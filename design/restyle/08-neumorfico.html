@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>08 · Neumórfico</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+  :root { --bg: #e3e8ef; --dk: #c2c9d5; --lt: #ffffff; --ink: #4a5468; --mute: #8e97a9; --acc: #5b6cff; --acc2: #9a6bff; }
+  body { background: var(--bg); color: var(--ink); font-family: 'Nunito', sans-serif; min-height: 100vh; }
+  .raised { background: var(--bg); box-shadow: 8px 8px 18px var(--dk), -8px -8px 18px var(--lt); }
+  .inset { background: var(--bg); box-shadow: inset 5px 5px 10px var(--dk), inset -5px -5px 10px var(--lt); }
+  .app { padding: 18px 20px 30px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 26px; }
+  .top { display: flex; justify-content: space-between; align-items: center; }
+  .brand { font-weight: 900; font-size: 20px; letter-spacing: -.02em; }
+  .btns { display: flex; gap: 14px; }
+  .rb { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; font-size: 18px; transition: box-shadow .2s; }
+  .rb:active { box-shadow: inset 4px 4px 8px var(--dk), inset -4px -4px 8px var(--lt); }
+
+  .hero { display: grid; justify-items: center; gap: 18px; }
+  .dial { position: relative; width: 220px; height: 220px; border-radius: 50%; display: grid; place-items: center; }
+  .dial > svg { position: absolute; inset: 0; }
+  .track { position: absolute; inset: 16px; border-radius: 50%; }
+  .play { position: relative; width: 112px; height: 112px; border-radius: 50%; display: grid; place-items: center; font-size: 34px; color: var(--acc); }
+  .play .ico { filter: drop-shadow(0 2px 6px #5b6cff55); }
+  .title { text-align: center; }
+  .title h1 { font-size: 30px; font-weight: 900; letter-spacing: -.02em; }
+  .title p { color: var(--mute); font-weight: 700; font-size: 14px; margin-top: 2px; }
+
+  .knobs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px 10px; }
+  .kn { display: grid; justify-items: center; gap: 8px; text-align: center; }
+  .k { position: relative; width: 88px; height: 88px; display: grid; place-items: center; }
+  .k > svg { position: absolute; inset: 0; }
+  .cap { position: relative; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; font-size: 20px; color: var(--mute); transition: rotate .6s cubic-bezier(.2,.9,.3,1.2); }
+  .cap .dot { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--acc); top: 6px; left: calc(50% - 3px); box-shadow: 0 0 6px #5b6cff88; }
+  .cap .ico { rotate: calc(var(--r) * -1); }
+  .kn b { font-size: 13.5px; font-weight: 800; }
+  .kn small { font-size: 12px; font-weight: 700; color: var(--mute); margin-top: -6px; }
+  .kn.off .cap .dot { background: var(--mute); box-shadow: none; }
+
+  .lib { display: grid; gap: 18px; }
+  .seg { display: grid; grid-template-columns: 1fr 1fr; padding: 6px; border-radius: 18px; }
+  .seg span { text-align: center; padding: 10px; border-radius: 13px; font-weight: 800; font-size: 14px; color: var(--mute); }
+  .seg span.on { color: var(--acc); box-shadow: 5px 5px 10px var(--dk), -5px -5px 10px var(--lt); }
+  .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px 12px; }
+  .sc { display: grid; justify-items: center; gap: 8px; font-size: 12.5px; font-weight: 800; text-align: center; }
+  .sq { width: 64px; height: 64px; border-radius: 22px; display: grid; place-items: center; font-size: 24px; color: var(--mute); }
+  .sc.on .sq { box-shadow: inset 5px 5px 10px var(--dk), inset -5px -5px 10px var(--lt); color: var(--acc); }
+  .sc.on { color: var(--acc); }
+
+  @media (min-width: 700px) {
+    .app { padding: 28px 40px; gap: 34px; }
+    .dial { width: 270px; height: 270px; }
+    .play { width: 136px; height: 136px; font-size: 40px; }
+    .knobs { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .grid { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  }
+  @media (min-width: 1100px) {
+    .app { height: 100vh; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 56px; padding: 26px 56px; align-content: start; }
+    .top { grid-column: 1 / -1; }
+    .left { display: grid; gap: 34px; align-content: start; }
+    .knobs { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px 10px; }
+    .lib { align-content: start; padding: 26px; border-radius: 34px; box-shadow: inset 6px 6px 14px var(--dk), inset -6px -6px 14px var(--lt); }
+    .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px 14px; }
+    .sq { width: 72px; height: 72px; }
+  }
+  @media (max-width: 1099px) { .left { display: grid; gap: 30px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">domentum</div>
+    <div class="btns"><button class="rb raised" id="b1"></button><button class="rb raised" id="b2"></button></div>
+  </header>
+  <div class="left">
+    <section class="hero">
+      <div class="dial raised" id="dial"></div>
+      <div class="title"><h1 id="title"></h1><p>Sonando · quedan <span id="timer"></span></p></div>
+    </section>
+    <section class="knobs" id="knobs"></section>
+  </div>
+  <section class="lib">
+    <div class="seg inset"><span class="on">Paisajes</span><span>Mezclas</span></div>
+    <div class="grid" id="grid"></div>
+  </section>
+</div>
+<script type="module">
+  import { SCENES, NOW, LAYERS, MASTER, TIMER, icon, pct, html } from './data.js';
+  const pt = (c, r, deg) => { const a = deg * Math.PI / 180; return [c + r * Math.sin(a), c - r * Math.cos(a)]; };
+  const arc = (c, r, a0, a1) => { const [x0, y0] = pt(c, r, a0), [x1, y1] = pt(c, r, a1); return `M${x0.toFixed(2)} ${y0.toFixed(2)}A${r} ${r} 0 ${a1 - a0 > 180 ? 1 : 0} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`; };
+  const grad = id => `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b6cff"/><stop offset="1" stop-color="#9a6bff"/></linearGradient></defs>`;
+  html('#title', NOW.name);
+  html('#timer', TIMER);
+  html('#b1', icon('timer')); html('#b2', icon('more'));
+  html('#dial', `<div class="track inset"></div>
+    <svg viewBox="0 0 220 220">${grad('g0')}<path d="${arc(110, 94, -135, 135)}" stroke="#cfd5df" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="${arc(110, 94, -135, -135 + 270 * MASTER)}" stroke="url(#g0)" stroke-width="7" fill="none" stroke-linecap="round"/></svg>
+    <button class="play raised">${icon('pause')}</button>`);
+  html('#knobs', LAYERS.map((l, i) => {
+    const r = -135 + 270 * l.v;
+    return `<div class="kn ${l.v ? '' : 'off'}">
+      <div class="k"><svg viewBox="0 0 88 88">${grad('g' + (i + 1))}<path d="${arc(44, 40, -135, 135)}" stroke="#cfd5df" stroke-width="4" fill="none" stroke-linecap="round"/>
+        ${l.v ? `<path d="${arc(44, 40, -135, r)}" stroke="url(#g${i + 1})" stroke-width="4" fill="none" stroke-linecap="round"/>` : ''}</svg>
+        <div class="cap raised" style="rotate:${r}deg;--r:${r}deg"><span class="dot"></span>${icon(l.icon)}</div></div>
+      <b>${l.name}</b><small>${pct(l.v)}%</small></div>`;
+  }).join(''));
+  html('#grid', SCENES.map(s => `<div class="sc ${s.id === NOW.id ? 'on' : ''}"><span class="sq raised">${icon(s.icon)}</span>${s.name}</div>`).join(''));
+</script>
+</body>
+</html>

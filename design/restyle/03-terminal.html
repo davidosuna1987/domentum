@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>03 · Terminal</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+  :root { --bg: #030a05; --g: #4dff94; --dim: #1f7a43; --faint: #0f3a20; --amber: #ffcf5a; }
+  body { background: var(--bg); color: var(--g); font: 400 13px/1.6 'IBM Plex Mono', monospace; min-height: 100vh; text-shadow: 0 0 6px #4dff9466; overflow: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse at center, #0000 55%, #000c); pointer-events: none; z-index: 2; }
+  body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(#0000 0 2px, #0005 3px); pointer-events: none; z-index: 3; animation: flick 4s steps(1) infinite; }
+  @keyframes flick { 50% { opacity: .85; } 52% { opacity: 1; } }
+  .wrap { height: 100vh; display: grid; grid-template-rows: 1fr auto; }
+  .panes { display: grid; gap: 14px; padding: 18px 14px 10px; min-height: 0; }
+  .pane { position: relative; border: 1px solid var(--dim); padding: 16px 12px 10px; min-height: 0; min-width: 0; }
+  .pane > div { overflow: hidden; }
+  .log { display: none; }
+  @media (min-width: 700px) { .log { display: block; } }
+  .pane > .ttl { position: absolute; top: -.85em; left: 10px; background: var(--bg); padding: 0 6px; color: var(--g); font-weight: 700; }
+  .p { color: var(--dim); }
+  .p b { color: var(--g); font-weight: 500; }
+  .hl { color: var(--bg); background: var(--g); text-shadow: none; padding: 0 4px; font-weight: 700; }
+  .amber { color: var(--amber); text-shadow: 0 0 6px #ffcf5a66; }
+  .muted { color: var(--dim); }
+  .line { white-space: pre; overflow: hidden; }
+  .gap { height: .8em; }
+  .row { display: grid; grid-template-columns: 2.5ch 13ch 1fr 5ch; gap: 1ch; white-space: pre; }
+  .row.off { color: var(--dim); }
+  .row .v { text-align: right; }
+  .wave { color: var(--g); letter-spacing: 0; overflow: hidden; white-space: nowrap; }
+  .cursor { display: inline-block; width: 1ch; background: var(--g); animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .ls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 2ch; }
+  .ls span.on { color: var(--bg); background: var(--g); text-shadow: none; }
+  .table .tr { display: grid; grid-template-columns: 5ch 9ch 1fr 4ch; gap: 1ch; white-space: pre; }
+  .table .tr.on { color: var(--bg); background: var(--g); text-shadow: none; }
+  .side { display: none; }
+  .status { display: flex; justify-content: space-between; gap: 1ch; background: var(--g); color: var(--bg); text-shadow: none; padding: 2px 10px; font-weight: 500; white-space: nowrap; overflow: hidden; }
+  .status .win b { background: var(--bg); color: var(--g); padding: 0 4px; font-weight: 700; }
+  @media (min-width: 700px) { body { font-size: 15px; } .panes { padding: 26px 22px 14px; } .ls { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 1100px) {
+    body { font-size: 15px; }
+    .panes { grid-template-columns: 1.25fr 1fr; gap: 18px; }
+    .side { display: block; }
+    .short { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="panes">
+    <section class="pane">
+      <span class="ttl">[0] mezclador</span>
+      <div class="line"><span class="p">dm@local <b>~</b> $</span> domentum play oceano --timer 45m</div>
+      <div class="gap"></div>
+      <div class="line"><span class="hl">▶ SONANDO</span>  <span id="title"></span>   <span class="amber">⏲ <span id="timer"></span></span></div>
+      <div class="wave" id="wave"></div>
+      <div class="gap"></div>
+      <div id="layers"></div>
+      <div class="gap"></div>
+      <div class="row"><span>»</span><span>general</span><span id="master"></span><span class="v" id="masterv"></span></div>
+      <div class="gap"></div>
+      <div class="line muted"># ↑↓ elige capa · ←→ volumen · espacio pausa · m silencia</div>
+      <div class="gap"></div>
+      <div class="short">
+        <div class="line"><span class="p">dm@local <b>~</b> $</span> ls paisajes/</div>
+        <div class="ls" id="ls"></div>
+        <div class="gap"></div>
+      </div>
+      <div class="log">
+        <div class="line"><span class="p">dm@local <b>~</b> $</span> tail -f domentum.log</div>
+        <div class="line muted">23:12:04  play     oceano (6 capas)</div>
+        <div class="line muted">23:12:31  capa     gaviotas → 24%</div>
+        <div class="line muted">23:13:02  capa     bajo-el-agua → 0% (silencio)</div>
+        <div class="line muted">23:14:47  timer    45m, fundido final 30s</div>
+        <div class="line">23:41:00  <span class="amber">quedan 45:00</span></div>
+        <div class="gap"></div>
+      </div>
+      <div class="line"><span class="p">dm@local <b>~</b> $</span> <span class="cursor">&nbsp;</span></div>
+    </section>
+    <section class="pane side">
+      <span class="ttl">[1] paisajes</span>
+      <div class="line"><span class="p">dm@local <b>~</b> $</span> ls -l paisajes/</div>
+      <div class="table" id="table"></div>
+      <div class="gap"></div>
+      <div class="line"><span class="p">dm@local <b>~</b> $</span> ls mezclas/</div>
+      <div id="mixes"></div>
+    </section>
+  </div>
+  <footer class="status">
+    <span class="win">[domentum] <b>0:oceano*</b> 1:lluvia 2:fogata</span>
+    <span>⏲ <span id="timer2"></span> · vol 80% · 23:41</span>
+  </footer>
+</div>
+<script type="module">
+  import { SCENES, NOW, LAYERS, MASTER, TIMER, MIXES, pct, pad, slug, meta, html } from './data.js';
+  const W = innerWidth >= 1100 ? 24 : innerWidth >= 700 ? 30 : 14;
+  const bar = v => '[' + '█'.repeat(Math.round(v * W)) + '░'.repeat(W - Math.round(v * W)) + ']';
+  html('#title', NOW.name.toUpperCase());
+  html('#timer', TIMER); html('#timer2', TIMER);
+  html('#layers', LAYERS.map((l, i) => `<div class="row ${l.v ? '' : 'off'}"><span>${pad(i + 1)}</span><span>${slug(l.name)}</span><span>${bar(l.v)}</span><span class="v">${pct(l.v)}%</span></div>`).join(''));
+  html('#master', bar(MASTER)); html('#masterv', pct(MASTER) + '%');
+  const blocks = '▁▂▃▄▅▆▇█';
+  const wave = ph => Array.from({ length: 160 }, (_, i) => blocks[Math.max(0, Math.min(7, Math.round(3.5 + 2.2 * Math.sin(i * .35 + ph) + 1.3 * Math.sin(i * .11 - ph * 1.7))))]).join('');
+  html('#wave', wave(0));
+  if (!document.documentElement.classList.contains('shot')) { let ph = 0; setInterval(() => html('#wave', wave(ph += .25)), 90); }
+  html('#ls', SCENES.map(s => `<span class="${s.id === NOW.id ? 'on' : ''}">${slug(s.name)}/</span>`).join(''));
+  html('#table', SCENES.map(s => `<div class="tr ${s.id === NOW.id ? 'on' : ''}"><span>drwx</span><span>${meta(s)}</span><span>${slug(s.name)}/</span><span>${s.id === NOW.id ? ' ▶' : ''}</span></div>`).join(''));
+  html('#mixes', MIXES.map(m => `<div class="line">${slug(m)}.mix</div>`).join(''));
+</script>
+</body>
+</html>

@@ -1,16 +1,24 @@
 // App shell: cache-first per version. Sounds: cache-first in their own long-lived
 // cache, filled on first play or via "Descargar todo".
-const VERSION = 'domentum-v1';
+const VERSION = 'domentum-v4';
 const SOUNDS = 'domentum-sounds-v1';
 const SHELL = [
-  './', 'index.html', 'manifest.webmanifest', 'css/app.css',
-  'js/app.js', 'js/engine.js', 'js/catalog.js', 'js/icons.js', 'js/bg.js', 'js/store.js', 'js/noise-worklet.js',
-  'icons/icon.svg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png',
+  './', 'index.html', 'manifest.webmanifest', 'css/base.css',
+  'js/app.js', 'js/engine.js', 'js/catalog.js', 'js/icons.js', 'js/bg.js', 'js/store.js', 'js/noise-worklet.js', 'js/themes/index.js',
+  'icons/icon.svg', 'icons/mark.svg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png',
   'sounds/credits.json', 'sounds/manifest.json',
 ];
+// Every theme, so any of them can be picked offline. Their fonts are cached the first time they load.
+const THEMES = ['zen', 'original', 'editorial', 'consola', 'terminal', 'cine', 'naturalista', 'aurora', 'bento', 'neumorfico', 'pop'];
+const EXTRAS = THEMES.flatMap(id => [`css/themes/${id}.css`, `js/themes/${id}.js`, `icons/themes/${id}-light.jpg`, `icons/themes/${id}-dark.jpg`]);
+const FONTS = ['shippori-mincho', 'inter-tight', 'jetbrains-mono', 'archivo', 'share-tech-mono', 'ibm-plex-mono', 'instrument-serif',
+  'inter', 'fraunces', 'caveat', 'unbounded', 'manrope', 'nunito', 'bricolage-grotesque'].map(f => `fonts/${f}.css`);
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(VERSION).then(async c => {
+    await c.addAll(SHELL);
+    await Promise.allSettled([...EXTRAS, ...FONTS].map(u => c.add(u)));
+  }).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', e => {

@@ -14,6 +14,7 @@ export class Backdrop {
     this.t = 0;
     this.last = 0;
     this.flash = 0;
+    this.mode = 'full';
     this.resize();
     addEventListener('resize', () => this.resize());
     document.addEventListener('visibilitychange', () => this.loop());
@@ -29,6 +30,14 @@ export class Backdrop {
     this.cx.setTransform(dpr, 0, 0, dpr, 0, 0);
     this.seed();
     this.draw(0);
+  }
+
+  // 'full' paints the whole backdrop, 'bare' only the particles over a transparent canvas, 'off' stops it
+  setMode(mode) {
+    this.mode = mode;
+    this.cv.hidden = mode === 'off';
+    this.loop();
+    if (mode !== 'off') this.draw(0);
   }
 
   set(mood, colors) {
@@ -70,7 +79,7 @@ export class Backdrop {
 
   loop() {
     cancelAnimationFrame(this.raf);
-    if (document.hidden || reduce.matches) return;
+    if (this.mode === 'off' || document.hidden || reduce.matches) return;
     const tick = now => {
       this.raf = requestAnimationFrame(tick);
       if (now - this.last < 33) return;
@@ -86,6 +95,11 @@ export class Backdrop {
     this.t += dt;
     if (this.mix < 1) this.mix = Math.min(1, this.mix + dt / 1.2);
     const [c0, c1, c2] = this.current();
+    if (this.mode === 'bare') {
+      cx.clearRect(0, 0, w, h);
+      (this[this.mood] || (() => {})).call(this, dt, c2);
+      return;
+    }
     const g = cx.createLinearGradient(0, 0, w * 0.35, h);
     g.addColorStop(0, c1);
     g.addColorStop(0.55, c0);

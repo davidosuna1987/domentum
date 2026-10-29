@@ -1,2 +1,8 @@
 .DS_Store
 .claude/settings.local.json
+# Review screenshots, regenerated with design/snap.mjs (hundreds of MB)
+design/snaps/
+# Mockup screenshots and overview images, regenerated with the design/ scripts
+design/restyle/shots/
+design/restyle/sheets/
+design/*.png

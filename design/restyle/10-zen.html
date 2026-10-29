@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>10 · Tinta zen</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+  :root { --paper: #f4f0e6; --ink: #1d1b18; --grey: #1d1b1880; --light: #1d1b1824; --red: #c4352a; }
+  body { background: var(--paper); color: var(--ink); font-family: 'Shippori Mincho', serif; min-height: 100vh; }
+  body::before { content: ''; position: fixed; inset: 0; pointer-events: none; opacity: .55;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .35' numOctaves='3' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .4 0 0 0 0 .3 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .app { position: relative; min-height: 100vh; padding: 22px 24px 34px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 34px; align-content: start; }
+  .top { display: flex; justify-content: space-between; align-items: center; }
+  .seal { display: flex; align-items: center; gap: 14px; }
+  .seal i { width: 36px; height: 36px; background: var(--red); color: var(--paper); display: grid; place-items: center; font-style: normal; font-weight: 700; font-size: 15px; letter-spacing: -.04em; rotate: -4deg; filter: url(#rough); }
+  .seal span { font-size: 13px; letter-spacing: .4em; }
+  .top small { font-size: 12px; letter-spacing: .3em; color: var(--grey); }
+  .center { display: grid; justify-items: center; gap: 22px; text-align: center; }
+  .enso { position: relative; width: 240px; aspect-ratio: 1; display: grid; place-items: center; }
+  .enso > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .draw { animation: draw 2.6s cubic-bezier(.6,.1,.2,1); }
+  @keyframes draw { from { stroke-dashoffset: 1; } }
+  .enso .pp { position: relative; font-size: 22px; color: var(--ink); opacity: .75; }
+  .enso .pp .ico { stroke-width: 1.2; }
+  h1 { font-weight: 500; font-size: 34px; letter-spacing: .34em; padding-left: .34em; }
+  .sub { font-size: 12px; letter-spacing: .3em; color: var(--grey); margin-top: 10px; }
+  .vt-title { display: none; }
+  .layers { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); justify-items: center; }
+  .vs { display: grid; justify-items: center; gap: 12px; }
+  .vt { position: relative; width: 22px; height: 150px; }
+  .vt::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: var(--light); }
+  .vt i { position: absolute; left: calc(50% - 1px); bottom: 0; width: 2.2px; height: calc(var(--v) * 100%); background: var(--ink); border-radius: 2px; transition: height 1.2s cubic-bezier(.2,.8,.2,1); }
+  .vt b { position: absolute; left: 50%; bottom: calc(var(--v) * 100% - 5px); width: 11px; height: 11px; margin-left: -5.5px; border-radius: 50%; background: var(--ink); filter: url(#rough); }
+  .vs.off .vt b { background: none; border: 1px solid var(--grey); }
+  .vs .ico { font-size: 16px; color: var(--grey); stroke-width: 1.3; }
+  .vn { writing-mode: vertical-rl; font-size: 13px; letter-spacing: .22em; height: 7.5em; }
+  .vs.off .vn { color: var(--grey); }
+  .vs em { font-style: normal; font-size: 11px; color: var(--grey); }
+  .list { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 22px; border-top: 1px solid var(--light); padding-top: 24px; font-size: 15px; letter-spacing: .12em; }
+  .list span { display: inline-flex; align-items: center; gap: 8px; color: var(--grey); }
+  .list span.on { color: var(--red); }
+  .list span.on::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--red); }
+  @media (min-width: 700px) {
+    .app { padding: 34px 56px; gap: 46px; }
+    .enso { width: 330px; }
+    h1 { font-size: 44px; }
+    .vt { height: 200px; }
+    .layers { max-width: 560px; margin: 0 auto; width: 100%; }
+    .list { font-size: 16px; gap: 14px 28px; }
+  }
+  @media (min-width: 1100px) {
+    .app { height: 100vh; grid-template-columns: 1fr auto 1fr; grid-template-rows: auto 1fr auto; padding: 34px 64px 30px; gap: 0 40px; }
+    .top { grid-column: 1 / -1; }
+    .vt-title { display: flex; align-self: center; justify-self: start; gap: 22px; }
+    .vt-title h2 { writing-mode: vertical-rl; font-weight: 500; font-size: 84px; letter-spacing: .2em; line-height: 1; }
+    .vt-title p { writing-mode: vertical-rl; font-size: 13px; letter-spacing: .4em; color: var(--grey); padding-top: 12px; }
+    .center { align-self: center; }
+    .center .name { display: none; }
+    .enso { width: 400px; }
+    .layers { align-self: center; justify-self: end; max-width: none; width: 400px; }
+    .vt { height: 260px; }
+    .list { grid-column: 1 / -1; align-self: end; justify-content: space-between; flex-wrap: nowrap; font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><filter id="rough"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4"/></filter></svg>
+<div class="app">
+  <header class="top">
+    <div class="seal"><i>dm</i><span>domentum</span></div>
+    <small id="timer"></small>
+  </header>
+  <div class="vt-title"><h2 id="vtitle"></h2><p>velero · olas · gaviotas</p></div>
+  <section class="center">
+    <div class="enso" id="enso"></div>
+    <div class="name"><h1 id="title"></h1><p class="sub">velero · olas · gaviotas</p></div>
+  </section>
+  <section class="layers" id="layers"></section>
+  <nav class="list" id="list"></nav>
+</div>
+<script type="module">
+  import { SCENES, NOW, LAYERS, TIMER, icon, pct, html } from './data.js';
+  html('#title', NOW.name);
+  html('#vtitle', NOW.name);
+  html('#timer', `quedan ${TIMER}`);
+  // A single brush stroke: thick where the brush lands, thinning out towards the tail, slightly uneven
+  const enso = (cx, cy, r) => {
+    const N = 240, a0 = -100 * Math.PI / 180, sweep = 318 * Math.PI / 180, outer = [], inner = [];
+    for (let i = 0; i <= N; i++) {
+      const t = i / N, a = a0 + sweep * t;
+      const w = (1.5 + 22 * Math.pow(1 - t, .75)) * Math.min(1, t * 14 + .25);
+      const rr = r + 2.6 * Math.sin(a * 3 + .7) + 1.2 * Math.sin(a * 7 + 2);
+      outer.push([cx + (rr + w / 2) * Math.cos(a), cy + (rr + w / 2) * Math.sin(a)]);
+      inner.push([cx + (rr - w / 2) * Math.cos(a), cy + (rr - w / 2) * Math.sin(a)]);
+    }
+    const p = outer.concat(inner.reverse());
+    return 'M' + p.map(q => q.map(n => n.toFixed(1)).join(' ')).join('L') + 'Z';
+  };
+  const guide = (() => { const a0 = -100 * Math.PI / 180, a1 = a0 + 318 * Math.PI / 180, r = 100;
+    return `M${100 + r * Math.cos(a0)} ${100 + r * Math.sin(a0)}A${r} ${r} 0 1 1 ${100 + r * Math.cos(a1)} ${100 + r * Math.sin(a1)}`; })();
+  html('#enso', `<svg viewBox="0 0 200 200">
+      <defs>
+        <filter id="ink" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".05 .8" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.6"/></filter>
+        <mask id="reveal"><path class="draw" d="${guide}" stroke="#fff" stroke-width="40" fill="none" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0"/></mask>
+      </defs>
+      <g mask="url(#reveal)"><path d="${enso(100, 100, 86)}" fill="#1d1b18" filter="url(#ink)" opacity=".92"/></g>
+    </svg><span class="pp">${icon('pause')}</span>`);
+  html('#layers', LAYERS.map(l => `<div class="vs ${l.v ? '' : 'off'}" style="--v:${l.v}">${icon(l.icon)}<div class="vt"><i></i><b></b></div><span class="vn">${l.name}</span><em>${pct(l.v)}</em></div>`).join(''));
+  html('#list', SCENES.map(s => `<span class="${s.id === NOW.id ? 'on' : ''}">${s.name}</span>`).join(''));
+</script>
+</body>
+</html>

@@ -193,7 +193,8 @@ class SampleScene {
   }
 
   defs(st) {
-    if (this.id === 'custom') return (st.custom || []).map(c => ({ id: c.id, vol: 0.5 }));
+    // Personal: the user's own files plus any sound picked from the other scenes (src = 'scene/layer')
+    if (this.id === 'custom') return (st.custom || []).map(c => ({ id: c.id, vol: c.vol ?? 0.5, src: c.src }));
     return SCENE[this.id].layers;
   }
 
@@ -210,7 +211,8 @@ class SampleScene {
       const key = `${this.id}/${d.id}`;
       let layer = this.layers.get(d.id);
       if (!layer) {
-        const loader = this.id === 'custom' ? () => this.e.customLoader(d.id) : () => fetchArray(soundUrl(this.id, d.id));
+        const loader = d.src ? () => fetchArray(soundUrl(...d.src.split('/')))
+          : this.id === 'custom' ? () => this.e.customLoader(d.id) : () => fetchArray(soundUrl(this.id, d.id));
         layer = new SampleLayer(this.e, key, loader, this.bus);
         this.layers.set(d.id, layer);
       }

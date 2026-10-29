@@ -1,0 +1,446 @@
+/* Terminal: green phosphor CRT on near-black. Scanlines, vignette and a faint flicker over everything,
+   IBM Plex Mono, layers as [█████░░░░] character bars, scenes listed like `ls`, a tmux status bar. */
+@import url("../../fonts/ibm-plex-mono.css");
+
+:root {
+  color-scheme: dark;
+  --bg: #030a05;
+  --g: #4dff94;
+  --dim: #1f7a43;
+  --faint-g: #0f3a20;
+  --amber: #ffcf5a;
+  --glow: 0 0 6px rgba(77, 255, 148, 0.4);
+  --glow-amber: 0 0 6px rgba(255, 207, 90, 0.4);
+  --blocks: "IBM Plex Mono", Menlo, "DejaVu Sans Mono", "Noto Sans Mono", "Courier New", monospace;
+  --fs: 13px;
+  --sb: calc(var(--fs) * 1.6 + 4px); /* status bar height */
+
+  --font: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --text: var(--g);
+  --muted: #39c172;
+  --faint: var(--dim);
+  --accent: var(--g);
+  --link: var(--amber);
+  --focus: var(--amber);
+  --sheet: var(--bg);
+  --sheet-text: var(--g);
+  --sheet-muted: #39c172;
+  --sheet-line: var(--faint-g);
+  --sheet-radius: 0;
+  --sheet-shadow: none;
+  --grip: var(--dim);
+  --hover: rgba(77, 255, 148, 0.08);
+  --opt: transparent;
+  --opt-hover: rgba(77, 255, 148, 0.1);
+  --on: var(--g);
+  --on-text: var(--bg);
+  --ctl-radius: 0;
+  --field: #06140b;
+  --field-line: var(--dim);
+  --switch-off: var(--dim);
+  --knob: #c8ffdf;
+  --scrim: rgba(0, 0, 0, 0.6);
+  --toast: var(--g);
+  --toast-text: var(--bg);
+}
+
+/* Light: a continuous-feed printout. Greenbar paper, tractor holes in the margins, black ribbon ink
+   with the red half of the ribbon for the timer, no CRT effects. */
+:root[data-scheme="light"] {
+  color-scheme: light;
+  --bg: #f6f4ec;
+  --g: #1e2721;
+  --dim: #7d8a80;
+  --faint-g: #dde8da;
+  --amber: #b42a1f;
+  --glow: 0 0 0 transparent;
+  --glow-amber: 0 0 0 transparent;
+  --muted: #56645a;
+  --sheet-muted: #56645a;
+  --hover: rgba(30, 39, 33, 0.06);
+  --opt-hover: rgba(30, 39, 33, 0.08);
+  --field: #fff;
+  --switch-off: #b8c3ba;
+  --knob: #fff;
+  --scrim: rgba(60, 66, 58, 0.28);
+}
+:root[data-scheme="light"] body::before, :root[data-scheme="light"] body::after { content: none; }
+:root[data-scheme="light"] .app {
+  background:
+    radial-gradient(circle at 7px 12px, #e2dfd3 0 4px, #cfccc0 4.5px 5px, transparent 5.5px) left top / 14px 24px repeat-y,
+    radial-gradient(circle at 7px 12px, #e2dfd3 0 4px, #cfccc0 4.5px 5px, transparent 5.5px) right top / 14px 24px repeat-y,
+    repeating-linear-gradient(transparent 0 4.8em, rgba(120, 170, 120, 0.13) 4.8em 9.6em);
+}
+:root[data-scheme="light"] .slider .track { color: #a9b5ac; }
+:root[data-scheme="light"] .t-wave { color: var(--dim); }
+
+body { background: var(--bg); font-size: var(--fs); line-height: 1.6; text-shadow: var(--glow); }
+#bg { display: none; }
+/* CRT: vignette, scanlines and a slight flicker over everything (sheets included) */
+body::before { content: ""; position: fixed; inset: 0; z-index: 50; pointer-events: none; background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.75)); }
+body::after { content: ""; position: fixed; inset: 0; z-index: 51; pointer-events: none; background: repeating-linear-gradient(transparent 0 2px, rgba(0, 0, 0, 0.3) 3px); animation: t-flick 4s steps(1) infinite; }
+@keyframes t-flick { 50% { opacity: 0.85; } 52% { opacity: 1; } }
+.ico { stroke-width: 1.7; }
+button { text-shadow: inherit; }
+:focus-visible { outline: 1px dashed var(--amber); outline-offset: 1px; }
+
+.app {
+  min-height: 100dvh; display: flex; flex-direction: column;
+  padding: calc(var(--safe-t) + 18px) max(14px, env(safe-area-inset-right)) calc(var(--safe-b) + var(--sb) + 12px) max(14px, env(safe-area-inset-left));
+}
+
+/* Plain text helpers used by the decoration */
+.t-line { white-space: pre; overflow: hidden; text-overflow: clip; }
+.t-p { color: var(--dim); }
+.t-p b { color: var(--g); font-weight: 500; }
+.t-dim { color: var(--dim); }
+.t-amber, .t-timer { color: var(--amber); text-shadow: var(--glow-amber); }
+.t-cursor { display: inline-block; width: 1ch; height: 1.2em; vertical-align: -0.25em; background: var(--g); box-shadow: var(--glow); animation: t-blink 1s steps(1) infinite; }
+@keyframes t-blink { 50% { opacity: 0; } }
+
+/* ---------- status bar (tmux): .top and #extra both sit on the bottom line ---------- */
+.top, .extra { position: fixed; bottom: 0; z-index: 10; height: calc(var(--sb) + var(--safe-b)); padding-bottom: var(--safe-b); }
+.top {
+  left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; gap: 1ch; padding-inline: 10px;
+  background: var(--g); color: var(--bg); text-shadow: none; font-weight: 500;
+}
+.logo { display: none; }
+.brand-name::before { content: "["; }
+.brand-name::after { content: "]"; }
+.top-actions { display: flex; align-items: center; gap: 1ch; }
+.pill, #menuBtn { display: flex; align-items: center; gap: 0.5ch; height: var(--sb); padding: 0 0.6ch; }
+.pill .ico { width: 1em; height: 1em; stroke-width: 2.2; }
+#menuBtn .ico { display: none; }
+#menuBtn::before { content: "menú"; }
+.pill:hover, #menuBtn:hover { background: var(--bg); color: var(--g); }
+.extra { left: calc(12ch + 20px); right: calc(17ch + 10px); display: flex; align-items: center; overflow: hidden; color: var(--bg); text-shadow: none; }
+.extra:empty { display: none; }
+.t-win { display: flex; gap: 1ch; white-space: nowrap; }
+.t-win button { height: var(--sb); padding: 0 0.5ch; color: var(--bg); font-weight: 500; }
+.t-win button.on { background: var(--bg); color: var(--g); font-weight: 700; }
+.t-win button:hover:not(.on) { text-decoration: underline; }
+
+/* ---------- panes ---------- */
+.layout { position: relative; flex: 1; display: grid; align-content: start; gap: 0.8em; border: 1px solid var(--dim); padding: 16px 12px 12px; }
+.layout::before, .col-main::before, .col-lib::before {
+  position: absolute; top: -0.85em; left: 10px; padding: 0 6px; background: var(--bg); color: var(--g); font-weight: 700; line-height: 1.6;
+}
+.layout::before { content: "[0] mezclador"; }
+.col-main, .col-lib { position: relative; min-width: 0; }
+
+/* Left pane: the transport, then the mixer table, all as lines of text */
+.col-main {
+  display: grid; align-content: start; column-gap: 2ch;
+  grid-template-columns: auto minmax(0, max-content) auto minmax(0, 1fr);
+  grid-template-areas:
+    "cmd cmd cmd cmd" "play title timer ." "sub sub sub sub" "wave wave wave wave" "chips chips chips chips"
+    "head head head head" "rows rows rows rows" "hint hint hint hint" "wide wide wide wide" "master master master master"
+    "help help help help" "log log log log" "end end end end";
+}
+#now, .now-head, .now-text, #mixer { display: contents; }
+.now .art, .eyebrow, .mix-head .art { display: none; }
+.t-cmd { grid-area: cmd; }
+.play {
+  grid-area: play; align-self: center; margin-top: 0.8em; display: flex; align-items: center; gap: 0.8ch; padding: 0 0.6ch;
+  box-shadow: inset 0 0 0 1px var(--g); font-weight: 700; text-transform: uppercase;
+}
+.play .ico { width: 0.85em; height: 0.85em; }
+.play::after { content: "En pausa"; }
+.play.on { background: var(--g); color: var(--bg); text-shadow: none; }
+.play.on::after { content: "Sonando"; }
+.play:hover { background: var(--amber); color: var(--bg); box-shadow: none; text-shadow: none; }
+.now-title { grid-area: title; align-self: center; margin-top: 0.8em; text-transform: uppercase; overflow-wrap: anywhere; }
+.now-title .plus { color: var(--dim); }
+.t-timer { grid-area: timer; align-self: center; margin-top: 0.8em; display: flex; align-items: center; gap: 0.6ch; white-space: nowrap; }
+.t-timer .ico { width: 1em; height: 1em; }
+[data-timer="off"] .t-timer { color: var(--dim); text-shadow: none; }
+.now-sub { grid-area: sub; color: var(--dim); text-transform: lowercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.now-sub::before { content: "# "; }
+.t-wave { grid-area: wave; overflow: hidden; white-space: nowrap; font-family: var(--blocks); line-height: 1.2; color: var(--g); }
+.t-wave span { display: inline-block; animation: t-scroll 9s linear infinite; }
+@keyframes t-scroll { to { transform: translateX(-50%); } }
+[data-playing="false"] .t-wave { color: var(--dim); }
+[data-playing="false"] .t-wave span { animation: none; }
+
+.chips { grid-area: chips; display: flex; flex-wrap: wrap; gap: 0.4em 2ch; margin-top: 0.4em; counter-reset: t-chip -1; }
+.chip { counter-increment: t-chip; display: flex; align-items: center; padding-left: 0.5ch; text-transform: lowercase; }
+.chip::before { content: counter(t-chip) ":"; }
+.chip > .ico { display: none; }
+.chip.on { background: var(--g); color: var(--bg); text-shadow: none; }
+.chip.on span::after { content: "*"; }
+.chip-x { width: 3ch; height: 28px; display: grid; place-items: center; }
+.chip-x .ico { width: 0.8em; height: 0.8em; stroke-width: 2.4; }
+.chip-x:hover { background: var(--amber); color: var(--bg); }
+
+/* Mixer header as a prompt, the scene menu as [...] */
+.mix-head { grid-area: head; display: flex; align-items: center; gap: 1ch; min-width: 0; margin-top: 0.8em; white-space: nowrap; }
+.mix-head::before { content: "dm@local ~ $"; color: var(--dim); }
+.mix-head h2 { margin: 0; font: inherit; text-transform: lowercase; overflow: hidden; text-overflow: ellipsis; }
+.mix-head h2::before { content: "mixer "; }
+.mix-meta { flex: 1; color: var(--dim); overflow: hidden; text-overflow: ellipsis; }
+.mix-meta::before { content: "# "; }
+.mix-head .icon-btn { flex: none; height: 28px; padding: 0 0.5ch; }
+.mix-head .icon-btn .ico { display: none; }
+.mix-head .icon-btn::before { content: "[…]"; }
+.mix-head .icon-btn:hover { background: var(--g); color: var(--bg); text-shadow: none; }
+
+/* Rows: NN [x] name [██████░░░░] NN% */
+.layers { grid-area: rows; display: grid; margin-top: 0.4em; counter-reset: t-row; }
+.layer, .master, .layer.wide {
+  display: grid; grid-template-columns: 2ch 3ch minmax(0, 13ch) minmax(0, 1fr) 4ch; column-gap: 1ch; align-items: center; min-height: 1.6em;
+}
+.layer { counter-increment: t-row; }
+.layer::before { content: counter(t-row, decimal-leading-zero); grid-area: 1 / 1; }
+.layer-ico, #muteBtn { grid-area: 1 / 2; height: 1.6em; display: flex; align-items: center; }
+.layer-ico .ico, #muteBtn .ico { display: none; }
+.layer-ico::before, #muteBtn::before { content: "[x]"; }
+.layer.off .layer-ico::before, .master:has([aria-valuenow="0"]) #muteBtn::before { content: "[ ]"; }
+.layer-ico:hover, #muteBtn:hover { color: var(--amber); }
+.layer-name { grid-area: 1 / 3; display: flex; align-items: center; gap: 1ch; min-width: 0; text-transform: lowercase; }
+.layer-name span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.layer .slider, .master .slider { grid-area: 1 / 4; }
+.layer .val, .master .val { grid-area: 1 / 5; text-align: right; font-variant-numeric: tabular-nums; }
+.val::after { content: "%"; }
+.layer.off { color: var(--dim); text-shadow: none; }
+.layer[data-status="loading"]::before { animation: t-blink 0.8s steps(1) infinite; }
+.layer[data-status="error"] .layer-name { color: var(--amber); }
+.del { height: 1.6em; padding: 0 0.5ch; color: var(--dim); }
+.del .ico { display: none; }
+.del::before { content: "rm"; }
+.del:hover { background: var(--amber); color: var(--bg); text-shadow: none; }
+.layer.add { counter-increment: none; display: flex; gap: 1ch; width: max-content; margin-top: 0.4em; padding: 0 0.6ch; cursor: pointer; box-shadow: inset 0 0 0 1px var(--dim); text-transform: lowercase; }
+.layer.add::before { content: "[+]"; }
+.layer.add .ico { display: none; }
+.layer.add:hover { background: var(--g); color: var(--bg); text-shadow: none; }
+
+.master { grid-area: master; margin-top: 0.8em; }
+/* Imported audios carry an "rm": give the names a little more room (all rows, so the bars stay aligned) */
+.col-main:has(.del) :is(.layer, .master) { grid-template-columns: 2ch 3ch minmax(0, 17ch) minmax(0, 1fr) 4ch; }
+.master::before { content: "»"; grid-area: 1 / 1; }
+.master::after { content: "general"; grid-area: 1 / 3; }
+
+/* The bar: "[", a track of ░ with a fill of █ cut to whole characters, "]" */
+.slider[data-orient="h"] { display: flex; align-items: center; height: 28px; font-family: var(--blocks); line-height: 1; white-space: nowrap; }
+.slider[data-orient="h"]::before { content: "["; }
+.slider[data-orient="h"]::after { content: "]"; }
+.slider[data-orient="h"] .track {
+  flex: none; height: 1.25em; overflow: hidden; color: var(--dim); text-shadow: none;
+  width: calc(100% - 2ch); width: round(down, calc(100% - 2ch), 1ch);
+}
+.track::before, .fill::before { content: "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"; display: block; line-height: 1.25; }
+.slider[data-orient="h"] .fill { position: absolute; left: 0; top: 0; bottom: 0; overflow: hidden; color: var(--g); text-shadow: var(--glow); width: calc(var(--v) * 100%); width: round(nearest, calc(var(--v) * 100%), 1ch); }
+.fill::before { content: "████████████████████████████████████████████████████████████████"; }
+.slider .thumb { display: none; }
+.slider:focus-visible { outline-offset: -2px; }
+.slider:focus-visible .fill, .slider.drag .fill { color: var(--amber); }
+.layer.off .fill { color: var(--dim); }
+
+/* Noise / binaural: options as a radio list, then the volume row */
+.variants { grid-area: rows; display: grid; grid-template-columns: repeat(auto-fill, minmax(15ch, 1fr)); gap: 0 2ch; margin-top: 0.4em; }
+.variant { display: flex; align-items: center; gap: 1ch; height: 1.9em; padding: 0 0.5ch; text-align: left; white-space: nowrap; overflow: hidden; }
+.variant::before { content: "( )"; }
+.variant.on::before { content: "(*)"; }
+.variant .ico { display: none; }
+.variant .glyph { color: var(--dim); }
+.variant .vname { text-transform: lowercase; overflow: hidden; text-overflow: ellipsis; }
+.variant:hover { color: var(--amber); }
+.variant.on { background: var(--g); color: var(--bg); text-shadow: none; }
+.variant.on .glyph { color: inherit; }
+.hint { grid-area: hint; margin: 0.6em 0 0; color: var(--dim); }
+.hint::before { content: "# "; }
+.layer.wide { grid-area: wide; margin-top: 0.8em; }
+.layer.wide::before { content: "»"; }
+.layer.wide .layer-name { grid-area: 1 / 3; }
+
+.t-help { grid-area: help; margin-top: 0.8em; color: var(--dim); display: none; }
+@media (hover: hover) and (min-width: 700px) { .t-help { display: block; } }
+.t-log { grid-area: log; margin-top: 0.8em; display: none; }
+.t-end { grid-area: end; margin-top: 0.8em; display: none; }
+
+/* ---------- library: ls ---------- */
+.col-lib { margin-top: 0.8em; }
+.tabs { display: flex; align-items: center; gap: 1ch; white-space: nowrap; overflow: hidden; }
+.tabs::before { content: "dm@local ~ $ ls"; color: var(--dim); }
+.tabs button { height: 28px; color: var(--dim); text-transform: lowercase; text-shadow: none; }
+.tabs button::after { content: "/"; }
+.tabs button:hover { color: var(--g); }
+.tabs button[aria-selected="true"] { color: var(--g); text-shadow: var(--glow); }
+#library { margin-top: 0.2em; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 2ch; }
+.tile { display: grid; grid-template-columns: minmax(0, 1fr) 3ch; align-items: center; min-height: 1.75em; padding-left: 0.3ch; text-transform: lowercase; }
+.tile-art { display: contents; }
+.tile-art > .ico, .tile-art .eq, .tile-meta, .mix-icons { display: none; }
+.tile-name { grid-area: 1 / 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tile-name::after { content: "/"; }
+.tile-add { grid-area: 1 / 2; height: 1.75em; color: var(--dim); }
+.tile-add .ico { display: none; }
+.tile-add::before { content: "+"; }
+.tile.on .tile-add::before { content: "−"; }
+.tile-add:hover { color: var(--amber); }
+.tile:hover .tile-name { text-decoration: underline; }
+.tile.on { background: var(--g); color: var(--bg); text-shadow: none; }
+.tile.on .tile-add { color: var(--bg); }
+.tile.mix .tile-name::after { content: ".mix"; }
+.tile.mix .tile-add::before { content: "rm"; }
+.tile.mix, .tile.save { grid-column: 1 / -1; grid-template-columns: minmax(0, max-content) minmax(0, 1fr) 3ch; column-gap: 2ch; }
+.tile.mix .tile-meta, .tile.save .tile-meta { display: block; grid-area: 1 / 2; color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tile.mix .tile-meta::before, .tile.save .tile-meta::before { content: "# "; }
+.tile.mix .tile-add { grid-area: 1 / 3; }
+.tile.save .tile-name::before { content: "[+] "; }
+.tile.save .tile-name::after { content: ""; }
+.tile.save { color: var(--amber); text-shadow: var(--glow-amber); }
+
+@media (min-width: 700px) {
+  :root { --fs: 15px; }
+  .app { padding: calc(var(--safe-t) + 26px) max(22px, env(safe-area-inset-right)) calc(var(--safe-b) + var(--sb) + 14px) max(22px, env(safe-area-inset-left)); }
+  .layout { padding: 18px 20px 14px; }
+  .layer, .master, .layer.wide { grid-template-columns: 2ch 3ch 14ch minmax(0, 34ch) minmax(0, 1fr); }
+  .col-main:has(.del) :is(.layer, .master) { grid-template-columns: 2ch 3ch 22ch minmax(0, 30ch) minmax(0, 1fr); }
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .t-log { display: block; }
+  .extra { left: calc(12ch + 20px); right: calc(18ch + 10px); }
+}
+
+/* Desktop: two panes side by side, like a split tmux window */
+@media (min-width: 1100px) {
+  .app { padding-top: calc(var(--safe-t) + 24px); }
+  .layout { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-content: stretch; gap: 18px; border: 0; padding: 0; }
+  .layout::before { display: none; }
+  .col-main, .col-lib { border: 1px solid var(--dim); padding: 16px 16px 12px; }
+  .col-main::before { content: "[0] mezclador"; }
+  .col-lib::before { content: "[1] paisajes"; }
+  .col-lib:has([data-tab="mixes"][aria-selected="true"])::before { content: "[1] mezclas"; }
+  .col-lib { margin: 0; align-content: start; }
+  .layer, .master, .layer.wide { grid-template-columns: 2ch 3ch 14ch minmax(0, 26ch) minmax(0, 1fr); }
+  .col-main:has(.del) :is(.layer, .master) { grid-template-columns: 2ch 3ch 20ch minmax(0, 24ch) minmax(0, 1fr); }
+  .t-end { display: block; }
+  .tabs::before { content: "dm@local ~ $ ls -l"; }
+  .grid { grid-template-columns: 1fr; }
+  .tile { grid-template-columns: 5ch 11ch minmax(0, 1fr) 3ch; column-gap: 1ch; padding-left: 0; }
+  .tile::before { content: "drwx"; grid-area: 1 / 1; }
+  .tile-meta { display: block; grid-area: 1 / 2; white-space: nowrap; overflow: hidden; }
+  .tile-name { grid-area: 1 / 3; }
+  .tile-add { grid-area: 1 / 4; }
+  .tile.mix, .tile.save { grid-template-columns: 5ch minmax(0, max-content) minmax(0, 1fr) 3ch; }
+  .tile.mix::before { content: "-rw-"; }
+  .tile.save::before { content: ""; }
+  .tile.mix .tile-name, .tile.save .tile-name { grid-area: 1 / 2; }
+  .tile.mix .tile-meta, .tile.save .tile-meta { grid-area: 1 / 3; }
+  .tile.mix .tile-add { grid-area: 1 / 4; }
+}
+
+/* ---------- sheets ---------- */
+.sheet { border: 1px solid var(--g); text-shadow: var(--glow); }
+/* The glow only exists while open, so nothing peeks out under the closed sheet on phones */
+body.sheet-open { --sheet-shadow: 0 0 0 4px var(--bg), 0 0 24px rgba(77, 255, 148, 0.18); }
+.sheet-grip { border-radius: 0; }
+.sheet h3 { font-weight: 700; font-size: 16px; text-transform: lowercase; }
+.sheet h3::before { content: "$"; color: var(--dim); }
+.row b { font-weight: 500; }
+.row small { color: var(--sheet-muted); }
+.opt { box-shadow: inset 0 0 0 1px var(--dim); font-weight: 500; }
+.opt.on, .btn { text-shadow: none; }
+.btn { font-weight: 700; }
+.switch, .switch::after { border-radius: 0; }
+.theme-opt img { border-radius: 0; }
+.theme-opt.on::after { border-radius: 0; }
+.toast { text-shadow: none; font-weight: 500; bottom: calc(var(--safe-b) + var(--sb) + 14px); }
+
+
+/* ======================================================================================
+   Menu proposal (only with data-menus="new"): every sheet is a new tmux window, [2].
+   It powers on like a CRT (a dot, a line, then the picture) and its lines are typed in one
+   after another; closing powers it off back into a line. Desktop: a pane split on the right.
+   ====================================================================================== */
+.t-sh, .t-sh-cmd { display: none; }
+:root[data-menus="new"] .sheet-grip { display: none; }
+:root[data-menus="new"] .sheet {
+  inset: calc(var(--safe-t) + 8px) 14px calc(var(--safe-b) + var(--sb) + 12px) 14px;
+  width: auto; max-width: none; max-height: none; margin: 0; padding: 0 12px 14px; border-radius: 0; opacity: 1;
+  border: 1px solid var(--g); background: var(--bg); box-shadow: 0 0 24px rgba(77, 255, 148, 0.12);
+  transform: scale(0, 0.004); transition: visibility 0s 0.4s;
+}
+:root[data-menus="new"] body.sheet-open .sheet { transform: none; pointer-events: auto; transition: none; animation: t-on 0.46s linear both; }
+:root[data-menus="new"] body.sheet-closing .sheet { pointer-events: none; animation: t-off 0.32s linear both; }
+@keyframes t-on {
+  0% { transform: scale(0.03, 0.004); filter: brightness(3); }
+  30% { transform: scale(1, 0.004); filter: brightness(2.6); }
+  62% { transform: scale(1, 1.015); filter: brightness(1.4); }
+  100% { transform: none; filter: none; }
+}
+@keyframes t-off {
+  0% { transform: none; filter: none; }
+  50% { transform: scale(1, 0.004); filter: brightness(2.6); }
+  100% { transform: scale(0, 0.004); filter: brightness(3); }
+}
+:root[data-menus="new"] .sheet-bg { background: rgba(0, 0, 0, 0.55); }
+:root[data-scheme="light"][data-menus="new"] .sheet { box-shadow: 4px 4px 0 rgba(30, 39, 33, 0.18); }
+:root[data-scheme="light"][data-menus="new"] .sheet-bg { background: rgba(246, 244, 236, 0.6); }
+
+/* The window's title bar (inverted, like tmux) and the command that opened it */
+:root[data-menus="new"] .t-sh {
+  position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 1ch;
+  margin: 0 -12px 0.6em; padding: 0 0 0 1ch; height: calc(var(--sb) + 2px);
+  background: var(--g); color: var(--bg); text-shadow: none; font-weight: 700;
+}
+.t-sh-x { height: 100%; padding: 0 1ch; color: var(--bg); font-weight: 500; }
+.t-sh-x:hover { background: var(--amber); }
+:root[data-menus="new"] .t-sh-cmd { display: block; margin-bottom: 0.6em; }
+/* Lines are typed in one after another (not when the window is only re-rendered) */
+:root[data-menus="new"] body.sheet-open .sheet:not(:has(.t-again)) > :not(.sheet-grip, .t-sh) {
+  animation: t-type 0.2s steps(12, end) both; animation-delay: calc(220ms + var(--k, 9) * 30ms);
+}
+@keyframes t-type { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
+:root[data-menus="new"] .sheet > :nth-child(3) { --k: 0; }
+:root[data-menus="new"] .sheet > :nth-child(4) { --k: 1; }
+:root[data-menus="new"] .sheet > :nth-child(5) { --k: 2; }
+:root[data-menus="new"] .sheet > :nth-child(6) { --k: 3; }
+:root[data-menus="new"] .sheet > :nth-child(7) { --k: 4; }
+:root[data-menus="new"] .sheet > :nth-child(8) { --k: 5; }
+:root[data-menus="new"] .sheet > :nth-child(9) { --k: 6; }
+:root[data-menus="new"] .sheet > :nth-child(10) { --k: 7; }
+:root[data-menus="new"] .sheet > :nth-child(11) { --k: 8; }
+
+/* Content as plain text: rows are entries of a list, options are [ ] / [*] */
+:root[data-menus="new"] .sheet h3 { margin: 0 0 0.4em; font-size: inherit; }
+:root[data-menus="new"] .sheet h3 .ico { display: none; }
+:root[data-menus="new"] .sheet h3::before { content: "#"; }
+:root[data-menus="new"] .sheet .muted { margin: 0 0 0.8em; font-size: inherit; color: var(--dim); }
+:root[data-menus="new"] .sheet .row { gap: 1.5ch; padding: 0.45em 1ch; font-size: inherit; }
+:root[data-menus="new"] .sheet .row > .ico { width: 1.1em; height: 1.1em; }
+:root[data-menus="new"] .sheet .row b { font-size: inherit; font-weight: 500; }
+:root[data-menus="new"] .sheet .row b::before { content: "> "; color: var(--dim); }
+:root[data-menus="new"] .sheet .row small { font-size: 0.86em; color: var(--dim); }
+:root[data-menus="new"] .sheet .row:hover { background: var(--g); color: var(--bg); text-shadow: none; }
+:root[data-menus="new"] .sheet .row:hover small, :root[data-menus="new"] .sheet .row:hover b::before { color: inherit; }
+:root[data-menus="new"] .sheet .row.static:hover { background: none; color: inherit; }
+:root[data-menus="new"] .sheet .opt, :root[data-menus="new"] .sound-opt { box-shadow: none; background: none; justify-content: flex-start; text-align: left; padding: 0 1ch; font-size: inherit; }
+:root[data-menus="new"] .sheet .opts .opt { height: 2em; }
+:root[data-menus="new"] .sheet .opt::before, :root[data-menus="new"] .sound-opt::before { content: "[ ]"; margin-right: 1ch; flex: none; }
+:root[data-menus="new"] .sheet .opt.on::before, :root[data-menus="new"] .sound-opt.on::before { content: "[*]"; }
+:root[data-menus="new"] .sheet .opt:hover, :root[data-menus="new"] .sound-opt:hover { background: var(--hover); }
+:root[data-menus="new"] .sheet .opt.on, :root[data-menus="new"] .sound-opt.on { background: var(--g); color: var(--bg); text-shadow: none; }
+:root[data-menus="new"] .scheme .opt .ico, :root[data-menus="new"] .sound-opt .ico { display: none; }
+:root[data-menus="new"] .sheet .scheme .opt { justify-content: center; }
+:root[data-menus="new"] .sheet .scheme .opt::before { content: none; }
+:root[data-menus="new"] .row.static + .scheme { padding: 0 0 0 calc(1.1em + 2.5ch); }
+:root[data-menus="new"] .sound-opt { min-height: 1.9em; }
+:root[data-menus="new"] .pick-group { border-top: 0; padding: 0.4em 0; }
+:root[data-menus="new"] .pick-group h4 { margin: 0 0 0.2em; font-size: inherit; font-weight: 700; }
+:root[data-menus="new"] .pick-group h4 .ico { display: none; }
+:root[data-menus="new"] .pick-group h4::after { content: "/"; }
+:root[data-menus="new"] .picks { gap: 0 2ch; }
+:root[data-menus="new"] .theme-opt { box-shadow: inset 0 0 0 1px var(--dim); }
+:root[data-menus="new"] .theme-opt.on { box-shadow: inset 0 0 0 2px var(--g); }
+
+/* Desktop: the window splits the screen on the right, over the [1] pane */
+@media (min-width: 1100px) {
+  :root[data-menus="new"] .sheet { left: auto; top: calc(var(--safe-t) + 12px); right: 22px; width: min(44vw, 620px); }
+  :root[data-menus="new"] .sheet.wide { width: min(62vw, 860px); }
+  :root[data-menus="new"] .sheet-bg { background: rgba(0, 0, 0, 0.4); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after, .t-wave span, .t-cursor, .layer::before { animation: none !important; }
+  :root[data-menus="new"] .sheet, :root[data-menus="new"] .sheet > * { animation: none !important; }
+}

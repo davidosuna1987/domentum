@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>05 · Atlas naturalista</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+  :root { --bg: #10231a; --cream: #efe4c8; --cream2: #efe4c99a; --gold: #c9a45c; --gold2: #c9a45c5c; }
+  body { background: radial-gradient(ellipse at 50% -10%, #1d3a2b, var(--bg) 65%); color: var(--cream); font-family: 'Fraunces', serif; min-height: 100vh; }
+  body::before { content: ''; position: fixed; inset: 0; pointer-events: none; opacity: .5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 .95 0 0 0 0 .8 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .app { position: relative; max-width: 1400px; margin: 0 auto; padding: 20px 18px 32px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  header { display: grid; justify-items: center; gap: 6px; text-align: center; }
+  .brand { font: 600 14px 'Fraunces'; letter-spacing: .34em; text-transform: uppercase; padding-left: .34em; }
+  .orn { display: flex; align-items: center; gap: 12px; color: var(--gold); font-size: 14px; }
+  .orn::before, .orn::after { content: ''; height: 1px; width: 56px; background: var(--gold2); }
+  .tag { font-style: italic; color: var(--cream2); font-size: 14px; }
+  .bar { display: flex; justify-content: space-between; align-items: center; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--cream2); }
+  .bar b { color: var(--gold); font-weight: 500; }
+
+  .plate { position: relative; border: 1px solid var(--gold); outline: 1px solid var(--gold2); outline-offset: -7px; padding: 26px 20px 22px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 18px; align-items: center; animation: page .8s cubic-bezier(.2,.8,.2,1); transform-origin: left center; }
+  @keyframes page { from { transform: perspective(1200px) rotateY(-14deg); opacity: 0; } }
+  .plate .no { position: absolute; top: -8px; left: 50%; transform: translateX(-50%); background: var(--bg); padding: 0 12px; font-size: 11px; letter-spacing: .32em; color: var(--gold); text-transform: uppercase; white-space: nowrap; }
+  .emblem { position: relative; width: 112px; height: 112px; color: var(--gold); display: grid; place-items: center; }
+  .emblem svg.rings { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .emblem .spin { transform-origin: 60px 60px; animation: spin 80s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .emblem > .ico { font-size: 40px; stroke-width: 1.3; }
+  h1 { font-weight: 300; font-style: italic; font-size: 54px; line-height: .95; font-variation-settings: 'opsz' 144; }
+  .desc { font-style: italic; color: var(--cream2); font-size: 15px; margin-top: 8px; line-height: 1.35; }
+  .act { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+  .seal { width: 44px; height: 44px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #e6c784, #a47c2c); color: #17281d; display: grid; place-items: center; font-size: 16px; box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px var(--gold2); flex: none; }
+  .hand { font: 500 22px/1 'Caveat'; color: var(--gold); }
+
+  .sec { display: flex; align-items: center; gap: 12px; font-size: 12px; letter-spacing: .26em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+  .sec::after { content: ''; flex: 1; height: 1px; background: var(--gold2); }
+  .lrow { display: grid; grid-template-columns: 20px auto minmax(12px, 1fr) minmax(80px, 130px) 28px; gap: 10px; align-items: center; padding: 9px 0; }
+  .lrow .ico { color: var(--gold); font-size: 18px; stroke-width: 1.4; }
+  .lrow .nm { font-size: 18px; }
+  .lrow .dots { border-bottom: 1.5px dotted #efe4c855; margin-top: 8px; }
+  .sl { position: relative; height: 12px; }
+  .sl::before { content: ''; position: absolute; inset: 50% 0 auto; height: 1px; background: var(--gold2); }
+  .sl i { position: absolute; left: 0; top: calc(50% - .5px); height: 1.5px; width: calc(var(--v) * 100%); background: var(--gold); }
+  .sl b { position: absolute; top: 1.5px; left: calc(var(--v) * 100% - 4.5px); width: 9px; height: 9px; background: var(--gold); transform: rotate(45deg); }
+  .lrow .n { text-align: right; font-style: italic; font-size: 18px; font-variant-numeric: oldstyle-nums; }
+  .lrow.off { opacity: .42; }
+  .note { font: 500 21px 'Caveat'; color: var(--gold); transform: rotate(-3deg); margin: 4px 0 0 34%; }
+
+  .tabs { display: flex; gap: 22px; align-items: baseline; margin-bottom: 14px; }
+  .tabs h2 { font-weight: 400; font-style: italic; font-size: 28px; }
+  .tabs span { font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--cream2); }
+  .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .card { position: relative; border: 1px solid var(--gold2); padding: 14px 10px 12px; display: grid; justify-items: center; gap: 8px; text-align: center; }
+  .card .rn { font-size: 10px; letter-spacing: .3em; color: var(--gold); }
+  .card .em { width: 58px; height: 58px; border: 1px solid var(--gold2); border-radius: 50%; display: grid; place-items: center; color: var(--gold); font-size: 24px; box-shadow: inset 0 0 0 4px var(--bg), inset 0 0 0 5px #c9a45c33; }
+  .card .em .ico { stroke-width: 1.4; }
+  .card .nm { font-style: italic; font-size: 19px; }
+  .card .mt { font-size: 9.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--cream2); }
+  .card.on { background: #c9a45c14; border-color: var(--gold); }
+  .card.on::after { content: 'sonando'; position: absolute; top: 6px; right: 8px; font: 500 17px 'Caveat'; color: var(--gold); }
+
+  @media (min-width: 700px) {
+    .app { padding: 30px 36px; gap: 28px; }
+    .plate { padding: 34px 30px 28px; gap: 30px; }
+    .emblem { width: 150px; height: 150px; }
+    .emblem > .ico { font-size: 54px; }
+    h1 { font-size: 76px; }
+    .desc { font-size: 17px; }
+    .cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  @media (min-width: 1100px) {
+    .app { grid-template-columns: minmax(0, 560px) minmax(0, 1fr); column-gap: 52px; row-gap: 20px; padding: 24px 46px; height: 100vh; align-content: start; }
+    header { grid-column: 1 / -1; grid-template-columns: 1fr auto 1fr; align-items: center; justify-items: stretch; }
+    header .bar:first-child { justify-content: flex-start; } header .bar:last-child { justify-content: flex-end; }
+    .mid { display: grid; justify-items: center; gap: 4px; }
+    .left { display: grid; gap: 22px; align-content: start; }
+    .cards { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+    .card { padding: 12px 8px 10px; gap: 6px; }
+    .card .em { width: 52px; height: 52px; font-size: 22px; }
+    .card .nm { font-size: 17px; }
+  }
+  @media (max-width: 1099px) { header .bar { display: none; } .left { display: grid; gap: 22px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="bar"><span>Quedan <b id="timer"></b></span></div>
+    <div class="mid">
+      <div class="brand">Domentum</div>
+      <div class="orn">❦</div>
+      <div class="tag">Atlas de paisajes sonoros</div>
+    </div>
+    <div class="bar"><span>Índice · Mezclas · Ajustes</span></div>
+  </header>
+  <div class="left">
+    <section class="plate">
+      <span class="no">Lámina I</span>
+      <div class="emblem" id="emblem"></div>
+      <div>
+        <h1 id="title"></h1>
+        <p class="desc">Velero, olas y gaviotas sobre mar abierto.</p>
+        <div class="act"><button class="seal" id="play"></button><span class="hand">sonando · quedan 45 min</span></div>
+      </div>
+    </section>
+    <section>
+      <div class="sec">Capas de la lámina</div>
+      <div id="layers"></div>
+      <div class="note">↖ más gaviotas al amanecer</div>
+    </section>
+  </div>
+  <section>
+    <div class="tabs"><h2>Láminas</h2><span>Mezclas guardadas</span></div>
+    <div class="cards" id="cards"></div>
+  </section>
+</div>
+<script type="module">
+  import { SCENES, NOW, LAYERS, TIMER, icon, pct, meta, html, ROMAN } from './data.js';
+  html('#title', NOW.name);
+  html('#timer', TIMER);
+  html('#play', icon('pause'));
+  const ticks = Array.from({ length: 72 }, (_, i) => {
+    const a = i * 5 * Math.PI / 180, r1 = i % 6 ? 53 : 50;
+    return `<line x1="${60 + r1 * Math.sin(a)}" y1="${60 - r1 * Math.cos(a)}" x2="${60 + 56 * Math.sin(a)}" y2="${60 - 56 * Math.cos(a)}" stroke="currentColor" stroke-width=".6"/>`;
+  }).join('');
+  html('#emblem', `<svg class="rings" viewBox="0 0 120 120" fill="none" stroke="currentColor">
+      <circle cx="60" cy="60" r="59" stroke-width=".8"/><g class="spin">${ticks}<path d="M60 4l2.5 6h-5z" fill="currentColor" stroke="none"/></g>
+      <circle cx="60" cy="60" r="47" stroke-width=".6" stroke-dasharray="1 3"/><circle cx="60" cy="60" r="41" stroke-width=".8"/>
+    </svg>${icon(NOW.icon)}`);
+  html('#layers', LAYERS.map(l => `
+    <div class="lrow ${l.v ? '' : 'off'}" style="--v:${l.v}">${icon(l.icon)}<span class="nm">${l.name}</span><span class="dots"></span>
+      <div class="sl"><i></i><b></b></div><span class="n">${pct(l.v)}</span></div>`).join(''));
+  html('#cards', SCENES.map((s, i) => `
+    <div class="card ${s.id === NOW.id ? 'on' : ''}"><span class="rn">${ROMAN[i]}</span><span class="em">${icon(s.icon)}</span><span class="nm">${s.name}</span><span class="mt">${meta(s)}</span></div>`).join(''));
+</script>
+</body>
+</html>

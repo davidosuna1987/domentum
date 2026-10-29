@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>07 · Bento</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+  :root { --bg: #eceef3; --card: #fff; --ink: #0f1222; --mute: #6b7083; --soft: #f2f4f8; }
+  body { background: var(--bg); color: var(--ink); font-family: 'Manrope', sans-serif; min-height: 100vh; }
+  .app { padding: 14px; display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas: "top top" "now now" "timer mixes" "mixer mixer" "scenes scenes"; }
+  .card { background: var(--card); border-radius: 26px; padding: 18px; box-shadow: 0 1px 2px #0f12220d, 0 10px 30px #0f12220a; min-width: 0; transition: transform .35s cubic-bezier(.3,1.5,.5,1); }
+  .card:hover { transform: translateY(-2px) scale(1.005); }
+  .lbl { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--mute); }
+  .top { grid-area: top; display: flex; justify-content: space-between; align-items: center; padding: 4px 4px 0; }
+  .brand { font-weight: 800; font-size: 20px; letter-spacing: -.035em; display: flex; gap: 9px; align-items: center; }
+  .brand i { width: 24px; height: 24px; border-radius: 8px; background: conic-gradient(from 200deg, #2aa3bd, #8b3dff, #ff7a59, #2aa3bd); }
+  .btns { display: flex; gap: 8px; }
+  .btn { width: 42px; height: 42px; border-radius: 14px; background: var(--card); display: grid; place-items: center; font-size: 18px; box-shadow: 0 1px 2px #0f12220d; }
+
+  .now { grid-area: now; color: #fff; min-height: 250px; position: relative; overflow: hidden; display: grid; align-content: space-between; gap: 18px;
+    background: radial-gradient(circle at 85% 10%, color-mix(in srgb, var(--c3) 90%, #fff) 0%, #0000 55%), linear-gradient(155deg, var(--c2), var(--c1)); }
+  .now .bg { position: absolute; right: -26px; top: -18px; font-size: 200px; opacity: .14; }
+  .now .bg .ico { stroke-width: 1; }
+  .now .lbl { color: #ffffffc0; display: flex; align-items: center; gap: 8px; }
+  .eq { display: inline-flex; gap: 2px; align-items: flex-end; height: 12px; }
+  .eq i { width: 3px; background: #fff; border-radius: 2px; height: 100%; animation: eq .9s ease-in-out infinite alternate; }
+  .eq i:nth-child(2) { height: 60%; animation-delay: -.3s; } .eq i:nth-child(3) { height: 80%; animation-delay: -.6s; }
+  @keyframes eq { to { transform: scaleY(.35); } }
+  .now h1 { font-size: 48px; font-weight: 800; letter-spacing: -.045em; line-height: 1; margin-top: 8px; }
+  .now p { color: #ffffffcc; font-weight: 600; margin-top: 6px; }
+  .ctrl { display: flex; align-items: center; gap: 14px; }
+  .play { width: 58px; height: 58px; border-radius: 20px; background: #fff; color: var(--c1); display: grid; place-items: center; font-size: 22px; flex: none; box-shadow: 0 8px 20px #0003; }
+  .vol { flex: 1; height: 10px; border-radius: 99px; background: #ffffff3d; position: relative; }
+  .vol i { position: absolute; inset: 0 auto 0 0; width: calc(var(--v) * 100%); background: #fff; border-radius: 99px; }
+
+  .timer { grid-area: timer; display: grid; align-content: space-between; gap: 14px; }
+  .timer b { font-size: 32px; font-weight: 800; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+  .prog { height: 6px; border-radius: 99px; background: var(--soft); overflow: hidden; }
+  .prog i { display: block; height: 100%; width: 38%; border-radius: 99px; background: var(--ink); }
+  .mixes { grid-area: mixes; display: grid; gap: 10px; align-content: start; }
+  .mix { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mix i { width: 10px; height: 10px; border-radius: 4px; flex: none; }
+
+  .mixer { grid-area: mixer; display: grid; gap: 8px; align-content: start; }
+  .mixer .hd { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+  .mixer h2 { font-size: 20px; font-weight: 800; letter-spacing: -.03em; }
+  .pill { position: relative; height: 50px; border-radius: 16px; background: var(--soft); overflow: hidden; display: flex; align-items: center; gap: 11px; padding: 0 16px; font-weight: 700; font-size: 14.5px; }
+  .pill .f { position: absolute; inset: 0 auto 0 0; width: calc(var(--v) * 100%); background: color-mix(in srgb, var(--c3) 34%, #fff); transition: width .5s cubic-bezier(.3,1.4,.5,1); }
+  .pill > *:not(.f) { position: relative; }
+  .pill .ico { font-size: 19px; }
+  .pill .p { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--mute); font-weight: 700; }
+  .pill.off { color: var(--mute); }
+
+  .scenes { grid-area: scenes; }
+  .scenes .hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .seg { display: inline-flex; padding: 4px; border-radius: 14px; background: var(--soft); font-weight: 700; font-size: 13.5px; }
+  .seg span { padding: 7px 14px; border-radius: 10px; color: var(--mute); }
+  .seg span.on { background: var(--card); color: var(--ink); box-shadow: 0 1px 3px #0f122214; }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .tile { border-radius: 18px; padding: 12px; background: var(--soft); display: grid; gap: 14px; }
+  .tile .ic { width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(135deg, var(--c3), var(--c2)); color: #fff; display: grid; place-items: center; font-size: 19px; }
+  .tile b { font-size: 14px; display: block; }
+  .tile small { font-size: 11.5px; font-weight: 600; color: var(--mute); }
+  .tile.on { background: var(--ink); color: #fff; }
+  .tile.on small { color: #ffffff99; }
+
+  @media (min-width: 700px) {
+    .app { padding: 22px; gap: 14px; grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-areas: "top top top top top top" "now now now now timer timer" "now now now now mixes mixes" "mixer mixer mixer mixer mixer mixer" "scenes scenes scenes scenes scenes scenes"; }
+    .now h1 { font-size: 60px; }
+    .grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  }
+  @media (min-width: 1100px) {
+    .app { height: 100vh; padding: 22px 28px; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr) auto;
+      grid-template-areas: "top top top top top top top top top top top top" "now now now now now mixer mixer mixer mixer timer timer timer" "now now now now now mixer mixer mixer mixer mixes mixes mixes" "scenes scenes scenes scenes scenes scenes scenes scenes scenes scenes scenes scenes"; }
+    .now { padding: 26px; }
+    .now h1 { font-size: 72px; }
+    .timer b { font-size: 44px; }
+    .grid { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+    .tile { gap: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand"><i></i>domentum</div>
+    <div class="btns"><button class="btn" id="b1"></button><button class="btn" id="b2"></button></div>
+  </header>
+  <section class="card now" id="now">
+    <span class="bg" id="bgico"></span>
+    <div>
+      <span class="lbl"><span class="eq"><i></i><i></i><i></i></span>Sonando</span>
+      <h1 id="title"></h1>
+      <p>Velero, olas y gaviotas</p>
+    </div>
+    <div class="ctrl"><button class="play" id="play"></button><div class="vol" id="vol"><i></i></div></div>
+  </section>
+  <section class="card timer"><span class="lbl">Temporizador</span><b id="timer"></b><div class="prog"><i></i></div></section>
+  <section class="card mixes"><span class="lbl">Mezclas</span><div id="mixes"></div></section>
+  <section class="card mixer">
+    <div class="hd"><h2>Capas</h2><span class="lbl">6 · Océano</span></div>
+    <div id="pills" style="display:grid;gap:8px"></div>
+  </section>
+  <section class="card scenes">
+    <div class="hd"><div class="seg"><span class="on">Paisajes</span><span>Mezclas</span></div><span class="lbl">14</span></div>
+    <div class="grid" id="grid"></div>
+  </section>
+</div>
+<script type="module">
+  import { SCENES, NOW, LAYERS, MASTER, TIMER, MIXES, icon, pct, meta, html } from './data.js';
+  const now = document.querySelector('#now');
+  NOW.colors.forEach((c, i) => document.documentElement.style.setProperty(`--c${i + 1}`, c));
+  html('#title', NOW.name);
+  html('#bgico', icon(NOW.icon));
+  html('#play', icon('pause'));
+  html('#b1', icon('timer')); html('#b2', icon('more'));
+  document.querySelector('#vol').style.setProperty('--v', MASTER);
+  html('#timer', TIMER);
+  const dots = ['#2aa3bd', '#8b3dff', '#d4b98c', '#a5815f'];
+  html('#mixes', MIXES.slice(0, 4).map((m, i) => `<div class="mix"><i style="background:${dots[i]}"></i>${m}</div>`).join(''));
+  html('#pills', LAYERS.map(l => `<div class="pill ${l.v ? '' : 'off'}" style="--v:${l.v}"><span class="f"></span>${icon(l.icon)}<span>${l.name}</span><span class="p">${pct(l.v)}%</span></div>`).join(''));
+  html('#grid', SCENES.map(s => `<div class="tile ${s.id === NOW.id ? 'on' : ''}" style="--c2:${s.colors[1]};--c3:${s.colors[2]}"><span class="ic">${icon(s.icon)}</span><span><b>${s.name}</b><small>${meta(s)}</small></span></div>`).join(''));
+</script>
+</body>
+</html>

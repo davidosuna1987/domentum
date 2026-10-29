@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>04 · Cine a pantalla completa</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+  :root { --glass: #ffffff1c; --line: #ffffff3d; }
+  body { background: #0b1024; color: #fff; font-family: 'Inter', sans-serif; min-height: 100vh; overflow: hidden; }
+  .scene, .shade { position: fixed; inset: 0; }
+  .scene svg { width: 100%; height: 100%; display: block; }
+  .drift { animation: drift 16s ease-in-out infinite alternate; }
+  .drift.b { animation-duration: 11s; animation-direction: alternate-reverse; }
+  @keyframes drift { to { transform: translateX(-90px); } }
+  .sunset { animation: sunset 90s linear infinite alternate; }
+  @keyframes sunset { to { transform: translateY(40px); } }
+  .shade { background: linear-gradient(180deg, #0b102470 0%, #0000 26%, #0000 52%, #070b1ccc 100%); }
+  .ui { position: relative; height: 100vh; display: grid; grid-template-rows: auto 1fr auto; padding: 18px 18px 18px; }
+  .top { display: flex; justify-content: space-between; align-items: center; }
+  .brand { font: italic 26px 'Instrument Serif'; }
+  .chips { display: flex; gap: 8px; }
+  .chip { height: 36px; padding: 0 14px; border-radius: 99px; background: var(--glass); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid var(--line); display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; }
+  .chip.i { width: 36px; padding: 0; justify-content: center; }
+  .hero { align-self: start; margin-top: 9vh; }
+  .eyebrow { font-size: 11px; font-weight: 500; letter-spacing: .24em; text-transform: uppercase; opacity: .85; display: flex; gap: 10px; align-items: center; }
+  .eyebrow::before { content: ''; width: 28px; height: 1px; background: #fff; }
+  h1 { font: 400 98px/.9 'Instrument Serif'; letter-spacing: -.02em; margin: 12px 0 8px; text-shadow: 0 4px 40px #0004; }
+  .sub { font: italic 20px 'Instrument Serif'; opacity: .88; }
+  .ctrl { display: flex; align-items: center; gap: 16px; margin-top: 22px; }
+  .play { width: 62px; height: 62px; border-radius: 50%; background: #fff; color: #0b1024; display: grid; place-items: center; font-size: 22px; box-shadow: 0 10px 40px #0006; }
+  .mv { flex: 0 1 220px; display: grid; gap: 8px; font-size: 10.5px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; opacity: .92; }
+  .bar { height: 3px; border-radius: 2px; background: #ffffff40; position: relative; }
+  .bar i { position: absolute; inset: 0 auto 0 0; width: calc(var(--v) * 100%); background: #fff; border-radius: 2px; }
+  .bottom { display: grid; gap: 18px; }
+  .dock { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; justify-items: center; }
+  .ly { display: grid; justify-items: center; gap: 7px; font-size: 11px; font-weight: 500; text-align: center; line-height: 1.2; }
+  .ring { position: relative; width: 52px; height: 52px; border-radius: 50%; background: var(--glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: grid; place-items: center; font-size: 20px; }
+  .ring svg.r { position: absolute; inset: -4px; width: calc(100% + 8px); height: calc(100% + 8px); transform: rotate(-90deg); }
+  .ly.off { opacity: .5; }
+  .strip { display: flex; gap: 10px; overflow: hidden; margin: 0 -18px; padding: 4px 18px; -webkit-mask-image: linear-gradient(90deg, #000 85%, #0000); mask-image: linear-gradient(90deg, #000 85%, #0000); }
+  .th { flex: none; width: 110px; height: 68px; border-radius: 12px; position: relative; overflow: hidden; display: flex; align-items: flex-end; padding: 8px 10px; font-size: 12px; font-weight: 600;
+    background: radial-gradient(circle at 75% 20%, var(--c3), #0000 60%), linear-gradient(160deg, var(--c2), var(--c1)); box-shadow: inset 0 0 0 1px #ffffff26; }
+  .th .ico { position: absolute; top: 8px; right: 9px; font-size: 16px; opacity: .9; }
+  .th.on { outline: 2px solid #fff; outline-offset: 2px; }
+  @media (min-width: 700px) {
+    .ui { padding: 28px 34px 28px; }
+    h1 { font-size: 150px; }
+    .sub { font-size: 24px; }
+    .ring { width: 62px; height: 62px; font-size: 22px; }
+    .ly { font-size: 12px; }
+    .dock { max-width: 580px; }
+    .th { width: 148px; height: 92px; font-size: 13px; }
+    .strip { margin: 0 -34px; padding: 4px 34px; }
+  }
+  @media (min-width: 1100px) {
+    .ui { padding: 30px 48px; }
+    .hero { margin-top: 7vh; }
+    h1 { font-size: 184px; }
+    .bottom { grid-template-columns: auto minmax(0, 1fr); align-items: end; gap: 40px; }
+    .dock { width: 540px; max-width: none; }
+    .strip { margin: 0; padding: 4px; }
+    .th { width: 128px; height: 84px; }
+  }
+</style>
+</head>
+<body>
+<div class="scene" id="scene"></div>
+<div class="shade"></div>
+<div class="ui">
+  <header class="top">
+    <div class="brand">domentum</div>
+    <div class="chips"><span class="chip" id="timer"></span><span class="chip i" id="menu"></span></div>
+  </header>
+  <section class="hero">
+    <div class="eyebrow">Sonando · 6 capas</div>
+    <h1 id="title"></h1>
+    <p class="sub">Velero, olas y gaviotas al caer la tarde</p>
+    <div class="ctrl">
+      <button class="play" id="play"></button>
+      <div class="mv">Volumen <div class="bar" id="master"><i></i></div></div>
+    </div>
+  </section>
+  <section class="bottom">
+    <div class="dock" id="dock"></div>
+    <div class="strip" id="strip"></div>
+  </section>
+</div>
+<script type="module">
+  import { SCENES, NOW, LAYERS, MASTER, TIMER, icon, html } from './data.js';
+  html('#title', NOW.name);
+  html('#timer', icon('timer') + TIMER);
+  html('#menu', icon('more'));
+  html('#play', icon('pause'));
+  document.querySelector('#master').style.setProperty('--v', MASTER);
+  const C = 2 * Math.PI * 28;
+  html('#dock', LAYERS.map(l => `
+    <div class="ly ${l.v ? '' : 'off'}">
+      <div class="ring">${icon(l.icon)}<svg class="r" viewBox="0 0 60 60"><circle cx="30" cy="30" r="28" fill="none" stroke="#ffffff2e" stroke-width="2"/>
+        <circle cx="30" cy="30" r="28" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="${(C * l.v).toFixed(1)} ${C}"/></svg></div>
+      ${l.name}
+    </div>`).join(''));
+  html('#strip', SCENES.map(s => `<div class="th ${s.id === NOW.id ? 'on' : ''}" style="--c1:${s.colors[0]};--c2:${s.colors[1]};--c3:${s.colors[2]}">${icon(s.icon)}${s.name}</div>`).join(''));
+
+  // Dusk over open sea: sky, sun, layered waves, a sailboat and a few gulls
+  const wave = (y, a, L, ph) => {
+    let d = `M-200 ${y}`;
+    for (let x = -200; x <= 1900; x += 16) d += ` L${x} ${(y + a * Math.sin(x / L * 2 * Math.PI + ph) + a * .4 * Math.sin(x / (L * .37) * 2 * Math.PI + ph * 2)).toFixed(1)}`;
+    return d + ' L1900 1000 L-200 1000Z';
+  };
+  const stars = Array.from({ length: 60 }, (_, i) => `<circle cx="${(i * 263) % 1600}" cy="${(i * 97) % 260}" r="${1 + (i % 3) * .4}" fill="#fff" opacity="${.25 + (i % 4) * .12}"/>`).join('');
+  const glint = Array.from({ length: 12 }, (_, i) => { const y = 650 + i * 14, w = 150 - i * 10; return `<rect x="${800 - w / 2 + (i % 2) * 12}" y="${y}" width="${w}" height="2.5" rx="1" fill="#ffd9a6" opacity="${.55 - i * .04}"/>`; }).join('');
+  const gull = (x, y, s) => `<path d="M${x} ${y} q ${10 * s} ${-8 * s} ${20 * s} 0 q ${10 * s} ${-8 * s} ${20 * s} 0" fill="none" stroke="#1d1a3a" stroke-width="${2.4 * s}" stroke-linecap="round"/>`;
+  html('#scene', `<svg viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d1330"/><stop offset=".4" stop-color="#2c2d5e"/><stop offset=".64" stop-color="#8b4f78"/><stop offset=".84" stop-color="#e97f5c"/><stop offset="1" stop-color="#f7bf86"/></linearGradient>
+      <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a3f6e"/><stop offset=".3" stop-color="#232a5a"/><stop offset="1" stop-color="#0a1130"/></linearGradient>
+      <radialGradient id="sun"><stop offset="0" stop-color="#fff4dc"/><stop offset="1" stop-color="#ffc283"/></radialGradient>
+      <radialGradient id="glow"><stop offset="0" stop-color="#ffb07a" stop-opacity=".6"/><stop offset="1" stop-color="#ffb07a" stop-opacity="0"/></radialGradient>
+    </defs>
+    <rect width="1600" height="640" fill="url(#sky)"/>${stars}
+    <g class="sunset"><circle cx="800" cy="600" r="300" fill="url(#glow)"/><circle cx="800" cy="604" r="74" fill="url(#sun)"/></g>
+    <rect y="640" width="1600" height="360" fill="url(#sea)"/>${glint}
+    <g fill="#0d1330"><path d="M598 652h104l-13 15h-78z"/><path d="M651 560v90M654 566v84h48zM648 584v66h-38z" stroke="#0d1330" stroke-width="2"/></g>
+    ${gull(960, 380, 1)}${gull(1010, 336, .8)}${gull(1052, 404, .6)}${gull(560, 300, .7)}
+    <g class="drift"><path d="${wave(712, 5, 240, 0)}" fill="#1c2453" opacity=".95"/></g>
+    <g class="drift b"><path d="${wave(790, 9, 360, 1.3)}" fill="#141c45"/><path d="${wave(790, 9, 360, 1.3)}" fill="none" stroke="#f2a27a" stroke-opacity=".18" stroke-width="2"/></g>
+    <g class="drift"><path d="${wave(890, 14, 520, 2.1)}" fill="#0b1232"/><path d="${wave(890, 14, 520, 2.1)}" fill="none" stroke="#f2a27a" stroke-opacity=".12" stroke-width="2"/></g>
+  </svg>`);
+</script>
+</body>
+</html>

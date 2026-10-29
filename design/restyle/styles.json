@@ -1,0 +1,62 @@
+[
+  {
+    "id": "01-editorial",
+    "name": "Editorial suizo",
+    "look": "Papel, retícula y tipografía enorme en negro con un único rojo. Las capas son filas de una tabla con su porcentaje en grande, y los paisajes, un índice numerado en lugar de tarjetas.",
+    "motion": "Cortes secos y sin rebotes: el título sube de golpe, las filas entran escalonadas y una barra roja recorre la retícula al cambiar de paisaje."
+  },
+  {
+    "id": "02-consola",
+    "name": "Consola hi-fi",
+    "look": "Un aparato de música de los 70: panel de aluminio crema, laterales de madera en escritorio, pantalla ámbar, vúmetros de aguja y un fader vertical por capa. Los paisajes son teclas que se hunden.",
+    "motion": "Las agujas y el espectro se mueven con el sonido, los LED se encienden al subir una capa y los faders se deslizan con un rebote pequeño, como si pesaran."
+  },
+  {
+    "id": "03-terminal",
+    "name": "Terminal",
+    "look": "Pantalla de fósforo verde con líneas de barrido. Todo es texto monoespaciado: las capas son barras de caracteres y los paisajes se listan como carpetas. En escritorio, dos paneles con barra de estado.",
+    "motion": "El texto se escribe solo al cambiar de paisaje, el cursor parpadea, la onda de bloques se desplaza en tiempo real y la pantalla parpadea un poco, como un CRT."
+  },
+  {
+    "id": "04-cine",
+    "name": "Cine a pantalla completa",
+    "look": "Una ilustración del paisaje ocupa toda la pantalla y la interfaz flota encima: título grande en serif, capas como círculos con un anillo de volumen y una tira de fotogramas para cambiar de paisaje.",
+    "motion": "Las olas se mueven en paralaje lento, el sol baja a medida que avanza el temporizador y al cambiar de paisaje hay un fundido de cine."
+  },
+  {
+    "id": "05-naturalista",
+    "name": "Atlas naturalista",
+    "look": "Tapa de libro antiguo en verde bosque con tinta crema y oro. Cada paisaje es una lámina numerada con su emblema grabado, y las capas, un índice con líneas de puntos.",
+    "motion": "Los iconos se dibujan trazo a trazo como si fueran tinta, las láminas se pasan como páginas y el anillo del emblema gira muy despacio mientras suena."
+  },
+  {
+    "id": "06-aurora",
+    "name": "Aurora orbital",
+    "look": "Noche con auroras de color. El paisaje es un orbe en el centro y sus capas orbitan alrededor: cuanto más cerca del centro, más alto suena. Los paisajes están abajo, en un carrusel.",
+    "motion": "El orbe respira con el volumen, las capas orbitan despacio, la aurora cambia de color con cada paisaje y una capa se acerca al centro al arrastrarla."
+  },
+  {
+    "id": "07-bento",
+    "name": "Bento",
+    "look": "Tablero claro de tarjetas redondeadas de distintos tamaños: reproductor con el color del paisaje, mezclador con barras gruesas tipo centro de control, temporizador, mezclas y paisajes.",
+    "motion": "Las tarjetas responden con un muelle suave al tocarlas, las barras se llenan con un rebote pequeño y el color de la tarjeta principal cambia con el paisaje."
+  },
+  {
+    "id": "08-neumorfico",
+    "name": "Neumórfico",
+    "look": "Superficie gris suave en relieve, como plástico moldeado. El volumen general es un dial alrededor del botón de reproducir y cada capa, una rueda giratoria. El paisaje activo queda hundido.",
+    "motion": "Los botones se hunden al pulsarlos, los diales giran con inercia y el brillo del relieve se desplaza un poco al mover el móvil."
+  },
+  {
+    "id": "09-pop",
+    "name": "Pop neobrutal",
+    "look": "Amarillo intenso, bordes negros gruesos, sombras duras y colores planos. Tarjetas ligeramente torcidas como pegatinas y texto en grotesca muy pesada.",
+    "motion": "Todo rebota: las tarjetas saltan al pulsarlas, la sombra se aplasta al hundirlas, los iconos se balancean y la estrella del logo gira."
+  },
+  {
+    "id": "10-zen",
+    "name": "Tinta zen",
+    "look": "Papel de arroz, tinta negra y un sello bermellón. El botón de reproducir es un ensō, un círculo de pincel. Las capas son trazos verticales finos, con muchísimo aire alrededor.",
+    "motion": "Muy lento: el ensō se dibuja de un trazo al dar a reproducir, la tinta se expande al cambiar un volumen y el resto apenas se mueve."
+  }
+]

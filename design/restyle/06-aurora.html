@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>06 · Aurora orbital</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+  :root { --glass: #ffffff10; --line: #ffffff1f; --mute: #ffffff8c; }
+  body { background: #05040c; color: #fff; font-family: 'Inter', sans-serif; min-height: 100vh; overflow: hidden; }
+  .sky { position: fixed; inset: 0; overflow: hidden; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .55; animation: float 18s ease-in-out infinite alternate; }
+  .b1 { width: 60vmax; height: 40vmax; left: -15vmax; top: -12vmax; background: #1fd1b9; }
+  .b2 { width: 50vmax; height: 45vmax; right: -18vmax; top: 10vh; background: #6a3cff; animation-duration: 23s; }
+  .b3 { width: 45vmax; height: 30vmax; left: 10vw; bottom: -18vmax; background: #ff4fa0; opacity: .35; animation-duration: 27s; }
+  .b4 { width: 30vmax; height: 30vmax; left: 40vw; top: 30vh; background: #2a6bff; opacity: .3; }
+  @keyframes float { to { transform: translate(6vmax, 4vmax) scale(1.1); } }
+  .grain { position: fixed; inset: 0; opacity: .35; mix-blend-mode: overlay; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E"); }
+  .app { position: relative; height: 100vh; display: grid; grid-template-rows: auto 1fr auto; padding: 18px 18px 20px; }
+  .top { display: flex; justify-content: space-between; align-items: center; }
+  .brand { font: 500 16px 'Unbounded'; letter-spacing: -.01em; }
+  .chips { display: flex; gap: 8px; }
+  .chip { height: 36px; padding: 0 14px; border-radius: 99px; background: var(--glass); border: 1px solid var(--line); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; }
+  .chip.i { width: 36px; padding: 0; justify-content: center; }
+  .main { display: grid; place-items: center; align-content: center; gap: 14px; min-height: 0; }
+  .stage { position: relative; width: min(92vw, 560px); aspect-ratio: 1; }
+  .orbit { position: absolute; border-radius: 50%; border: 1px solid #ffffff16; left: 50%; top: 50%; translate: -50% -50%; }
+  .orbit.dash { border-style: dashed; border-color: #ffffff1c; }
+  .spin { position: absolute; inset: 0; animation: orbit 120s linear infinite; }
+  @keyframes orbit { to { rotate: 360deg; } }
+  .orb { position: absolute; left: 50%; top: 50%; width: 40%; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; display: grid; place-items: center; align-content: center; gap: 4px; text-align: center;
+    background: radial-gradient(circle at 34% 28%, #effeff 0%, #8ee8f2 16%, #2f86dc 46%, #2a1f72 76%, #120b33 100%);
+    box-shadow: 0 0 70px #39c6ff80, 0 0 160px #6a3cff4d, inset -18px -26px 50px #0009; animation: breathe 6s ease-in-out infinite; }
+  @keyframes breathe { 50% { scale: 1.04; box-shadow: 0 0 90px #39c6ffa0, 0 0 200px #6a3cff66, inset -18px -26px 50px #0009; } }
+  .orb h1 { font: 600 clamp(15px, 4.6vw, 26px) 'Unbounded'; letter-spacing: -.02em; text-shadow: 0 2px 20px #0008; }
+  .orb small { text-shadow: 0 1px 8px #0009; font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: #ffffffc0; }
+  .orb .pp { width: 34px; height: 34px; border-radius: 50%; background: #ffffff26; border: 1px solid #ffffff4d; display: grid; place-items: center; font-size: 13px; margin-top: 4px; }
+  .node { position: absolute; left: calc(50% + var(--x) * 50%); top: calc(50% + var(--y) * 50%); translate: -50% -50%; display: grid; justify-items: center; gap: 6px; text-align: center; }
+  .node .b { width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; font-size: 19px; scale: var(--s);
+    background: radial-gradient(circle at 35% 30%, #ffffff40, #ffffff10 60%); border: 1px solid #ffffff40; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 0 calc(var(--v) * 40px) #7fe3f0aa; }
+  .node span { font-size: 11px; font-weight: 500; line-height: 1.25; white-space: nowrap; }
+  .node em { font-style: normal; color: var(--mute); display: block; font-size: 10px; }
+  .node.off .b { border-style: dashed; background: none; opacity: .55; box-shadow: none; }
+  .node.off span { color: var(--mute); }
+  .hint { font-size: 12px; color: var(--mute); text-align: center; }
+  .side { display: none; }
+  .car { display: flex; gap: 8px; overflow: hidden; margin: 0 -18px; padding: 2px 18px; -webkit-mask-image: linear-gradient(90deg, #000 80%, #0000); mask-image: linear-gradient(90deg, #000 80%, #0000); }
+  .pill { flex: none; display: flex; align-items: center; gap: 9px; height: 40px; padding: 0 16px 0 12px; border-radius: 99px; background: var(--glass); border: 1px solid var(--line); font-size: 13px; font-weight: 500; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  .pill .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c); box-shadow: 0 0 12px var(--c); }
+  .pill.on { background: #fff; color: #0a0a14; }
+  .panel { border-radius: 24px; background: #ffffff0b; border: 1px solid var(--line); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 18px; display: grid; gap: 10px; align-content: start; }
+  .panel h2 { font: 500 13px 'Unbounded'; letter-spacing: .02em; }
+  .mix { display: flex; justify-content: space-between; align-items: center; font-size: 14px; padding: 10px 0; border-top: 1px solid #ffffff12; }
+  .mix span { color: var(--mute); font-size: 12px; }
+  .vbar { display: none; }
+  @media (min-width: 700px) {
+    .app { padding: 26px 32px; }
+    .stage { width: min(78vw, 640px); }
+    .node .b { width: 62px; height: 62px; font-size: 22px; }
+    .node span { font-size: 12.5px; }
+    .car { margin: 0 -32px; padding: 2px 32px; }
+    .pill { height: 44px; font-size: 14px; }
+    .side { display: block; width: min(78vw, 640px); }
+  }
+  @media (min-width: 1100px) {
+    .app { padding: 26px 40px 28px; }
+    .main { grid-template-columns: 1fr auto 1fr; align-items: center; justify-items: center; }
+    .stage { width: min(64vh, 600px); }
+    .side { width: 300px; justify-self: end; }
+    .vbar { display: grid; justify-self: start; justify-items: center; gap: 12px; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--mute); }
+    .vbar .t { width: 8px; height: 240px; border-radius: 99px; background: #ffffff14; position: relative; overflow: hidden; }
+    .vbar .t i { position: absolute; inset: auto 0 0; height: calc(var(--v) * 100%); background: linear-gradient(#ff8fc8, #7fe3f0); border-radius: 99px; }
+    .hint { grid-column: 2; }
+    .car { margin: 0; padding: 2px; justify-content: safe center; -webkit-mask-image: none; mask-image: none; }
+  }
+</style>
+</head>
+<body>
+<div class="sky"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div></div>
+<div class="grain"></div>
+<div class="app">
+  <header class="top">
+    <div class="brand">domentum</div>
+    <div class="chips"><span class="chip" id="timer"></span><span class="chip i" id="menu"></span></div>
+  </header>
+  <section class="main">
+    <div class="vbar" id="vbar">Volumen<div class="t"><i></i></div><b id="vbarv"></b></div>
+    <div class="stage" id="stage"></div>
+    <aside class="side"><div class="panel" id="panel"></div></aside>
+    <p class="hint">Acerca una capa al centro para subirla · aléjala para bajarla</p>
+  </section>
+  <nav class="car" id="car"></nav>
+</div>
+<script type="module">
+  import { SCENES, NOW, LAYERS, MASTER, TIMER, MIXES, icon, pct, html } from './data.js';
+  html('#timer', icon('timer') + TIMER);
+  html('#menu', icon('more'));
+  document.querySelector('#vbar').style.setProperty('--v', MASTER);
+  html('#vbarv', pct(MASTER));
+  const rings = [.9, .62, .4].map((r, i) => `<div class="orbit ${i === 1 ? 'dash' : ''}" style="width:${r * 100}%;height:${r * 100}%"></div>`).join('');
+  const nodes = LAYERS.map((l, i) => {
+    const a = (-90 + i * 60) * Math.PI / 180, r = .9 - l.v * .45;
+    return `<div class="node ${l.v ? '' : 'off'}" style="--x:${(r * Math.cos(a)).toFixed(3)};--y:${(r * Math.sin(a)).toFixed(3)};--v:${l.v};--s:${(.82 + l.v * .45).toFixed(2)}">
+      <div class="b">${icon(l.icon)}</div><span>${l.name}<em>${pct(l.v)}%</em></span></div>`;
+  }).join('');
+  html('#stage', `${rings}<div class="orb"><small>sonando</small><h1>${NOW.name}</h1><span class="pp">${icon('pause')}</span></div>${nodes}`);
+  html('#car', SCENES.map(s => `<span class="pill ${s.id === NOW.id ? 'on' : ''}" style="--c:${s.colors[2]}"><i class="dot"></i>${s.name}</span>`).join(''));
+  html('#panel', `<h2>Mezclas</h2>${MIXES.slice(0, 4).map((m, i) => `<div class="mix">${m}<span>${[2, 2, 2, 2][i]} paisajes</span></div>`).join('')}`);
+</script>
+</body>
+</html>

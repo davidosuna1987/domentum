@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>02 · Consola hi-fi</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+  :root { --ink: #2b2621; --mute: #7a7062; --orange: #ff5a1f; --lcd: #121a15; --amber: #ffb03b; --wood: #5b3b25; }
+  body { background: #241e1a; font-family: 'Archivo', sans-serif; color: var(--ink); min-height: 100vh; }
+  .deck { min-height: 100vh; padding: 14px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; align-content: start;
+    background: linear-gradient(180deg, #e6e0d3, #d2cab9); box-shadow: inset 0 1px 0 #fff9; }
+  .lbl { font: 700 10px/1.1 'Archivo'; letter-spacing: .16em; text-transform: uppercase; color: var(--mute); }
+  .plate { display: flex; justify-content: space-between; align-items: center; padding: 2px 2px 0; }
+  .logo { font: 800 17px 'Archivo'; letter-spacing: -.02em; display: flex; align-items: center; gap: 8px; }
+  .logo span { font: 700 9px 'Archivo'; letter-spacing: .2em; padding: 3px 6px; border: 1.5px solid var(--ink); border-radius: 3px; }
+  .screws { display: flex; gap: 8px; }
+  .hw { width: 36px; height: 30px; border-radius: 4px; display: grid; place-items: center; font-size: 16px;
+    background: linear-gradient(#f2ede3, #d3cbbb); box-shadow: 0 2px 0 #a69d8b, 0 3px 5px #0003; }
+
+  .screen { background: var(--lcd); border-radius: 7px; padding: 12px 14px; color: var(--amber); font-family: 'Share Tech Mono', monospace;
+    box-shadow: inset 0 3px 12px #000c, 0 1px 0 #fffa; text-shadow: 0 0 8px #ffb03b99; display: grid; gap: 6px; position: relative; overflow: hidden; }
+  .screen::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(#0000 0 2px, #0003 3px); pointer-events: none; }
+  .screen .l1 { display: flex; justify-content: space-between; font-size: 13px; opacity: .85; }
+  .screen .title { font-size: 34px; letter-spacing: .1em; line-height: 1; }
+  .spectrum { display: flex; gap: 3px; align-items: flex-end; height: 34px; }
+  .spectrum i { flex: 1; height: var(--h); background: repeating-linear-gradient(to top, var(--amber) 0 3px, #0000 3px 5px); transform-origin: bottom; animation: bar 1.1s ease-in-out infinite alternate; animation-delay: var(--d); }
+  @keyframes bar { to { transform: scaleY(.45); } }
+
+  .vus { display: none; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .vu { background: linear-gradient(#f8efd6, #eadfbf); border-radius: 6px; box-shadow: inset 0 2px 8px #0005, 0 1px 0 #fffa; overflow: hidden; }
+  .vu svg { display: block; width: 100%; }
+  .needle { transform-origin: 100px 112px; animation: sway 1.6s ease-in-out infinite alternate; }
+  @keyframes sway { to { transform: rotate(-9deg); } }
+
+  .strip { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; background: linear-gradient(#cbc3b1, #c1b8a5); border-radius: 7px; padding: 12px 6px 10px; box-shadow: inset 0 2px 4px #0003, 0 1px 0 #fff9; }
+  .ch { display: grid; justify-items: center; gap: 8px; text-align: center; }
+  .ch .ico { font-size: 17px; }
+  .led { width: 7px; height: 7px; border-radius: 50%; background: #6b5a48; box-shadow: inset 0 1px 1px #0007; }
+  .led.on { background: var(--orange); box-shadow: 0 0 8px var(--orange), 0 0 2px #fff inset; }
+  .fader { position: relative; width: 100%; height: 170px; }
+  .slot { position: absolute; left: 50%; top: 8px; bottom: 8px; width: 6px; margin-left: -3px; background: #1d1a16; border-radius: 3px; box-shadow: inset 0 1px 2px #000, 0 1px 0 #fff8; }
+  .ticks { position: absolute; left: calc(50% + 9px); top: 8px; bottom: 8px; width: 6px; background: repeating-linear-gradient(#7a7062 0 1px, #0000 1px 10%); }
+  .cap { position: absolute; left: 50%; width: 32px; height: 22px; margin-left: -16px; bottom: calc(var(--v) * (100% - 22px)); border-radius: 3px;
+    background: linear-gradient(#f6f2ea, #b9b1a1); box-shadow: 0 4px 5px #0006, inset 0 -2px 0 #0002; transition: bottom .3s cubic-bezier(.3,1.4,.5,1); }
+  .cap::after { content: ''; position: absolute; left: 5px; right: 5px; top: 50%; height: 2px; margin-top: -1px; background: var(--ink); }
+  .ch.master .cap { background: linear-gradient(#ff8551, #dc4510); }
+  .ch.master .cap::after { background: #fff; }
+  .ch label { display: none; font: 700 10px/1.15 'Archivo'; letter-spacing: .08em; text-transform: uppercase; color: var(--mute); min-height: 2.3em; }
+  .ch .pct { font: 13px 'Share Tech Mono'; color: var(--ink); }
+
+  .keys { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .key { background: linear-gradient(#f4efe5, #d7d0c0); border-radius: 5px; padding: 9px 10px 8px; box-shadow: 0 3px 0 #a39a88, 0 4px 7px #0003; display: grid; gap: 7px; transition: transform .1s; }
+  .key .k { display: flex; justify-content: space-between; align-items: center; }
+  .key .ico { font-size: 18px; }
+  .key b { font: 700 10.5px 'Archivo'; letter-spacing: .1em; text-transform: uppercase; }
+  .key.on { transform: translateY(2px); box-shadow: 0 1px 0 #a39a88, inset 0 1px 3px #0002; }
+
+  @media (min-width: 700px) {
+    .deck { padding: 22px; gap: 16px; }
+    .top-row { display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; }
+    .vus { display: grid; }
+    .screen .title { font-size: 44px; }
+    .fader { height: 250px; }
+    .ch label { display: block; }
+    .keys { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  @media (min-width: 1100px) {
+    body { padding: 28px 0; display: grid; align-items: center; }
+    .deck { min-height: 0; width: 100%; max-width: 1340px; margin: 0 auto; border-radius: 4px; border-inline: 30px solid var(--wood);
+      border-image: linear-gradient(90deg, #4a2f1d, #6e4a2f 40%, #4a2f1d) 1; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); padding: 22px 24px; }
+    .plate { grid-column: 1 / -1; }
+    .top-row { grid-column: 1 / -1; grid-template-columns: 1.35fr 1fr; }
+    .fader { height: 330px; }
+    .key { padding: 14px 12px 12px; gap: 12px; }
+    .keys { align-content: start; }
+  }
+</style>
+</head>
+<body>
+<main class="deck">
+  <div class="plate">
+    <div class="logo">domentum <span>Paisajes · 14</span></div>
+    <div class="screws"><button class="hw" id="tbtn"></button><button class="hw" id="mbtn"></button></div>
+  </div>
+  <div class="top-row">
+    <div class="screen">
+      <div class="l1"><span>▶ REPRODUCIENDO</span><span>TEMP <span id="timer"></span></span></div>
+      <div class="title" id="title"></div>
+      <div class="spectrum" id="spec"></div>
+    </div>
+    <div class="vus"><div class="vu" id="vuL"></div><div class="vu" id="vuR"></div></div>
+  </div>
+  <div class="strip" id="strip"></div>
+  <div class="keys" id="keys"></div>
+</main>
+<script type="module">
+  import { SCENES, NOW, LAYERS, MASTER, TIMER, icon, pct, html } from './data.js';
+  html('#title', NOW.name.toUpperCase());
+  html('#timer', TIMER);
+  html('#tbtn', icon('timer'));
+  html('#mbtn', icon('more'));
+  html('#spec', Array.from({ length: 40 }, (_, i) => {
+    const h = 25 + 70 * Math.abs(Math.sin(i * 1.7) * Math.cos(i * .37));
+    return `<i style="--h:${h.toFixed(0)}%;--d:${(-i * 137 % 1100)}ms"></i>`;
+  }).join(''));
+  const vu = (a, side) => {
+    const ticks = Array.from({ length: 11 }, (_, i) => {
+      const t = (-50 + i * 10) * Math.PI / 180, r1 = 78, r2 = i % 2 ? 84 : 88;
+      return `<line x1="${100 + r1 * Math.sin(t)}" y1="${112 - r1 * Math.cos(t)}" x2="${100 + r2 * Math.sin(t)}" y2="${112 - r2 * Math.cos(t)}" stroke="${i > 7 ? '#d23b12' : '#2b2621'}" stroke-width="1.4"/>`;
+    }).join('');
+    const arc = (from, to) => { const p = d => [100 + 82 * Math.sin(d * Math.PI / 180), 112 - 82 * Math.cos(d * Math.PI / 180)]; const [x1, y1] = p(from), [x2, y2] = p(to); return `M${x1} ${y1}A82 82 0 0 1 ${x2} ${y2}`; };
+    return `<svg viewBox="0 0 200 100"><path d="${arc(-50, 28)}" stroke="#2b2621" stroke-width="1.2" fill="none"/><path d="${arc(28, 50)}" stroke="#d23b12" stroke-width="4" fill="none"/>${ticks}
+      <text x="100" y="78" text-anchor="middle" font-family="Archivo" font-weight="800" font-size="13" fill="#2b2621">VU</text>
+      <text x="18" y="92" font-family="Archivo" font-weight="700" font-size="10" fill="#7a7062">${side}</text>
+      <g class="needle" style="animation-delay:${side === 'R' ? '-.7s' : '0s'}"><line x1="100" y1="112" x2="${100 + 92 * Math.sin(a * Math.PI / 180)}" y2="${112 - 92 * Math.cos(a * Math.PI / 180)}" stroke="#1d1a16" stroke-width="1.6"/></g>
+      <circle cx="100" cy="112" r="9" fill="#2b2621"/></svg>`;
+  };
+  html('#vuL', vu(6, 'L'));
+  html('#vuR', vu(-4, 'R'));
+  const ch = (l, cls = '') => `
+    <div class="ch ${cls}" style="--v:${l.v}">
+      <span class="led ${l.v ? 'on' : ''}"></span>${icon(l.icon)}
+      <div class="fader"><div class="slot"></div><div class="ticks"></div><div class="cap"></div></div>
+      <span class="pct">${pct(l.v)}</span><label>${l.name}</label>
+    </div>`;
+  html('#strip', LAYERS.map(l => ch(l)).join('') + ch({ name: 'General', icon: 'volume', v: MASTER }, 'master'));
+  html('#keys', SCENES.map(s => `
+    <button class="key ${s.id === NOW.id ? 'on' : ''}"><span class="k">${icon(s.icon)}<span class="led ${s.id === NOW.id ? 'on' : ''}"></span></span><b>${s.name}</b></button>`).join(''));
+</script>
+</body>
+</html>

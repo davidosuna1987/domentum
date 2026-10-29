@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>09 · Pop neobrutal</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+  :root { --y: #ffd84d; --ink: #141414; --pink: #ff8ac2; --blue: #7cc8ff; --green: #8ff0a4; --orange: #ffa95c; --purple: #c4a5ff; --white: #fffdf6; }
+  body { background: var(--y) radial-gradient(#14141420 1.2px, #0000 1.4px) 0 0 / 18px 18px; color: var(--ink); font-family: 'Bricolage Grotesque', sans-serif; min-height: 100vh; }
+  .box { border: 3px solid var(--ink); border-radius: 20px; box-shadow: 5px 5px 0 var(--ink); background: var(--white); transition: transform .25s cubic-bezier(.3,1.8,.5,1), box-shadow .25s; }
+  .box:active { transform: translate(4px, 4px); box-shadow: 1px 1px 0 var(--ink); }
+  .app { padding: 16px 16px 30px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .top { display: flex; justify-content: space-between; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 26px; letter-spacing: -.045em; font-variation-settings: 'opsz' 96; }
+  .star { width: 34px; height: 34px; animation: spin 8s linear infinite; }
+  @keyframes spin { to { rotate: 360deg; } }
+  .btns { display: flex; gap: 10px; }
+  .sq { width: 46px; height: 46px; display: grid; place-items: center; font-size: 20px; border-radius: 14px; }
+  .sq.t { width: auto; padding: 0 14px; gap: 6px; display: flex; font-weight: 800; font-size: 15px; }
+
+  .now { position: relative; background: var(--pink); padding: 26px 20px 20px; }
+  .tag { position: absolute; top: -14px; left: 18px; background: var(--ink); color: var(--y); font-weight: 800; font-size: 13px; letter-spacing: .06em; padding: 6px 12px; border-radius: 10px; rotate: -5deg; }
+  .now h1 { font-weight: 800; font-size: 64px; line-height: .92; letter-spacing: -.055em; font-variation-settings: 'opsz' 96; }
+  .now p { font-weight: 600; font-size: 16px; margin-top: 8px; }
+  .ctrl { display: flex; align-items: center; gap: 14px; margin-top: 18px; }
+  .play { width: 64px; height: 64px; border-radius: 50%; background: var(--ink); color: var(--y); display: grid; place-items: center; font-size: 24px; flex: none; box-shadow: 4px 4px 0 #0005; }
+  .chunk { flex: 1; height: 26px; border: 3px solid var(--ink); border-radius: 99px; background: var(--white); overflow: hidden; position: relative; }
+  .chunk i { position: absolute; inset: 0 auto 0 0; width: calc(var(--v) * 100%); background: var(--ink); }
+
+  .mixer { padding: 18px; display: grid; gap: 12px; }
+  .hd { display: flex; justify-content: space-between; align-items: center; }
+  .hd h2 { font-weight: 800; font-size: 24px; letter-spacing: -.04em; }
+  .chip { border: 3px solid var(--ink); border-radius: 99px; padding: 2px 10px; font-weight: 800; font-size: 13px; background: var(--y); }
+  .row { display: grid; grid-template-columns: 42px minmax(0, 1fr) 52px; gap: 12px; align-items: center; }
+  .ic { width: 42px; height: 42px; border: 3px solid var(--ink); border-radius: 50%; display: grid; place-items: center; font-size: 19px; background: var(--c); }
+  .ic .ico { stroke-width: 2.2; }
+  .rn { font-weight: 800; font-size: 16px; margin-bottom: 5px; }
+  .tr { height: 18px; border: 3px solid var(--ink); border-radius: 99px; background: var(--white); overflow: hidden; position: relative; }
+  .tr i { position: absolute; inset: 0 auto 0 0; width: calc(var(--v) * 100%); background: var(--c); border-right: 3px solid var(--ink); }
+  .row.off .tr i { border: 0; }
+  .pc { font-weight: 800; font-size: 18px; text-align: right; font-variant-numeric: tabular-nums; }
+  .row.off { opacity: .55; }
+
+  .lib { display: grid; gap: 14px; align-content: start; }
+  .tabs { display: flex; gap: 10px; }
+  .tab { padding: 8px 16px; font-weight: 800; font-size: 16px; border-radius: 14px; }
+  .tab.on { background: var(--ink); color: var(--y); box-shadow: 4px 4px 0 #0004; }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .tile { position: relative; padding: 14px; display: grid; gap: 16px; background: var(--c); rotate: var(--rot); }
+  .tile .ico { font-size: 30px; stroke-width: 2; }
+  .tile b { font-weight: 800; font-size: 19px; letter-spacing: -.03em; display: block; }
+  .tile small { font-weight: 700; font-size: 12.5px; opacity: .75; }
+  .tile.on::after { content: '▶ sonando'; position: absolute; top: -12px; right: 10px; background: var(--ink); color: var(--y); font-weight: 800; font-size: 11px; padding: 4px 8px; border-radius: 8px; rotate: 4deg; }
+  .wiggle { animation: wig 2.4s ease-in-out infinite; }
+  @keyframes wig { 50% { rotate: -8deg; } }
+
+  @media (min-width: 700px) {
+    .app { padding: 24px 30px; gap: 22px; }
+    .now h1 { font-size: 92px; }
+    .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  @media (min-width: 1100px) {
+    .app { height: 100vh; grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr); column-gap: 30px; row-gap: 22px; padding: 24px 36px; align-content: start; }
+    .top { grid-column: 1 / -1; }
+    .left { display: grid; gap: 22px; align-content: start; }
+    .now h1 { font-size: 84px; }
+    .mixer { gap: 9px; }
+    .grid { gap: 14px; }
+    .tile { gap: 12px; padding: 12px 14px; }
+  }
+  @media (max-width: 1099px) { .left { display: grid; gap: 22px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="logo"><svg class="star" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#ff8ac2" stroke="#141414" stroke-width="3"/><path d="M20 7l3.2 8.6L32 16l-6.9 5.6L27.5 31 20 25.8 12.5 31l2.4-9.4L8 16l8.8-.4z" fill="#ffd84d" stroke="#141414" stroke-width="2.4" stroke-linejoin="round"/></svg>domentum</div>
+    <div class="btns"><button class="box sq t" id="b1"></button><button class="box sq" id="b2"></button></div>
+  </header>
+  <div class="left">
+    <section class="box now">
+      <span class="tag">¡SONANDO!</span>
+      <h1 id="title"></h1>
+      <p>Velero, olas y gaviotas. Sin límite.</p>
+      <div class="ctrl"><button class="play" id="play"></button><div class="chunk" id="vol"><i></i></div></div>
+    </section>
+    <section class="box mixer">
+      <div class="hd"><h2>Capas</h2><span class="chip">6</span></div>
+      <div id="rows" style="display:grid;gap:10px"></div>
+    </section>
+  </div>
+  <section class="lib">
+    <div class="tabs"><span class="tab on">Paisajes</span><span class="tab box">Mezclas</span></div>
+    <div class="grid" id="grid"></div>
+  </section>
+</div>
+<script type="module">
+  import { SCENES, NOW, LAYERS, MASTER, TIMER, icon, pct, meta, html } from './data.js';
+  const C = ['var(--blue)', 'var(--green)', 'var(--orange)', 'var(--purple)', 'var(--pink)', 'var(--white)'];
+  const ROT = [-1.6, 1.2, -.8, 1.8, -1.2, .9, 1.5, -1.8];
+  html('#title', NOW.name);
+  html('#b1', icon('timer') + TIMER); html('#b2', icon('more'));
+  html('#play', icon('pause'));
+  document.querySelector('#vol').style.setProperty('--v', MASTER);
+  html('#rows', LAYERS.map((l, i) => `
+    <div class="row ${l.v ? '' : 'off'}" style="--v:${l.v};--c:${C[i % C.length]}"><span class="ic ${i === 2 ? 'wiggle' : ''}">${icon(l.icon)}</span>
+      <div><div class="rn">${l.name}</div><div class="tr"><i></i></div></div><span class="pc">${pct(l.v)}</span></div>`).join(''));
+  html('#grid', SCENES.map((s, i) => `
+    <div class="box tile ${s.id === NOW.id ? 'on' : ''}" style="--c:${C[i % 5]};--rot:${ROT[i % ROT.length]}deg">${icon(s.icon)}<span><b>${s.name}</b><small>${meta(s)}</small></span></div>`).join(''));
+</script>
+</body>
+</html>

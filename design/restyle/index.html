@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Restyling Domentum</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #111114; --card: #19191d; --line: #2a2a30; --fg: #f4f4f5; --mute: #a1a1aa; --acc: #7dd3fc; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  header { max-width: 1240px; margin: 0 auto; padding: 48px 24px 12px; }
+  h1 { margin: 0; font-size: 34px; letter-spacing: -.03em; }
+  header p { color: var(--mute); max-width: 70ch; margin: 10px 0 0; }
+  nav { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+  nav a { color: var(--fg); text-decoration: none; font-size: 13px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 99px; }
+  nav a:hover { border-color: var(--mute); }
+  main { max-width: 1240px; margin: 0 auto; padding: 12px 24px 80px; display: grid; gap: 28px; }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 22px; scroll-margin-top: 16px; }
+  .hd { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+  h2 { margin: 0; font-size: 22px; letter-spacing: -.02em; }
+  h2 span { color: var(--mute); font-weight: 500; margin-right: 10px; }
+  .live { color: #111; background: var(--acc); text-decoration: none; font-weight: 600; font-size: 13px; padding: 8px 14px; border-radius: 10px; white-space: nowrap; }
+  .txt { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 12px 0 18px; color: var(--mute); }
+  .txt b { display: block; color: var(--fg); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 4px; }
+  .shots { display: grid; grid-template-columns: 1.6fr .695fr .462fr; gap: 14px; align-items: start; }
+  .shots a { display: block; color: var(--mute); text-decoration: none; font-size: 12px; }
+  .shots img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); margin-bottom: 6px; background: #000; }
+  @media (max-width: 760px) {
+    .txt { grid-template-columns: 1fr; gap: 10px; }
+    .shots { grid-template-columns: .695fr .462fr; }
+    .shots a:first-child { grid-column: 1 / -1; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Restyling Domentum · 10 propuestas</h1>
+  <p>El mismo contenido en diez estilos: Océano sonando, sus seis capas y la lista de paisajes. Cada uno, en escritorio, tablet y móvil. Pulsa una captura para verla a tamaño completo. «Ver en vivo» abre la maqueta con sus animaciones; estrecha la ventana para ver cómo se adapta.</p>
+  <nav id="nav"></nav>
+</header>
+<main id="list"></main>
+<script type="module">
+  const styles = await (await fetch('styles.json')).json();
+  const dev = [['escritorio', 'Escritorio · 1440 px'], ['tablet', 'Tablet · 820 px'], ['movil', 'Móvil · 390 px']];
+  document.querySelector('#nav').innerHTML = styles.map((s, i) => `<a href="#${s.id}">${String(i + 1).padStart(2, '0')} ${s.name}</a>`).join('');
+  document.querySelector('#list').innerHTML = styles.map((s, i) => `
+    <section id="${s.id}">
+      <div class="hd"><h2><span>${String(i + 1).padStart(2, '0')}</span>${s.name}</h2><a class="live" href="${s.id}.html" target="_blank">Ver en vivo ↗</a></div>
+      <div class="txt"><p><b>Aspecto</b>${s.look}</p><p><b>Animaciones</b>${s.motion}</p></div>
+      <div class="shots">${dev.map(([d, label]) => `<a href="shots/${s.id}-${d}.png" target="_blank"><img loading="lazy" src="shots/${s.id}-${d}.png" alt="${s.name}, ${label}">${label}</a>`).join('')}</div>
+    </section>`).join('');
+</script>
+</body>
+</html>

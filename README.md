@@ -8,6 +8,10 @@ En línea: https://davidosuna1987.github.io/domentum/
 - Volumen independiente por capa y sin límite de tiempo. Los bucles se encadenan con fundido cruzado, así que no se oye el corte.
 - Puedes sumar hasta 4 paisajes a la vez, guardar mezclas y usar un temporizador opcional con fundido final.
 - El ruido (marrón, rosa, gris, blanco, avión, tapa voces) y los binaurales (δ θ α β γ y música generativa) se generan en tiempo real.
+- Modo claro, oscuro o como el sistema (menú ⋯ → Apariencia), en todos los temas.
+- «Todos los sonidos» (menú ⋯ o «Elegir sonidos» en Personal): elige sonidos sueltos de cualquier paisaje y júntalos con tus audios en una mezcla propia.
+- «Probar menús nuevos» (menú ⋯): propuesta de menús con su propia animación en cada tema.
+- 11 temas para elegir en el menú ⋯ → Tema: Tinta zen (por defecto), Original, Editorial suizo, Consola hi-fi, Terminal, Cine, Atlas naturalista, Aurora orbital, Bento, Neumórfico y Pop neobrutal. Cada tema es `css/themes/<id>.css` más `js/themes/<id>.js`; cómo se hacen está en `design/THEMES.md`.
 - Grabaciones de campo CC0 de [Freesound](https://freesound.org). Los créditos están en `sounds/credits.json` y en la app (menú ⋯ → Créditos).
 
 ## Desarrollo
@@ -16,7 +20,7 @@ En línea: https://davidosuna1987.github.io/domentum/
 python3 .claude/serve.py 5180
 ```
 
-Abre http://localhost:5180. En localhost el service worker está desactivado para que no sirva código viejo; actívalo con `?sw`.
+Abre http://localhost:5180. En localhost el service worker está desactivado para que no sirva código viejo; actívalo con `?sw`. `?theme=<id>` abre un tema concreto.
 
 ## Publicar
 
