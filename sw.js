@@ -1,6 +1,6 @@
 // App shell: cache-first per version. Sounds: cache-first in their own long-lived
 // cache, filled on first play or via "Descargar todo".
-const VERSION = 'domentum-v6';
+const VERSION = 'domentum-v7';
 const SOUNDS = 'domentum-sounds-v1';
 const SHELL = [
   './', 'index.html', 'manifest.webmanifest', 'css/base.css',

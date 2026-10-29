@@ -72,6 +72,7 @@ const LOGO = $('#logo').innerHTML;
 let T = {};
 let bgKey = '';
 let wasPlaying = state.playing;
+let played = state.playing; // anything played in this session (the update reload waits for the background then)
 const darkMedia = matchMedia('(prefers-color-scheme: dark)');
 const scheme = () => (state.scheme === 'system' ? (darkMedia.matches ? 'dark' : 'light') : state.scheme);
 // A theme option may be one value or { light, dark }
@@ -202,6 +203,7 @@ function render() {
   $('meta[name="theme-color"]').setAttribute('content', bySchemeOf(T.color) || f.colors[0]);
   document.title = state.playing ? `${c.title} · Domentum` : 'Domentum';
   wasPlaying = state.playing;
+  if (state.playing) played = true;
   paintTimer();
 }
 
@@ -995,5 +997,23 @@ if (dev) {
 }
 // On localhost the service worker would serve stale code while developing; opt in with ?sw
 if ('serviceWorker' in navigator && location.protocol !== 'file:' && (!dev || location.search.includes('sw'))) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
+  const sw = navigator.serviceWorker;
+  const hadController = !!sw.controller;
+  // sw.js skips waiting and claims the page, so a new version takes over while this one runs: reload to load
+  // it. Right away if nothing has played yet; otherwise only once it is paused and the app is in the background.
+  let updateReady = false;
+  const applyUpdate = () => {
+    if (updateReady && !state.playing && (document.hidden || !played)) location.reload();
+  };
+  sw.addEventListener('controllerchange', () => {
+    if (!hadController || updateReady) return; // the first install has nothing to update
+    updateReady = true;
+    if (played) toast('Hay una versión nueva. Se cargará cuando pauses y salgas de la app.');
+    applyUpdate();
+  });
+  document.addEventListener('visibilitychange', applyUpdate);
+  sw.register('sw.js').then(reg => {
+    // An installed app can stay open for days: look for a new version whenever it comes back to the front
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) reg.update().catch(() => {}); });
+  }).catch(() => {});
 }
