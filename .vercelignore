@@ -1,0 +1,6 @@
+# Only the site goes to Vercel: the landing (root and /<lang>/), assets/ and the player in app/
+design/
+.claude/
+README.md
+.env*
+.vercel

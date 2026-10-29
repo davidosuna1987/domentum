@@ -6,3 +6,5 @@ design/snaps/
 design/restyle/shots/
 design/restyle/sheets/
 design/*.png
+.vercel
+.env*
