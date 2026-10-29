@@ -138,6 +138,11 @@ export default {
       h: 'Chrome-Erweiterung',
       steps: ['Lade die Erweiterung (.zip) herunter und entpacke sie.', 'Öffne chrome://extensions und aktiviere den Entwicklermodus.', 'Klicke auf „Entpackte Erweiterung laden“ und wähle den Ordner. Jeder neue Tab ist dann Domentum, und das Symbol öffnet einen Mini-Player.'],
       download: 'Für Chrome herunterladen',
+      cta: 'Chrome-Erweiterung holen',
+      store: 'Zu Chrome hinzufügen',
+      intro: 'Domentum in jedem neuen Tab und ein Mini-Player hinter dem Symbol in der Leiste. Im Chrome Web Store ist sie noch nicht, deshalb installierst du sie von Hand. Das dauert eine Minute:',
+      copy: 'Kopieren',
+      copied: 'Kopiert',
     },
   },
   faq: {

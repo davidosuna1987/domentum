@@ -16,7 +16,7 @@
 <link rel="alternate" hreflang="x-default" href="https://davidosuna1987.github.io/domentum/">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="theme-color" content="#f4f0e6">
-<script>/* light unless the visitor picked dark here; then animate the brush strokes in */ (() => { const d = document.documentElement; d.classList.add('js'); try { if (localStorage.getItem('domentum:landing-scheme') === 'dark') { d.dataset.scheme = 'dark'; document.querySelector('meta[name=theme-color]').content = '#151412'; } } catch {} })();</script>
+<script>/* light unless the visitor picked dark here; then animate the brush strokes in */ (() => { const d = document.documentElement; d.classList.add('js'); const u = navigator.userAgentData; if (u ? !u.mobile && u.brands.some(b => /Chromium/.test(b.brand)) : /Chrom(e|ium)[/]/.test(navigator.userAgent) && !/Mobile|Android|iPhone|iPad/.test(navigator.userAgent)) d.classList.add('chromium'); try { if (localStorage.getItem('domentum:landing-scheme') === 'dark') { d.dataset.scheme = 'dark'; document.querySelector('meta[name=theme-color]').content = '#151412'; } } catch {} })();</script>
 <link rel="icon" href="app/icons/icon.svg" type="image/svg+xml">
 <link rel="icon" href="app/icons/icon-192.png" sizes="192x192" type="image/png">
 <link rel="apple-touch-icon" href="app/icons/apple-touch-icon.png">
@@ -383,7 +383,7 @@
       <div class="hero-text">
         <h1>Ambient sounds to <mark class="hl">focus, relax and sleep</mark></h1>
         <p class="lede">Mix rain, waves, fire, forest, café, brown noise or binaural beats, with <mark class="hl">a volume for every layer</mark>. Free, with no time limit, and it works offline.</p>
-        <p class="ctas"><a class="btn" href="app/">Start listening</a><a class="link" href="#install">Install on your phone</a></p>
+        <p class="ctas"><a class="btn" href="app/">Start listening</a><a class="link" href="#install">Install on your phone</a><button type="button" class="ext-cta ext-only" data-ext-open><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h4v3a2 2 0 1 0 4 0V3h0a2 2 0 0 1 2 2v4h-3a2 2 0 1 0 0 4h3v6a2 2 0 0 1-2 2h-4v-3a2 2 0 1 0-4 0v3H5a2 2 0 0 1-2-2v-4h3a2 2 0 1 0 0-4H3V5a2 2 0 0 1 2-2h4Z"/></svg><span>Get the Chrome extension</span></button></p>
         <ul class="facts"><li>Free</li><li>No account</li><li>No ads</li><li>No time limit</li><li>Works offline</li></ul>
       </div>
       <a class="enso" href="app/" aria-label="Open the player">
@@ -706,6 +706,16 @@
   </div>
 </footer>
 
+<dialog class="ext-dialog" aria-labelledby="ext-h">
+  <form method="dialog"><button class="ext-x" aria-label="Close"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></form>
+  <h2 id="ext-h">Chrome extension</h2>
+  <p class="intro">Domentum in every new tab, and a mini player behind the toolbar icon. It isn’t in the Chrome Web Store yet, so it installs by hand. It takes a minute:</p>
+  <ol>
+    <li><span>Download the extension (.zip) and unzip it.</span><a class="btn small" href="https://github.com/davidosuna1987/domentum/releases/latest/download/domentum-chrome.zip" download>Download for Chrome</a></li>
+    <li><span>Open chrome://extensions and turn on Developer mode.</span><span class="copy"><code>chrome://extensions</code><button type="button" class="link" data-copy="chrome://extensions" data-done="Copied">Copy</button></span></li>
+    <li><span>Click “Load unpacked” and choose the folder. Every new tab becomes Domentum, and its icon opens a mini player.</span></li>
+  </ol>
+</dialog>
 <div class="lang-banner" role="region" aria-label="Language" hidden><p></p><a href="#"></a><button type="button"><svg class="ico " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
 <script>
 // A visitor whose browser asks for another language we have gets a quiet link to it. No automatic
@@ -767,6 +777,14 @@
     else strokes.forEach(s => s.classList.add('in'));
   };
   const show = el => { if (el.classList.contains('hl')) place(el, !still); el.classList.add('in'); };
+  // the Chrome extension dialog: steps, the .zip and a copy button for chrome://extensions (pages can't link it)
+  const dlg = document.querySelector('.ext-dialog');
+  document.querySelectorAll('[data-ext-open]').forEach(b => b.addEventListener('click', () => dlg?.showModal()));
+  dlg?.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+  document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(b.dataset.copy); } catch {}
+    const was = b.textContent; b.textContent = b.dataset.done; setTimeout(() => { b.textContent = was; }, 1800);
+  }));
   const marks = document.querySelectorAll('.hl, .draw');
   document.querySelectorAll('.hl').forEach((m, i) => order.set(m, i));
   if (!('IntersectionObserver' in window)) marks.forEach(show);

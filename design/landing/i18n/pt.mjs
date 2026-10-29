@@ -138,6 +138,11 @@ export default {
       h: 'Extensão do Chrome',
       steps: ['Baixe a extensão (.zip) e descompacte.', 'Abra chrome://extensions e ative o modo do desenvolvedor.', 'Clique em “Carregar sem compactação” e escolha a pasta. Cada nova aba passa a ser o Domentum, e o ícone dele abre um minirreprodutor.'],
       download: 'Baixar para o Chrome',
+      cta: 'Extensão para o Chrome',
+      store: 'Adicionar ao Chrome',
+      intro: 'O Domentum em cada nova aba e um minirreprodutor no ícone da barra. Ainda não está na Chrome Web Store, então a instalação é manual. Leva um minuto:',
+      copy: 'Copiar',
+      copied: 'Copiado',
     },
   },
   faq: {

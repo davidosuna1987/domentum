@@ -19,6 +19,10 @@ const ORDER = ['en', 'es', 'ca', 'fr', 'it', 'pt', 'de'];
 const REPO = 'https://github.com/davidosuna1987/domentum';
 // the Chrome extension, as built by extension/build.mjs and attached to the latest GitHub release
 const EXTENSION = `${REPO}/releases/latest/download/domentum-chrome.zip`;
+// Once the extension is in the Chrome Web Store, put its page here and rebuild: every "add to Chrome" button then
+// goes straight to the store, and the by-hand steps (download the .zip, load it unpacked) leave the page.
+// (CHROME_STORE=<url> node design/landing/build.mjs previews it without changing this line.)
+const CHROME_STORE = process.env.CHROME_STORE || '';
 const TODAY = new Date().toISOString().slice(0, 10);
 
 const LANGS = [];
@@ -126,6 +130,28 @@ function sceneLayers(s, t) {
   return s.layers.map((l, i) => ({ name: names[i] ?? l.name, icon: l.icon }));
 }
 
+// The "add to Chrome" button: straight to the store once it is there, else it opens the dialog with the steps
+function extButton(t, cls) {
+  const x = t.install.extension;
+  const ico = `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h4v3a2 2 0 1 0 4 0V3h0a2 2 0 0 1 2 2v4h-3a2 2 0 1 0 0 4h3v6a2 2 0 0 1-2 2h-4v-3a2 2 0 1 0-4 0v3H5a2 2 0 0 1-2-2v-4h3a2 2 0 1 0 0-4H3V5a2 2 0 0 1 2-2h4Z"/></svg>`;
+  if (CHROME_STORE) return `<a class="${cls} ext-only" href="${CHROME_STORE}" rel="noopener">${ico}<span>${esc(x.store)}</span></a>`;
+  return `<button type="button" class="${cls} ext-only" data-ext-open>${ico}<span>${esc(x.cta)}</span></button>`;
+}
+function extDialog(t) {
+  if (CHROME_STORE) return '';
+  const x = t.install.extension;
+  return `<dialog class="ext-dialog" aria-labelledby="ext-h">
+  <form method="dialog"><button class="ext-x" aria-label="${esc(t.banner.close)}"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></form>
+  <h2 id="ext-h">${esc(x.h)}</h2>
+  <p class="intro">${esc(x.intro)}</p>
+  <ol>
+    <li><span>${esc(x.steps[0])}</span><a class="btn small" href="${EXTENSION}" download>${esc(x.download)}</a></li>
+    <li><span>${esc(x.steps[1])}</span><span class="copy"><code>chrome://extensions</code><button type="button" class="link" data-copy="chrome://extensions" data-done="${esc(x.copied)}">${esc(x.copy)}</button></span></li>
+    <li><span>${esc(x.steps[2])}</span></li>
+  </ol>
+</dialog>`;
+}
+
 function jsonLd(t, url) {
   const og = `${BASE}assets/og/${t.lang}.png`;
   const scenes = SCENES.map((s, i) => {
@@ -181,7 +207,7 @@ ${LANGS.map(l => `<link rel="alternate" hreflang="${l.lang}" href="${urlOf(l.lan
 <link rel="alternate" hreflang="x-default" href="${BASE}">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="theme-color" content="#f4f0e6">
-<script>/* light unless the visitor picked dark here; then animate the brush strokes in */ (() => { const d = document.documentElement; d.classList.add('js'); try { if (localStorage.getItem('domentum:landing-scheme') === 'dark') { d.dataset.scheme = 'dark'; document.querySelector('meta[name=theme-color]').content = '#151412'; } } catch {} })();</script>
+<script>/* light unless the visitor picked dark here; then animate the brush strokes in */ (() => { const d = document.documentElement; d.classList.add('js'); const u = navigator.userAgentData; if (u ? !u.mobile && u.brands.some(b => /Chromium/.test(b.brand)) : /Chrom(e|ium)[/]/.test(navigator.userAgent) && !/Mobile|Android|iPhone|iPad/.test(navigator.userAgent)) d.classList.add('chromium'); try { if (localStorage.getItem('domentum:landing-scheme') === 'dark') { d.dataset.scheme = 'dark'; document.querySelector('meta[name=theme-color]').content = '#151412'; } } catch {} })();</script>
 <link rel="icon" href="${r}app/icons/icon.svg" type="image/svg+xml">
 <link rel="icon" href="${r}app/icons/icon-192.png" sizes="192x192" type="image/png">
 <link rel="apple-touch-icon" href="${r}app/icons/apple-touch-icon.png">
@@ -242,7 +268,7 @@ ${jsonLd(t, url)}
       <div class="hero-text">
         <h1>${rich(t.hero.h1)}</h1>
         <p class="lede">${rich(t.hero.lede)}</p>
-        <p class="ctas"><a class="btn" href="${app}">${esc(t.hero.cta)}</a><a class="link" href="#install">${esc(t.hero.install)}</a></p>
+        <p class="ctas"><a class="btn" href="${app}">${esc(t.hero.cta)}</a><a class="link" href="#install">${esc(t.hero.install)}</a>${extButton(t, 'ext-cta')}</p>
         <ul class="facts">${t.hero.facts.map(f => `<li>${esc(f)}</li>`).join('')}</ul>
       </div>
       <a class="enso" href="${app}" aria-label="${esc(t.hero.play)}">
@@ -377,7 +403,9 @@ ${THEMES.map(th => {
         <p class="intro">${rich(t.install.intro)}</p>
         <div class="platforms">
 ${t.install.items.map(p => `          <div class="reveal"><h3>${esc(p.h)}</h3><ol>${p.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol></div>`).join('\n')}
-          <div class="reveal extension"><h3>${esc(t.install.extension.h)}</h3><ol>${t.install.extension.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol><p><a class="link" href="${EXTENSION}" download>${esc(t.install.extension.download)}</a></p></div>
+          <div class="reveal extension"><h3>${esc(t.install.extension.h)}</h3>${CHROME_STORE
+            ? `<p class="ext-store">${esc(plain(t.install.extension.intro).split(/[.:]/)[0])}.</p><p>${extButton(t, 'link')}</p>`
+            : `<ol>${t.install.extension.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol><p><a class="link" href="${EXTENSION}" download>${esc(t.install.extension.download)}</a></p>`}</div>
         </div>
         <p class="note">${esc(t.install.offline)}</p>
         <p class="ctas"><a class="btn" href="${app}">${esc(t.hero.cta)}</a></p>
@@ -414,6 +442,7 @@ ${t.faq.items.map(q => `          <details class="reveal"><summary><h3>${esc(q.q
   </div>
 </footer>
 
+${extDialog(t)}
 <div class="lang-banner" role="region" aria-label="${esc(t.nav.languages)}" hidden><p></p><a href="#"></a><button type="button">${icon('x')}</button></div>
 <script>
 // A visitor whose browser asks for another language we have gets a quiet link to it. No automatic
@@ -475,6 +504,14 @@ ${t.faq.items.map(q => `          <details class="reveal"><summary><h3>${esc(q.q
     else strokes.forEach(s => s.classList.add('in'));
   };
   const show = el => { if (el.classList.contains('hl')) place(el, !still); el.classList.add('in'); };
+  // the Chrome extension dialog: steps, the .zip and a copy button for chrome://extensions (pages can't link it)
+  const dlg = document.querySelector('.ext-dialog');
+  document.querySelectorAll('[data-ext-open]').forEach(b => b.addEventListener('click', () => dlg?.showModal()));
+  dlg?.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+  document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(b.dataset.copy); } catch {}
+    const was = b.textContent; b.textContent = b.dataset.done; setTimeout(() => { b.textContent = was; }, 1800);
+  }));
   const marks = document.querySelectorAll('.hl, .draw');
   document.querySelectorAll('.hl').forEach((m, i) => order.set(m, i));
   if (!('IntersectionObserver' in window)) marks.forEach(show);
@@ -516,7 +553,9 @@ function llms() {
     '## Pages', '',
     ...LANGS.map(l => `- [${l.name}](${urlOf(l.lang)}): ${l.title}`),
     `- [Player](${BASE}app/): the app itself`,
-    `- [Chrome extension](${EXTENSION}): Domentum in every new tab, and a mini player behind the toolbar icon. ${t.install.extension.steps.join(' ')}`, '',
+    CHROME_STORE
+      ? `- [Chrome extension](${CHROME_STORE}): Domentum in every new tab, and a mini player behind the toolbar icon. In the Chrome Web Store.`
+      : `- [Chrome extension](${EXTENSION}): Domentum in every new tab, and a mini player behind the toolbar icon. ${t.install.extension.steps.join(' ')}`, '',
     '## Soundscapes', '',
     'Each one opens directly with `?paisaje=<id>` on the player URL.', '',
     ...SCENES.map(s => {

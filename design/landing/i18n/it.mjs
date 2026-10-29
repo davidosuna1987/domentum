@@ -138,6 +138,11 @@ export default {
       h: 'Estensione per Chrome',
       steps: ['Scarica l’estensione (.zip) ed estraila.', 'Apri chrome://extensions e attiva la modalità sviluppatore.', 'Fai clic su «Carica estensione non pacchettizzata» e scegli la cartella. Ogni nuova scheda sarà Domentum, e la sua icona apre un mini lettore.'],
       download: 'Scarica per Chrome',
+      cta: 'Estensione per Chrome',
+      store: 'Aggiungi a Chrome',
+      intro: 'Domentum in ogni nuova scheda e un mini lettore nell’icona della barra. Non è ancora sul Chrome Web Store, quindi si installa a mano. Basta un minuto:',
+      copy: 'Copia',
+      copied: 'Copiato',
     },
   },
   faq: {

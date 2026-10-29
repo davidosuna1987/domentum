@@ -138,6 +138,11 @@ export default {
       h: 'Extensió de Chrome',
       steps: ['Baixa l’extensió (.zip) i descomprimeix-la.', 'Obre chrome://extensions i activa el mode de desenvolupador.', 'Fes clic a «Carrega l’extensió desempaquetada» i tria la carpeta. Cada pestanya nova serà Domentum, i la seva icona obre un mini reproductor.'],
       download: 'Baixa-la per a Chrome',
+      cta: 'Extensió per a Chrome',
+      store: 'Afegeix a Chrome',
+      intro: 'Domentum a cada pestanya nova i un mini reproductor a la icona de la barra. Encara no és a la Chrome Web Store, així que s’instal·la a mà. És un minut:',
+      copy: 'Copia',
+      copied: 'Copiat',
     },
   },
   faq: {

@@ -138,6 +138,11 @@ export default {
       h: 'Extension Chrome',
       steps: ['Téléchargez l’extension (.zip) et décompressez-la.', 'Ouvrez chrome://extensions et activez le mode développeur.', 'Cliquez sur « Charger l’extension non empaquetée » et choisissez le dossier. Chaque nouvel onglet devient Domentum, et son icône ouvre un mini lecteur.'],
       download: 'Télécharger pour Chrome',
+      cta: 'Extension pour Chrome',
+      store: 'Ajouter à Chrome',
+      intro: 'Domentum dans chaque nouvel onglet et un mini lecteur derrière l’icône de la barre d’outils. Elle n’est pas encore sur le Chrome Web Store, elle s’installe donc à la main. Cela prend une minute :',
+      copy: 'Copier',
+      copied: 'Copié',
     },
   },
   faq: {

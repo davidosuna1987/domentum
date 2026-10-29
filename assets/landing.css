@@ -263,6 +263,34 @@ ul, ol { padding: 0; list-style: none; }
   .credits { grid-column: 1 / -1; }
 }
 
+/* the Chrome extension: its button only shows on desktop Chrome, Brave, Edge… (html.chromium, set by the page) */
+.ext-only { display: none; }
+.chromium .ext-only { display: inline-flex; }
+.ext-cta {
+  align-items: center; gap: 9px; padding: 0; border: 0; background: none; cursor: pointer; font: inherit; color: var(--grey);
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 7px; transition: color 0.4s;
+}
+.ext-cta:hover { color: var(--red); }
+.ext-cta .ico, .extension .ext-only .ico { font-size: 18px; color: var(--red); }
+.extension .ext-only { align-items: center; gap: 8px; }
+.ext-dialog {
+  width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 48px); padding: 34px 34px 30px; border: 1px solid var(--line); border-radius: 3px;
+  background: var(--paper) var(--washi); color: var(--ink); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.22);
+}
+.ext-dialog::backdrop { background: color-mix(in srgb, var(--paper) 55%, transparent); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+.ext-dialog[open] { animation: settle-in 0.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.ext-dialog h2 { font-weight: 500; font-size: 26px; letter-spacing: 0.08em; padding-right: 40px; }
+.ext-dialog .intro { margin-top: 12px; font-size: 15px; }
+.ext-dialog ol { margin-top: 24px; counter-reset: s; display: grid; gap: 18px; }
+.ext-dialog li { counter-increment: s; display: grid; grid-template-columns: 28px 1fr; gap: 10px 0; }
+.ext-dialog li::before { content: counter(s); grid-row: span 2; color: var(--red); font-size: 18px; line-height: 1.5; }
+.ext-dialog li > :not(:first-child) { grid-column: 2; justify-self: start; }
+.ext-dialog .copy { display: inline-flex; align-items: center; gap: 14px; }
+.ext-dialog code { padding: 4px 10px; border: 1px solid var(--line); background: var(--paper2); font: 14px ui-monospace, "SF Mono", Menlo, monospace; color: var(--ink); }
+.ext-dialog .copy .link { border: 0; background: none; padding: 0; font: inherit; font-size: 14px; cursor: pointer; }
+.ext-x { position: absolute; top: 14px; right: 14px; width: 40px; height: 40px; display: grid; place-items: center; border: 0; background: none; color: var(--grey); font-size: 20px; cursor: pointer; }
+.ext-x:hover { color: var(--red); }
+
 /* the quiet "read in your language" note */
 .lang-banner {
   position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 30; transform: translateX(-50%);
@@ -291,7 +319,7 @@ ul, ol { padding: 0; list-style: none; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .enso .brush, .enso .breath, .lang-banner { animation: none; }
+  .enso .brush, .enso .breath, .lang-banner, .ext-dialog[open] { animation: none; }
   .stroke, .js .draw h3::before, .js .arrow path { transition: none !important; }
   .styles img, .enso .tri { transition: none; }
 }

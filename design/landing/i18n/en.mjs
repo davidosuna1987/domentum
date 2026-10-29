@@ -138,6 +138,11 @@ export default {
       h: 'Chrome extension',
       steps: ['Download the extension (.zip) and unzip it.', 'Open chrome://extensions and turn on Developer mode.', 'Click “Load unpacked” and choose the folder. Every new tab becomes Domentum, and its icon opens a mini player.'],
       download: 'Download for Chrome',
+      cta: 'Get the Chrome extension',
+      store: 'Add to Chrome',
+      intro: 'Domentum in every new tab, and a mini player behind the toolbar icon. It isn’t in the Chrome Web Store yet, so it installs by hand. It takes a minute:',
+      copy: 'Copy',
+      copied: 'Copied',
     },
   },
   faq: {
