@@ -70,7 +70,7 @@ a { color: var(--link); }
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s 0.4s;
 }
 .sheet-grip { width: 40px; height: 5px; border-radius: 3px; background: var(--grip); margin: 4px auto 6px; }
-body.sheet-open .sheet-bg { opacity: 1; pointer-events: auto; }
+body.sheet-open .sheet-bg, body.sheet-swap .sheet-bg { opacity: 1; pointer-events: auto; }
 /* The shadow only while open: a closed sheet waits just below the screen and its shadow would show */
 body.sheet-open .sheet { transform: none; visibility: visible; box-shadow: var(--sheet-shadow); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
 @media (min-width: 700px) {

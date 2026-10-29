@@ -198,7 +198,12 @@ re-rendered when it changes.
 ## Menus and sheets (added later)
 
 `#sheet` has `data-sheet="menu|timer|theme|scene|save|credits|install|pick"`. `decor.sheet(kind, ctx)`
-returns HTML inserted at the top of every sheet (after `.sheet-grip`); a button with `data-act="close"` closes it. When a sheet is redrawn while already open (picking a sound or a theme), `#sheet[data-again="true"]` is set and `decor.sheet` gets `ctx.again`, so entrance animations can be skipped. While open, `body.sheet-open`; for
+returns HTML inserted at the top of every sheet (after `.sheet-grip`); a button with `data-act="close"` closes it. When a sheet is redrawn while already open (picking a sound or a theme), `#sheet[data-again="true"]` is set and `decor.sheet` gets `ctx.again`, so entrance animations can be skipped. Opening a different sheet while one is open (menu → Tema) runs the
+theme's exit (`body.sheet-closing` + `body.sheet-swap`, backdrop kept), waits `--sheet-swap` (default 340 ms,
+set it on `:root`) and then opens the next one with its entrance. A module with `sheetHead: true` gets each
+sheet split into `.sheet-head` (everything up to the `h3`, plus the `.muted`/`.scheme` right after it) and
+`.sheet-body` (the rest), so the head can stay fixed while only the body scrolls. `?variante=<name>` sets
+`<html data-variant>` for themes that offer alternative designs to compare. While open, `body.sheet-open`; for
 400 ms after closing, `body.sheet-closing` (the sheet stays visible that long, so an exit animation fits).
 Sheet content uses: `h3`, `.muted`, `.row` (button or label, with `.ico` + `<span><b/><small/></span>` and
 maybe a `.switch`), `.row.static`, `.scheme` (three `.opt` buttons: Sistema/Claro/Oscuro), `.opts/.opt`

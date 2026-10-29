@@ -341,14 +341,14 @@ body::before {
   top: 0; bottom: 0; right: 0; left: auto; margin: 0; width: min(calc(100vw - 18px), 470px); max-width: none; height: 100dvh; max-height: none;
   padding: 0 24px calc(var(--safe-b) + 30px) 34px; border: 0; border-left: 1px solid var(--gold2); border-radius: 0;
   outline: 1px solid var(--gold2); outline-offset: -10px;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.26), rgba(0, 0, 0, 0.06) 22px, rgba(0, 0, 0, 0) 48px), var(--sheet);
+  background: linear-gradient(270deg, rgba(0, 0, 0, 0.26), rgba(0, 0, 0, 0.06) 22px, rgba(0, 0, 0, 0) 48px), var(--sheet);
   box-shadow: -18px 0 50px rgba(0, 0, 0, 0.35);
-  transform-origin: 0 50%; transform: none; opacity: 1; visibility: hidden; pointer-events: none; transition: none;
+  transform-origin: 100% 50%; transform: none; opacity: 1; visibility: hidden; pointer-events: none; transition: none;
   -webkit-backface-visibility: hidden; backface-visibility: hidden;
 }
 :root[data-menus="new"][data-scheme="light"] .sheet {
   background:
-    linear-gradient(90deg, rgba(70, 52, 20, 0.2), rgba(70, 52, 20, 0.05) 22px, rgba(70, 52, 20, 0) 48px),
+    linear-gradient(270deg, rgba(70, 52, 20, 0.2), rgba(70, 52, 20, 0.05) 22px, rgba(70, 52, 20, 0) 48px),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42 0 0 0 0 .32 0 0 0 0 .16 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
     var(--sheet);
   box-shadow: -18px 0 50px rgba(70, 52, 20, 0.2);
@@ -357,12 +357,13 @@ body::before {
 :root[data-menus="new"] .sheet-grip { display: none; }
 :root[data-menus="new"] body.sheet-open .sheet { visibility: visible; pointer-events: auto; animation: nt-turn-in 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) both; }
 :root[data-menus="new"] body.sheet-closing .sheet { visibility: visible; animation: nt-turn-out 0.4s cubic-bezier(0.55, 0, 0.8, 0.3) forwards; }
+/* hinged on the screen's edge: it unfolds in from outside and folds back out */
 @keyframes nt-turn-in {
-  0% { transform: perspective(2200px) rotateY(-118deg); filter: brightness(0.55); }
-  58% { transform: perspective(2200px) rotateY(6deg); filter: brightness(1.05); }
+  0% { transform: perspective(2200px) rotateY(118deg); filter: brightness(0.55); }
+  58% { transform: perspective(2200px) rotateY(-6deg); filter: brightness(1.05); }
   100% { transform: perspective(2200px) rotateY(0); filter: none; }
 }
-@keyframes nt-turn-out { to { transform: perspective(2200px) rotateY(-118deg); filter: brightness(0.6); } }
+@keyframes nt-turn-out { to { transform: perspective(2200px) rotateY(118deg); filter: brightness(0.6); } }
 /* running head with the page title, and a gold ribbon marker that closes the page */
 :root[data-menus="new"] .nt-folio {
   position: sticky; top: 0; z-index: 2; display: flex; align-items: baseline; justify-content: space-between; gap: 12px;

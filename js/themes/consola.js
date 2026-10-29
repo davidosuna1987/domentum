@@ -23,7 +23,7 @@ const vu = side => `<div class="cs-vu"><svg viewBox="0 0 200 112" aria-hidden="t
   <circle cx="100" cy="112" r="9" fill="#2b2621"/></svg></div>`;
 const VUS = vu('L') + vu('R');
 
-// Menu proposal: every sheet is a hinged flap of the deck with its own LCD strip and a close key
+// Menus: every sheet is a panel of the deck with its own LCD strip and a close key (how it comes in: consola.css)
 const SHEETS = { menu: 'Menú', timer: 'Temporizador', theme: 'Temas', scene: 'Paisaje', save: 'Guardar', credits: 'Créditos', install: 'Instalar', pick: 'Sonidos' };
 
 export default {

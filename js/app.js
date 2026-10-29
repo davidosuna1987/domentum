@@ -638,23 +638,63 @@ document.addEventListener('change', e => {
 });
 
 // ---------- sheets ----------
-let closingT;
+let closingT, swapT;
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+// Opening another sheet while one is up (menu → Tema) closes the current one with the theme's own exit
+// and then opens the next with its entrance; the dimmed backdrop stays. --sheet-swap sets the pause.
 function openSheet(html, cls = '', kind = '') {
   const sh = $('#sheet');
+  const open = document.body.classList.contains('sheet-open');
+  if (open && kind && sh.dataset.sheet && kind !== sh.dataset.sheet && !reduceMotion.matches) {
+    const ms = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sheet-swap')) || 340;
+    document.body.classList.remove('sheet-open');
+    document.body.classList.add('sheet-closing', 'sheet-swap');
+    clearTimeout(swapT);
+    swapT = setTimeout(() => fillSheet(sh, html, cls, kind, false), ms);
+    return;
+  }
+  fillSheet(sh, html, cls, kind, open);
+}
+
+function fillSheet(sh, html, cls, kind, again) {
+  clearTimeout(swapT);
   // again: redrawn while already open (a sound or theme was picked), so themes can skip the entrance
-  const again = document.body.classList.contains('sheet-open');
   sh.className = `sheet ${cls}`;
   sh.dataset.sheet = kind;
   sh.dataset.again = again;
   sh.innerHTML = `<div class="sheet-grip"></div>${T.decor?.sheet?.(kind, { ...ctx(), again }) ?? ''}${html}`;
+  if (T.sheetHead) splitSheet(sh);
   clearTimeout(closingT);
-  document.body.classList.remove('sheet-closing');
+  document.body.classList.remove('sheet-closing', 'sheet-swap');
   document.body.classList.add('sheet-open');
   sh.querySelector('input:not([type=checkbox]),button:not([data-act="close"])')?.focus({ preventScroll: true });
 }
+
+// For themes with sheetHead: the title, its intro and controls stay in .sheet-head; only .sheet-body scrolls
+function splitSheet(sh) {
+  const head = document.createElement('div');
+  const body = document.createElement('div');
+  head.className = 'sheet-head';
+  body.className = 'sheet-body';
+  const kids = [...sh.children];
+  const h3 = kids.findIndex(k => k.matches('h3'));
+  let i = 0;
+  for (; i <= h3; i++) head.append(kids[i]);
+  while (kids[i]?.matches('.muted:not(.foot), .scheme')) head.append(kids[i++]);
+  body.append(...kids.slice(i));
+  sh.append(head, body);
+}
+
+// What scrolls in a sheet: its body when the theme splits it, else the sheet itself
+const sheetScroller = () => $('#sheet .sheet-body') || $('#sheet');
+
 // Themes may animate the exit while body.sheet-closing is set (up to 400 ms)
 function closeSheet() {
-  if (!document.body.classList.contains('sheet-open')) return;
+  const swapping = document.body.classList.contains('sheet-swap');
+  clearTimeout(swapT);
+  document.body.classList.remove('sheet-swap');
+  if (!document.body.classList.contains('sheet-open') && !swapping) return;
   document.body.classList.remove('sheet-open');
   document.body.classList.add('sheet-closing');
   clearTimeout(closingT);
@@ -729,19 +769,19 @@ function pickSheet() {
 }
 
 function pickSound(src) {
-  const top = $('#sheet').scrollTop;
+  const top = sheetScroller().scrollTop;
   togglePick(src);
   pickSheet();
-  $('#sheet').scrollTop = top;
+  sheetScroller().scrollTop = top;
   $(`[data-pick="${src}"]`)?.focus({ preventScroll: true });
 }
 
 async function pickTheme(id) {
-  const top = $('#sheet').scrollTop;
+  const top = sheetScroller().scrollTop;
   await applyTheme(id);
   saveState(state);
   themeSheet();
-  $('#sheet').scrollTop = top;
+  sheetScroller().scrollTop = top;
   $(`[data-theme-pick="${id}"]`)?.focus({ preventScroll: true });
 }
 

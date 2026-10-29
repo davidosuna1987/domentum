@@ -1,5 +1,5 @@
 # The Domentum mark: a vermilion brush ensō with a sound wave inside. Writes icons/mark.svg (the mark alone)
-# and the app icons on rice paper: icons/icon.svg, icon-192.png, icon-512.png, maskable-512.png, apple-touch-icon.png.
+# and the app icons: icon.svg, icon-192.png, icon-512.png transparent; maskable-512.png, apple-touch-icon.png on rice paper.
 # usage: python3 design/logo.py
 import math, os
 from PIL import Image, ImageDraw
@@ -51,18 +51,22 @@ def svg(shapes, bg=None):
 
 
 def png(shapes, size, dst, bg=PAPER):
+    """bg=None leaves it transparent (the clear pixels carry the red, so edges don't darken when scaled)."""
     big = size * 8
-    im = Image.new('RGB', (big, big), bg)
+    im = Image.new('RGBA', (big, big), (196, 53, 42, 0) if bg is None else bg)
     d = ImageDraw.Draw(im)
     for s in shapes:
         d.polygon([(x * big / 100, y * big / 100) for x, y in s], fill=RED)
-    im.resize((size, size), Image.LANCZOS).save(os.path.join(root, dst), optimize=True)
+    im = im.resize((size, size), Image.LANCZOS)
+    (im if bg is None else im.convert('RGB')).save(os.path.join(root, dst), optimize=True)
 
 
 open(os.path.join(root, 'mark.svg'), 'w').write(svg(mark()))
-open(os.path.join(root, 'icon.svg'), 'w').write(svg(mark(0.82), PAPER))
-png(mark(0.82), 192, 'icon-192.png')
-png(mark(0.82), 512, 'icon-512.png')
+# Favicon and the plain app icons: the mark alone on a transparent background
+open(os.path.join(root, 'icon.svg'), 'w').write(svg(mark(0.94)))
+png(mark(0.9), 192, 'icon-192.png', bg=None)
+png(mark(0.9), 512, 'icon-512.png', bg=None)
+# Where the system needs an opaque square (Android masks it, iOS would fill clear pixels with black): rice paper
 png(mark(0.64), 512, 'maskable-512.png')   # inside the maskable safe zone
 png(mark(0.78), 180, 'apple-touch-icon.png')
 print('icons written')
