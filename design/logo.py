@@ -61,12 +61,13 @@ def png(shapes, size, dst, bg=PAPER):
     (im if bg is None else im.convert('RGB')).save(os.path.join(root, dst), optimize=True)
 
 
-open(os.path.join(root, 'mark.svg'), 'w').write(svg(mark()))
-# Favicon and the plain app icons: the mark alone on a transparent background
-open(os.path.join(root, 'icon.svg'), 'w').write(svg(mark(0.94)))
-png(mark(0.9), 192, 'icon-192.png', bg=None)
-png(mark(0.9), 512, 'icon-512.png', bg=None)
-# Where the system needs an opaque square (Android masks it, iOS would fill clear pixels with black): rice paper
-png(mark(0.64), 512, 'maskable-512.png')   # inside the maskable safe zone
-png(mark(0.78), 180, 'apple-touch-icon.png')
-print('icons written')
+if __name__ == '__main__':
+    open(os.path.join(root, 'mark.svg'), 'w').write(svg(mark()))
+    # Favicon and the plain app icons: the mark alone on a transparent background
+    open(os.path.join(root, 'icon.svg'), 'w').write(svg(mark(0.94)))
+    png(mark(0.9), 192, 'icon-192.png', bg=None)
+    png(mark(0.9), 512, 'icon-512.png', bg=None)
+    # Where the system needs an opaque square (Android masks it, iOS would fill clear pixels with black): rice paper
+    png(mark(0.64), 512, 'maskable-512.png')   # inside the maskable safe zone
+    png(mark(0.78), 180, 'apple-touch-icon.png')
+    print('icons written')

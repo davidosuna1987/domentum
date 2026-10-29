@@ -264,15 +264,18 @@ ul, ol { padding: 0; list-style: none; }
 }
 
 /* the Chrome extension: its button only shows on desktop Chrome, Brave, Edge… (html.chromium, set by the page) */
-.ext-only { display: none; }
-.chromium .ext-only { display: inline-flex; }
+.ext-only, .android-only, .mac-only { display: none; }
+.chromium .ext-only, .android .android-only, .mac .mac-only { display: inline-flex; }
+/* on Android the native app replaces the "add to home screen" link */
+.android .pwa-link { display: none; }
 .ext-cta {
   align-items: center; gap: 9px; padding: 0; border: 0; background: none; cursor: pointer; font: inherit; color: var(--grey);
   text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 7px; transition: color 0.4s;
 }
 .ext-cta:hover { color: var(--red); }
-.ext-cta .ico, .extension .ext-only .ico { font-size: 18px; color: var(--red); }
-.extension .ext-only { align-items: center; gap: 8px; }
+.ext-cta .ico, .extension .link .ico { font-size: 18px; color: var(--red); }
+.extension :is(.ext-only, .android-only, .mac-only) { align-items: center; gap: 8px; }
+.ext-dialog .note { margin-top: 22px; font-size: 14px; }
 .ext-dialog {
   width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 48px); padding: 34px 34px 30px; border: 1px solid var(--line); border-radius: 3px;
   background: var(--paper) var(--washi); color: var(--ink); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.22);

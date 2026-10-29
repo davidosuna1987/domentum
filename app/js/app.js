@@ -57,6 +57,12 @@ if (dev) {
 // In the Chrome extension the sound plays in an offscreen document (extension/js/ext.js stands in for Engine)
 const ext = location.protocol === 'chrome-extension:';
 const engine = ext ? new (await import('./ext.js')).RemoteEngine() : new Engine();
+// Inside an app (Android/iPhone with Capacitor, the Mac app, the extension) the files are already on the device:
+// no install help, no "download for offline", no service worker
+const cap = window.Capacitor?.isNativePlatform?.() ? window.Capacitor : null;
+const shell = cap ? cap.getPlatform() : window.domentumShell || (ext ? 'extension' : null);
+// Android: a foreground service keeps the sound going with the screen off (native/android, BackgroundAudioPlugin)
+const bgAudio = cap?.isPluginAvailable('BackgroundAudio') ? cap.Plugins.BackgroundAudio : null;
 engine.customLoader = async id => {
   const blob = await getAudio(id);
   if (!blob) throw new Error('Archivo no encontrado');
@@ -80,6 +86,7 @@ const LOGO = $('#logo').innerHTML;
 // controls move (orient), whether the canvas backdrop runs, and what decoration goes in each slot.
 let T = {};
 let bgKey = '';
+let lastBar = '';
 let wasPlaying = state.playing;
 let played = state.playing; // anything played in this session (the update reload waits for the background then)
 const darkMedia = matchMedia('(prefers-color-scheme: dark)');
@@ -114,6 +121,8 @@ async function applyTheme(id) {
 function applyScheme() {
   const root = document.documentElement;
   root.dataset.scheme = scheme();
+  // the phone's status and navigation bar icons: dark on light themes, light on dark ones
+  if (cap?.isPluginAvailable('SystemBars')) cap.Plugins.SystemBars.setStyle({ style: scheme() === 'dark' ? 'DARK' : 'LIGHT' }).catch(() => {});
   root.dataset.menus = state.menus || 'classic';
   root.style.colorScheme = scheme();
   backdrop.setMode(bySchemeOf(T.backdrop) || 'off');
@@ -209,7 +218,10 @@ function render() {
   renderLibrary(c);
   $('#extra').innerHTML = T.decor?.extra?.(c) ?? '';
   backdrop.set(f.mood, f.colors);
-  $('meta[name="theme-color"]').setAttribute('content', bySchemeOf(T.color) || f.colors[0]);
+  const barColor = bySchemeOf(T.color) || f.colors[0];
+  $('meta[name="theme-color"]').setAttribute('content', barColor);
+  // Android app: the window behind the status and navigation bars takes the same colour
+  if (barColor !== lastBar && cap?.isPluginAvailable('WindowColor')) { lastBar = barColor; cap.Plugins.WindowColor.set({ color: barColor }).catch(() => {}); }
   document.title = state.playing ? `${c.title} · Domentum` : 'Domentum';
   wasPlaying = state.playing;
   if (state.playing) played = true;
@@ -749,9 +761,9 @@ function menuSheet() {
     ${schemeControl()}
     <button class="row" data-act="zen">${icon('zen')}<span><b>Modo zen</b><small>Solo lo que suena, sin nada más en pantalla. Atajo: Z.</small></span></button>
     <button class="row" data-act="pick">${icon('grid')}<span><b>Todos los sonidos</b><small>Elige sonidos sueltos de cualquier paisaje y júntalos en Personal.</small></span></button>
-    <button class="row" data-act="offline">${icon('download')}<span><b>Descargar todo para usar sin conexión</b><small id="offlineInfo">${offlineLabel()}</small></span></button>
+    ${shell ? '' : `<button class="row" data-act="offline">${icon('download')}<span><b>Descargar todo para usar sin conexión</b><small id="offlineInfo">${offlineLabel()}</small></span></button>`}
     <label class="row">${icon('sparkles')}<span><b>Variación natural</b><small>Cada capa sube y baja muy levemente su volumen, como pasa en la naturaleza. Así el bucle nunca se nota.</small></span><input type="checkbox" class="switch" data-act="breathe" ${state.breathe ? 'checked' : ''}></label>
-    <button class="row" data-act="install">${icon('phone')}<span><b>Instalar en el móvil</b><small>Funciona como una app, a pantalla completa y sin conexión.</small></span></button>
+    ${shell ? '' : `<button class="row" data-act="install">${icon('phone')}<span><b>Instalar en el móvil</b><small>Funciona como una app, a pantalla completa y sin conexión.</small></span></button>`}
     <button class="row" data-act="credits">${icon('info')}<span><b>Créditos de los sonidos</b><small>Grabaciones de campo con licencia CC0 (dominio público).</small></span></button>
     <p class="muted foot">Atajo: barra espaciadora para reproducir o pausar.</p>`, '', 'menu');
 }
@@ -1057,7 +1069,18 @@ function tickTimer() {
 setInterval(tickTimer, 1000);
 
 // ---------- media session ----------
+let bgKey2 = '';
 function updateMedia() {
+  // Android app: the playback service follows what plays (start with the title, stop on pause)
+  if (bgAudio) {
+    const title = state.active.map(id => sceneTitle(SCENE[id])).join(' + ');
+    const key = state.playing ? `on|${title}` : 'off';
+    if (key !== bgKey2) {
+      bgKey2 = key;
+      if (state.playing) bgAudio.start({ title, text: 'Domentum · sonando' }).catch(() => {});
+      else bgAudio.stop().catch(() => {});
+    }
+  }
   if (!('mediaSession' in navigator)) return;
   try {
     navigator.mediaSession.metadata = new MediaMetadata({
@@ -1069,6 +1092,8 @@ function updateMedia() {
     navigator.mediaSession.playbackState = state.playing ? 'playing' : 'paused';
   } catch {}
 }
+// "Pausar" in the Android notification
+bgAudio?.addListener('action', e => { if (e.action === 'pause' && state.playing) setPlaying(false); });
 if ('mediaSession' in navigator) {
   const h = (a, f) => { try { navigator.mediaSession.setActionHandler(a, f); } catch {} };
   h('play', () => setPlaying(true));
@@ -1107,7 +1132,7 @@ if (dev) {
   sheets[params.get('sheet')]?.();
 }
 // On localhost the service worker would serve stale code while developing; opt in with ?sw
-if ('serviceWorker' in navigator && !ext && location.protocol !== 'file:' && (!dev || location.search.includes('sw'))) {
+if ('serviceWorker' in navigator && !shell && location.protocol !== 'file:' && (!dev || location.search.includes('sw'))) {
   const sw = navigator.serviceWorker;
   const hadController = !!sw.controller;
   // sw.js skips waiting and claims the page, so a new version takes over while this one runs: reload to load

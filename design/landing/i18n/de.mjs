@@ -134,6 +134,19 @@ export default {
       { h: 'Computer', steps: ['Öffne die Seite in Chrome oder Edge.', 'Klicke auf das Installationssymbol in der Adressleiste.', 'Die App öffnet sich in einem eigenen Fenster.'] },
     ],
     offline: 'Öffne danach in der App das Menü ⋯ und tippe auf „Descargar todo“ (Alles herunterladen), um offline zu hören.',
+    android: {
+      h: 'App für Android',
+      steps: ['Lade die App (.apk) auf dein Handy.', 'Öffne sie. Wenn Android fragt, erlaube deinem Browser, Apps zu installieren.', 'Tippe auf Installieren. Der Klang läuft auch bei ausgeschaltetem Bildschirm weiter.'],
+      download: '.apk herunterladen',
+      cta: 'Für Android herunterladen',
+    },
+    mac: {
+      h: 'App für Mac',
+      steps: ['Lade Domentum für Mac (.dmg) herunter und öffne es.', 'Zieh Domentum in den Ordner „Programme“.', 'Öffne sie beim ersten Mal und geh dann zu Systemeinstellungen → Datenschutz & Sicherheit → „Dennoch öffnen“: Sie ist noch nicht im App Store.'],
+      download: '.dmg herunterladen',
+      cta: 'Für Mac herunterladen',
+    },
+    releases: 'Alle Versionen auf GitHub',
     extension: {
       h: 'Chrome-Erweiterung',
       steps: ['Lade die Erweiterung (.zip) herunter und entpacke sie.', 'Öffne chrome://extensions und aktiviere den Entwicklermodus.', 'Klicke auf „Entpackte Erweiterung laden“ und wähle den Ordner. Jeder neue Tab ist dann Domentum, und das Symbol öffnet einen Mini-Player.'],

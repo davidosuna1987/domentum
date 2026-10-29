@@ -134,6 +134,19 @@ export default {
       { h: 'Ordinador', steps: ['Obre-la a Chrome o Edge.', 'Fes clic a la icona d’instal·lació de la barra d’adreces.', 'S’obre en una finestra pròpia.'] },
     ],
     offline: 'Després, obre el menú ⋯ de l’app i toca «Descargar todo» (descarregar-ho tot) per escoltar sense connexió.',
+    android: {
+      h: 'App per a Android',
+      steps: ['Baixa l’app (.apk) al mòbil.', 'Obre-la. Si Android t’ho demana, permet que el navegador instal·li apps.', 'Toca Instal·la. El so continua amb la pantalla apagada.'],
+      download: 'Baixa l’.apk',
+      cta: 'Baixa-la per a Android',
+    },
+    mac: {
+      h: 'App per a Mac',
+      steps: ['Baixa Domentum per a Mac (.dmg) i obre’l.', 'Arrossega Domentum a Aplicacions.', 'La primera vegada, obre-la i ves a Configuració del Sistema → Privadesa i seguretat → «Obre igualment»: encara no és a l’App Store.'],
+      download: 'Baixa el .dmg',
+      cta: 'Baixa-la per a Mac',
+    },
+    releases: 'Totes les versions a GitHub',
     extension: {
       h: 'Extensió de Chrome',
       steps: ['Baixa l’extensió (.zip) i descomprimeix-la.', 'Obre chrome://extensions i activa el mode de desenvolupador.', 'Fes clic a «Carrega l’extensió desempaquetada» i tria la carpeta. Cada pestanya nova serà Domentum, i la seva icona obre un mini reproductor.'],

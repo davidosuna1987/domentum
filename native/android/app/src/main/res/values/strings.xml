@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Domentum</string>
+    <string name="title_activity_main">Domentum</string>
+    <string name="package_name">io.github.davidosuna1987.domentum</string>
+    <string name="custom_url_scheme">io.github.davidosuna1987.domentum</string>
+</resources>

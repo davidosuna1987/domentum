@@ -16,7 +16,7 @@
 <link rel="alternate" hreflang="x-default" href="https://davidosuna1987.github.io/domentum/">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="theme-color" content="#f4f0e6">
-<script>/* light unless the visitor picked dark here; then animate the brush strokes in */ (() => { const d = document.documentElement; d.classList.add('js'); const u = navigator.userAgentData; if (u ? !u.mobile && u.brands.some(b => /Chromium/.test(b.brand)) : /Chrom(e|ium)[/]/.test(navigator.userAgent) && !/Mobile|Android|iPhone|iPad/.test(navigator.userAgent)) d.classList.add('chromium'); try { if (localStorage.getItem('domentum:landing-scheme') === 'dark') { d.dataset.scheme = 'dark'; document.querySelector('meta[name=theme-color]').content = '#151412'; } } catch {} })();</script>
+<script>/* light unless the visitor picked dark here; then animate the brush strokes in */ (() => { const d = document.documentElement; d.classList.add('js'); const u = navigator.userAgentData; if (u ? !u.mobile && u.brands.some(b => /Chromium/.test(b.brand)) : /Chrom(e|ium)[/]/.test(navigator.userAgent) && !/Mobile|Android|iPhone|iPad/.test(navigator.userAgent)) d.classList.add('chromium'); if (/Android/.test(navigator.userAgent)) d.classList.add('android'); else if ((u ? u.platform === 'macOS' : /Macintosh/.test(navigator.userAgent)) && navigator.maxTouchPoints < 2) d.classList.add('mac'); try { if (localStorage.getItem('domentum:landing-scheme') === 'dark') { d.dataset.scheme = 'dark'; document.querySelector('meta[name=theme-color]').content = '#151412'; } } catch {} })();</script>
 <link rel="icon" href="app/icons/icon.svg" type="image/svg+xml">
 <link rel="icon" href="app/icons/icon-192.png" sizes="192x192" type="image/png">
 <link rel="apple-touch-icon" href="app/icons/apple-touch-icon.png">
@@ -107,6 +107,10 @@
    "applicationSubCategory": "Ambient sounds to focus, relax and sleep",
    "operatingSystem": "Web browser, iOS, iPadOS, Android, Windows, macOS, Linux",
    "browserRequirements": "Requires JavaScript and the Web Audio API",
+   "downloadUrl": [
+    "https://github.com/davidosuna1987/domentum/releases/latest/download/domentum-android.apk",
+    "https://github.com/davidosuna1987/domentum/releases/latest/download/Domentum-mac.dmg"
+   ],
    "isAccessibleForFree": true,
    "offers": {
     "@type": "Offer",
@@ -383,7 +387,7 @@
       <div class="hero-text">
         <h1>Ambient sounds to <mark class="hl">focus, relax and sleep</mark></h1>
         <p class="lede">Mix rain, waves, fire, forest, café, brown noise or binaural beats, with <mark class="hl">a volume for every layer</mark>. Free, with no time limit, and it works offline.</p>
-        <p class="ctas"><a class="btn" href="app/">Start listening</a><a class="link" href="#install">Install on your phone</a><button type="button" class="ext-cta ext-only" data-ext-open><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h4v3a2 2 0 1 0 4 0V3h0a2 2 0 0 1 2 2v4h-3a2 2 0 1 0 0 4h3v6a2 2 0 0 1-2 2h-4v-3a2 2 0 1 0-4 0v3H5a2 2 0 0 1-2-2v-4h3a2 2 0 1 0 0-4H3V5a2 2 0 0 1 2-2h4Z"/></svg><span>Get the Chrome extension</span></button></p>
+        <p class="ctas"><a class="btn" href="app/">Start listening</a><a class="link pwa-link" href="#install">Install on your phone</a><button type="button" class="ext-cta ext-only" data-dl-open="ext"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h4v3a2 2 0 1 0 4 0V3h0a2 2 0 0 1 2 2v4h-3a2 2 0 1 0 0 4h3v6a2 2 0 0 1-2 2h-4v-3a2 2 0 1 0-4 0v3H5a2 2 0 0 1-2-2v-4h3a2 2 0 1 0 0-4H3V5a2 2 0 0 1 2-2h4Z"/></svg><span>Get the Chrome extension</span></button><button type="button" class="ext-cta android-only" data-dl-open="android"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg><span>Download for Android</span></button><button type="button" class="ext-cta mac-only" data-dl-open="mac"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg><span>Download for Mac</span></button></p>
         <ul class="facts"><li>Free</li><li>No account</li><li>No ads</li><li>No time limit</li><li>Works offline</li></ul>
       </div>
       <a class="enso" href="app/" aria-label="Open the player">
@@ -657,6 +661,8 @@
           <div class="reveal"><h3>iPhone and iPad</h3><ol><li>Open Domentum in Safari.</li><li>Tap Share (the square with an arrow).</li><li>Choose Add to Home Screen.</li></ol></div>
           <div class="reveal"><h3>Android</h3><ol><li>Open it in Chrome.</li><li>Open the ⋮ menu.</li><li>Tap Install app or Add to Home screen.</li></ol></div>
           <div class="reveal"><h3>Computer</h3><ol><li>Open it in Chrome or Edge.</li><li>Click the install icon in the address bar.</li><li>It opens in its own window.</li></ol></div>
+          <div class="reveal extension"><h3>Android app</h3><ol><li>Download the app (.apk) on your phone.</li><li>Open it. If Android asks, allow your browser to install apps.</li><li>Tap Install. The sound keeps playing with the screen off.</li></ol><p><a class="link" href="https://github.com/davidosuna1987/domentum/releases/latest/download/domentum-android.apk" download>Download the .apk</a> · <a class="link" href="https://github.com/davidosuna1987/domentum/releases" rel="noopener">All versions on GitHub</a></p></div>
+          <div class="reveal extension"><h3>Mac app</h3><ol><li>Download Domentum for Mac (.dmg) and open it.</li><li>Drag Domentum into Applications.</li><li>The first time, open it and then go to System Settings → Privacy &amp; Security → “Open Anyway”: it isn’t in the App Store yet.</li></ol><p><a class="link" href="https://github.com/davidosuna1987/domentum/releases/latest/download/Domentum-mac.dmg" download>Download the .dmg</a> · <a class="link" href="https://github.com/davidosuna1987/domentum/releases" rel="noopener">All versions on GitHub</a></p></div>
           <div class="reveal extension"><h3>Chrome extension</h3><ol><li>Download the extension (.zip) and unzip it.</li><li>Open chrome://extensions and turn on Developer mode.</li><li>Click “Load unpacked” and choose the folder. Every new tab becomes Domentum, and its icon opens a mini player.</li></ol><p><a class="link" href="https://github.com/davidosuna1987/domentum/releases/latest/download/domentum-chrome.zip" download>Download for Chrome</a></p></div>
         </div>
         <p class="note">Then open the ⋯ menu in the app and tap “Descargar todo” (download everything) to listen offline.</p>
@@ -706,7 +712,7 @@
   </div>
 </footer>
 
-<dialog class="ext-dialog" aria-labelledby="ext-h">
+<dialog class="ext-dialog" id="dl-ext" aria-labelledby="ext-h">
   <form method="dialog"><button class="ext-x" aria-label="Close"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></form>
   <h2 id="ext-h">Chrome extension</h2>
   <p class="intro">Domentum in every new tab, and a mini player behind the toolbar icon. It isn’t in the Chrome Web Store yet, so it installs by hand. It takes a minute:</p>
@@ -715,6 +721,26 @@
     <li><span>Open chrome://extensions and turn on Developer mode.</span><span class="copy"><code>chrome://extensions</code><button type="button" class="link" data-copy="chrome://extensions" data-done="Copied">Copy</button></span></li>
     <li><span>Click “Load unpacked” and choose the folder. Every new tab becomes Domentum, and its icon opens a mini player.</span></li>
   </ol>
+</dialog>
+<dialog class="ext-dialog" id="dl-android" aria-labelledby="dl-android-h">
+  <form method="dialog"><button class="ext-x" aria-label="Close"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></form>
+  <h2 id="dl-android-h">Android app</h2>
+  <ol>
+    <li><span>Download the app (.apk) on your phone.</span><a class="btn small" href="https://github.com/davidosuna1987/domentum/releases/latest/download/domentum-android.apk" download>Download the .apk</a></li>
+    <li><span>Open it. If Android asks, allow your browser to install apps.</span></li>
+    <li><span>Tap Install. The sound keeps playing with the screen off.</span></li>
+  </ol>
+  <p class="note"><a class="link" href="https://github.com/davidosuna1987/domentum/releases" rel="noopener">All versions on GitHub</a></p>
+</dialog>
+<dialog class="ext-dialog" id="dl-mac" aria-labelledby="dl-mac-h">
+  <form method="dialog"><button class="ext-x" aria-label="Close"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></form>
+  <h2 id="dl-mac-h">Mac app</h2>
+  <ol>
+    <li><span>Download Domentum for Mac (.dmg) and open it.</span><a class="btn small" href="https://github.com/davidosuna1987/domentum/releases/latest/download/Domentum-mac.dmg" download>Download the .dmg</a></li>
+    <li><span>Drag Domentum into Applications.</span></li>
+    <li><span>The first time, open it and then go to System Settings → Privacy &amp; Security → “Open Anyway”: it isn’t in the App Store yet.</span></li>
+  </ol>
+  <p class="note"><a class="link" href="https://github.com/davidosuna1987/domentum/releases" rel="noopener">All versions on GitHub</a></p>
 </dialog>
 <div class="lang-banner" role="region" aria-label="Language" hidden><p></p><a href="#"></a><button type="button"><svg class="ico " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
 <script>
@@ -778,9 +804,8 @@
   };
   const show = el => { if (el.classList.contains('hl')) place(el, !still); el.classList.add('in'); };
   // the Chrome extension dialog: steps, the .zip and a copy button for chrome://extensions (pages can't link it)
-  const dlg = document.querySelector('.ext-dialog');
-  document.querySelectorAll('[data-ext-open]').forEach(b => b.addEventListener('click', () => dlg?.showModal()));
-  dlg?.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+  document.querySelectorAll('[data-dl-open]').forEach(b => b.addEventListener('click', () => document.getElementById('dl-' + b.dataset.dlOpen)?.showModal()));
+  document.querySelectorAll('.ext-dialog').forEach(dlg => dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); }));
   document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', async () => {
     try { await navigator.clipboard.writeText(b.dataset.copy); } catch {}
     const was = b.textContent; b.textContent = b.dataset.done; setTimeout(() => { b.textContent = was; }, 1800);

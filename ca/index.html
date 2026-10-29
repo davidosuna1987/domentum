@@ -16,7 +16,7 @@
 <link rel="alternate" hreflang="x-default" href="https://davidosuna1987.github.io/domentum/">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="theme-color" content="#f4f0e6">
-<script>/* light unless the visitor picked dark here; then animate the brush strokes in */ (() => { const d = document.documentElement; d.classList.add('js'); const u = navigator.userAgentData; if (u ? !u.mobile && u.brands.some(b => /Chromium/.test(b.brand)) : /Chrom(e|ium)[/]/.test(navigator.userAgent) && !/Mobile|Android|iPhone|iPad/.test(navigator.userAgent)) d.classList.add('chromium'); try { if (localStorage.getItem('domentum:landing-scheme') === 'dark') { d.dataset.scheme = 'dark'; document.querySelector('meta[name=theme-color]').content = '#151412'; } } catch {} })();</script>
+<script>/* light unless the visitor picked dark here; then animate the brush strokes in */ (() => { const d = document.documentElement; d.classList.add('js'); const u = navigator.userAgentData; if (u ? !u.mobile && u.brands.some(b => /Chromium/.test(b.brand)) : /Chrom(e|ium)[/]/.test(navigator.userAgent) && !/Mobile|Android|iPhone|iPad/.test(navigator.userAgent)) d.classList.add('chromium'); if (/Android/.test(navigator.userAgent)) d.classList.add('android'); else if ((u ? u.platform === 'macOS' : /Macintosh/.test(navigator.userAgent)) && navigator.maxTouchPoints < 2) d.classList.add('mac'); try { if (localStorage.getItem('domentum:landing-scheme') === 'dark') { d.dataset.scheme = 'dark'; document.querySelector('meta[name=theme-color]').content = '#151412'; } } catch {} })();</script>
 <link rel="icon" href="../app/icons/icon.svg" type="image/svg+xml">
 <link rel="icon" href="../app/icons/icon-192.png" sizes="192x192" type="image/png">
 <link rel="apple-touch-icon" href="../app/icons/apple-touch-icon.png">
@@ -100,6 +100,10 @@
    "applicationSubCategory": "Sons ambientals per concentrar-te, relaxar-te i dormir",
    "operatingSystem": "Web browser, iOS, iPadOS, Android, Windows, macOS, Linux",
    "browserRequirements": "Requires JavaScript and the Web Audio API",
+   "downloadUrl": [
+    "https://github.com/davidosuna1987/domentum/releases/latest/download/domentum-android.apk",
+    "https://github.com/davidosuna1987/domentum/releases/latest/download/Domentum-mac.dmg"
+   ],
    "isAccessibleForFree": true,
    "offers": {
     "@type": "Offer",
@@ -376,7 +380,7 @@
       <div class="hero-text">
         <h1>Sons ambientals per <mark class="hl">concentrar-te, relaxar-te i dormir</mark></h1>
         <p class="lede">Mescla pluja, onades, foc, bosc, cafè, soroll marró o ones binaurals, amb <mark class="hl">el volum de cada capa</mark> al teu gust. Gratis, sense límit de temps i també sense connexió.</p>
-        <p class="ctas"><a class="btn" href="../app/">Començar a escoltar</a><a class="link" href="#install">Instal·lar al mòbil</a><button type="button" class="ext-cta ext-only" data-ext-open><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h4v3a2 2 0 1 0 4 0V3h0a2 2 0 0 1 2 2v4h-3a2 2 0 1 0 0 4h3v6a2 2 0 0 1-2 2h-4v-3a2 2 0 1 0-4 0v3H5a2 2 0 0 1-2-2v-4h3a2 2 0 1 0 0-4H3V5a2 2 0 0 1 2-2h4Z"/></svg><span>Extensió per a Chrome</span></button></p>
+        <p class="ctas"><a class="btn" href="../app/">Començar a escoltar</a><a class="link pwa-link" href="#install">Instal·lar al mòbil</a><button type="button" class="ext-cta ext-only" data-dl-open="ext"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h4v3a2 2 0 1 0 4 0V3h0a2 2 0 0 1 2 2v4h-3a2 2 0 1 0 0 4h3v6a2 2 0 0 1-2 2h-4v-3a2 2 0 1 0-4 0v3H5a2 2 0 0 1-2-2v-4h3a2 2 0 1 0 0-4H3V5a2 2 0 0 1 2-2h4Z"/></svg><span>Extensió per a Chrome</span></button><button type="button" class="ext-cta android-only" data-dl-open="android"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg><span>Baixa-la per a Android</span></button><button type="button" class="ext-cta mac-only" data-dl-open="mac"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg><span>Baixa-la per a Mac</span></button></p>
         <ul class="facts"><li>Gratis</li><li>Sense compte</li><li>Sense anuncis</li><li>Sense límit de temps</li><li>Funciona sense connexió</li></ul>
       </div>
       <a class="enso" href="../app/" aria-label="Obrir el reproductor">
@@ -650,6 +654,8 @@
           <div class="reveal"><h3>iPhone i iPad</h3><ol><li>Obre Domentum a Safari.</li><li>Toca Comparteix (el quadrat amb una fletxa).</li><li>Tria Afegeix a la pantalla d’inici.</li></ol></div>
           <div class="reveal"><h3>Android</h3><ol><li>Obre-la a Chrome.</li><li>Obre el menú ⋮.</li><li>Toca Instal·la l’aplicació o Afegeix a la pantalla d’inici.</li></ol></div>
           <div class="reveal"><h3>Ordinador</h3><ol><li>Obre-la a Chrome o Edge.</li><li>Fes clic a la icona d’instal·lació de la barra d’adreces.</li><li>S’obre en una finestra pròpia.</li></ol></div>
+          <div class="reveal extension"><h3>App per a Android</h3><ol><li>Baixa l’app (.apk) al mòbil.</li><li>Obre-la. Si Android t’ho demana, permet que el navegador instal·li apps.</li><li>Toca Instal·la. El so continua amb la pantalla apagada.</li></ol><p><a class="link" href="https://github.com/davidosuna1987/domentum/releases/latest/download/domentum-android.apk" download>Baixa l’.apk</a> · <a class="link" href="https://github.com/davidosuna1987/domentum/releases" rel="noopener">Totes les versions a GitHub</a></p></div>
+          <div class="reveal extension"><h3>App per a Mac</h3><ol><li>Baixa Domentum per a Mac (.dmg) i obre’l.</li><li>Arrossega Domentum a Aplicacions.</li><li>La primera vegada, obre-la i ves a Configuració del Sistema → Privadesa i seguretat → «Obre igualment»: encara no és a l’App Store.</li></ol><p><a class="link" href="https://github.com/davidosuna1987/domentum/releases/latest/download/Domentum-mac.dmg" download>Baixa el .dmg</a> · <a class="link" href="https://github.com/davidosuna1987/domentum/releases" rel="noopener">Totes les versions a GitHub</a></p></div>
           <div class="reveal extension"><h3>Extensió de Chrome</h3><ol><li>Baixa l’extensió (.zip) i descomprimeix-la.</li><li>Obre chrome://extensions i activa el mode de desenvolupador.</li><li>Fes clic a «Carrega l’extensió desempaquetada» i tria la carpeta. Cada pestanya nova serà Domentum, i la seva icona obre un mini reproductor.</li></ol><p><a class="link" href="https://github.com/davidosuna1987/domentum/releases/latest/download/domentum-chrome.zip" download>Baixa-la per a Chrome</a></p></div>
         </div>
         <p class="note">Després, obre el menú ⋯ de l’app i toca «Descargar todo» (descarregar-ho tot) per escoltar sense connexió.</p>
@@ -699,7 +705,7 @@
   </div>
 </footer>
 
-<dialog class="ext-dialog" aria-labelledby="ext-h">
+<dialog class="ext-dialog" id="dl-ext" aria-labelledby="ext-h">
   <form method="dialog"><button class="ext-x" aria-label="Tancar"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></form>
   <h2 id="ext-h">Extensió de Chrome</h2>
   <p class="intro">Domentum a cada pestanya nova i un mini reproductor a la icona de la barra. Encara no és a la Chrome Web Store, així que s’instal·la a mà. És un minut:</p>
@@ -708,6 +714,26 @@
     <li><span>Obre chrome://extensions i activa el mode de desenvolupador.</span><span class="copy"><code>chrome://extensions</code><button type="button" class="link" data-copy="chrome://extensions" data-done="Copiat">Copia</button></span></li>
     <li><span>Fes clic a «Carrega l’extensió desempaquetada» i tria la carpeta. Cada pestanya nova serà Domentum, i la seva icona obre un mini reproductor.</span></li>
   </ol>
+</dialog>
+<dialog class="ext-dialog" id="dl-android" aria-labelledby="dl-android-h">
+  <form method="dialog"><button class="ext-x" aria-label="Tancar"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></form>
+  <h2 id="dl-android-h">App per a Android</h2>
+  <ol>
+    <li><span>Baixa l’app (.apk) al mòbil.</span><a class="btn small" href="https://github.com/davidosuna1987/domentum/releases/latest/download/domentum-android.apk" download>Baixa l’.apk</a></li>
+    <li><span>Obre-la. Si Android t’ho demana, permet que el navegador instal·li apps.</span></li>
+    <li><span>Toca Instal·la. El so continua amb la pantalla apagada.</span></li>
+  </ol>
+  <p class="note"><a class="link" href="https://github.com/davidosuna1987/domentum/releases" rel="noopener">Totes les versions a GitHub</a></p>
+</dialog>
+<dialog class="ext-dialog" id="dl-mac" aria-labelledby="dl-mac-h">
+  <form method="dialog"><button class="ext-x" aria-label="Tancar"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></form>
+  <h2 id="dl-mac-h">App per a Mac</h2>
+  <ol>
+    <li><span>Baixa Domentum per a Mac (.dmg) i obre’l.</span><a class="btn small" href="https://github.com/davidosuna1987/domentum/releases/latest/download/Domentum-mac.dmg" download>Baixa el .dmg</a></li>
+    <li><span>Arrossega Domentum a Aplicacions.</span></li>
+    <li><span>La primera vegada, obre-la i ves a Configuració del Sistema → Privadesa i seguretat → «Obre igualment»: encara no és a l’App Store.</span></li>
+  </ol>
+  <p class="note"><a class="link" href="https://github.com/davidosuna1987/domentum/releases" rel="noopener">Totes les versions a GitHub</a></p>
 </dialog>
 <div class="lang-banner" role="region" aria-label="Idioma" hidden><p></p><a href="#"></a><button type="button"><svg class="ico " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
 <script>
@@ -771,9 +797,8 @@
   };
   const show = el => { if (el.classList.contains('hl')) place(el, !still); el.classList.add('in'); };
   // the Chrome extension dialog: steps, the .zip and a copy button for chrome://extensions (pages can't link it)
-  const dlg = document.querySelector('.ext-dialog');
-  document.querySelectorAll('[data-ext-open]').forEach(b => b.addEventListener('click', () => dlg?.showModal()));
-  dlg?.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+  document.querySelectorAll('[data-dl-open]').forEach(b => b.addEventListener('click', () => document.getElementById('dl-' + b.dataset.dlOpen)?.showModal()));
+  document.querySelectorAll('.ext-dialog').forEach(dlg => dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); }));
   document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', async () => {
     try { await navigator.clipboard.writeText(b.dataset.copy); } catch {}
     const was = b.textContent; b.textContent = b.dataset.done; setTimeout(() => { b.textContent = was; }, 1800);

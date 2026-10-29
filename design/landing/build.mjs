@@ -23,6 +23,12 @@ const EXTENSION = `${REPO}/releases/latest/download/domentum-chrome.zip`;
 // goes straight to the store, and the by-hand steps (download the .zip, load it unpacked) leave the page.
 // (CHROME_STORE=<url> node design/landing/build.mjs previews it without changing this line.)
 const CHROME_STORE = process.env.CHROME_STORE || '';
+// The Android and Mac apps (native/), attached to the latest GitHub release; the stores, once they are there
+const RELEASES = `${REPO}/releases`;
+const APK = `${REPO}/releases/latest/download/domentum-android.apk`;
+const DMG = `${REPO}/releases/latest/download/Domentum-mac.dmg`;
+const PLAY_STORE = process.env.PLAY_STORE || '';
+const MAC_STORE = process.env.MAC_STORE || '';
 const TODAY = new Date().toISOString().slice(0, 10);
 
 const LANGS = [];
@@ -135,12 +141,40 @@ function extButton(t, cls) {
   const x = t.install.extension;
   const ico = `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h4v3a2 2 0 1 0 4 0V3h0a2 2 0 0 1 2 2v4h-3a2 2 0 1 0 0 4h3v6a2 2 0 0 1-2 2h-4v-3a2 2 0 1 0-4 0v3H5a2 2 0 0 1-2-2v-4h3a2 2 0 1 0 0-4H3V5a2 2 0 0 1 2-2h4Z"/></svg>`;
   if (CHROME_STORE) return `<a class="${cls} ext-only" href="${CHROME_STORE}" rel="noopener">${ico}<span>${esc(x.store)}</span></a>`;
-  return `<button type="button" class="${cls} ext-only" data-ext-open>${ico}<span>${esc(x.cta)}</span></button>`;
+  return `<button type="button" class="${cls} ext-only" data-dl-open="ext">${ico}<span>${esc(x.cta)}</span></button>`;
 }
+// "Download for Android / Mac": straight to the store once it is there, else a dialog with the steps
+const DL_ICON = `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg>`;
+function appButton(t, kind, cls) {
+  const x = t.install[kind], store = kind === 'android' ? PLAY_STORE : MAC_STORE;
+  if (store) return `<a class="${cls} ${kind}-only" href="${store}" rel="noopener">${DL_ICON}<span>${esc(x.cta)}</span></a>`;
+  return `<button type="button" class="${cls} ${kind}-only" data-dl-open="${kind}">${DL_ICON}<span>${esc(x.cta)}</span></button>`;
+}
+function appDialog(t, kind) {
+  if (kind === 'android' ? PLAY_STORE : MAC_STORE) return '';
+  const x = t.install[kind], file = kind === 'android' ? APK : DMG;
+  return `<dialog class="ext-dialog" id="dl-${kind}" aria-labelledby="dl-${kind}-h">
+  <form method="dialog"><button class="ext-x" aria-label="${esc(t.banner.close)}"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></form>
+  <h2 id="dl-${kind}-h">${esc(x.h)}</h2>
+  <ol>
+    <li><span>${esc(x.steps[0])}</span><a class="btn small" href="${file}" download>${esc(x.download)}</a></li>
+    <li><span>${esc(x.steps[1])}</span></li>
+    <li><span>${esc(x.steps[2])}</span></li>
+  </ol>
+  <p class="note"><a class="link" href="${RELEASES}" rel="noopener">${esc(t.install.releases)}</a></p>
+</dialog>`;
+}
+// the app's block in the install section: the steps and the download, or the store
+function appBlock(t, kind) {
+  const x = t.install[kind], store = kind === 'android' ? PLAY_STORE : MAC_STORE, file = kind === 'android' ? APK : DMG;
+  if (store) return `<div class="reveal extension"><h3>${esc(x.h)}</h3><p>${appButton(t, kind, 'link')}</p></div>`;
+  return `<div class="reveal extension"><h3>${esc(x.h)}</h3><ol>${x.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol><p><a class="link" href="${file}" download>${esc(x.download)}</a> · <a class="link" href="${RELEASES}" rel="noopener">${esc(t.install.releases)}</a></p></div>`;
+}
+
 function extDialog(t) {
   if (CHROME_STORE) return '';
   const x = t.install.extension;
-  return `<dialog class="ext-dialog" aria-labelledby="ext-h">
+  return `<dialog class="ext-dialog" id="dl-ext" aria-labelledby="ext-h">
   <form method="dialog"><button class="ext-x" aria-label="${esc(t.banner.close)}"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></form>
   <h2 id="ext-h">${esc(x.h)}</h2>
   <p class="intro">${esc(x.intro)}</p>
@@ -170,7 +204,7 @@ function jsonLd(t, url) {
       '@type': 'WebApplication', '@id': `${BASE}#app`, name: 'Domentum', url: `${BASE}app/`, installUrl: `${BASE}app/`,
       description: plain(t.about.p.join(' ')), applicationCategory: 'LifestyleApplication', applicationSubCategory: t.ogTagline,
       operatingSystem: 'Web browser, iOS, iPadOS, Android, Windows, macOS, Linux', browserRequirements: 'Requires JavaScript and the Web Audio API',
-      isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' }, inLanguage: 'es',
+      downloadUrl: [PLAY_STORE || APK, MAC_STORE || DMG], isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' }, inLanguage: 'es',
       featureList: t.features.items.map(f => `${f.h}: ${f.p}`), image: `${BASE}app/icons/icon-512.png`,
       screenshot: THEMES.slice(0, 4).map(th => `${BASE}app/icons/themes/${th.id}-light.jpg`),
       sameAs: [REPO],
@@ -207,7 +241,7 @@ ${LANGS.map(l => `<link rel="alternate" hreflang="${l.lang}" href="${urlOf(l.lan
 <link rel="alternate" hreflang="x-default" href="${BASE}">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="theme-color" content="#f4f0e6">
-<script>/* light unless the visitor picked dark here; then animate the brush strokes in */ (() => { const d = document.documentElement; d.classList.add('js'); const u = navigator.userAgentData; if (u ? !u.mobile && u.brands.some(b => /Chromium/.test(b.brand)) : /Chrom(e|ium)[/]/.test(navigator.userAgent) && !/Mobile|Android|iPhone|iPad/.test(navigator.userAgent)) d.classList.add('chromium'); try { if (localStorage.getItem('domentum:landing-scheme') === 'dark') { d.dataset.scheme = 'dark'; document.querySelector('meta[name=theme-color]').content = '#151412'; } } catch {} })();</script>
+<script>/* light unless the visitor picked dark here; then animate the brush strokes in */ (() => { const d = document.documentElement; d.classList.add('js'); const u = navigator.userAgentData; if (u ? !u.mobile && u.brands.some(b => /Chromium/.test(b.brand)) : /Chrom(e|ium)[/]/.test(navigator.userAgent) && !/Mobile|Android|iPhone|iPad/.test(navigator.userAgent)) d.classList.add('chromium'); if (/Android/.test(navigator.userAgent)) d.classList.add('android'); else if ((u ? u.platform === 'macOS' : /Macintosh/.test(navigator.userAgent)) && navigator.maxTouchPoints < 2) d.classList.add('mac'); try { if (localStorage.getItem('domentum:landing-scheme') === 'dark') { d.dataset.scheme = 'dark'; document.querySelector('meta[name=theme-color]').content = '#151412'; } } catch {} })();</script>
 <link rel="icon" href="${r}app/icons/icon.svg" type="image/svg+xml">
 <link rel="icon" href="${r}app/icons/icon-192.png" sizes="192x192" type="image/png">
 <link rel="apple-touch-icon" href="${r}app/icons/apple-touch-icon.png">
@@ -268,7 +302,7 @@ ${jsonLd(t, url)}
       <div class="hero-text">
         <h1>${rich(t.hero.h1)}</h1>
         <p class="lede">${rich(t.hero.lede)}</p>
-        <p class="ctas"><a class="btn" href="${app}">${esc(t.hero.cta)}</a><a class="link" href="#install">${esc(t.hero.install)}</a>${extButton(t, 'ext-cta')}</p>
+        <p class="ctas"><a class="btn" href="${app}">${esc(t.hero.cta)}</a><a class="link pwa-link" href="#install">${esc(t.hero.install)}</a>${extButton(t, 'ext-cta')}${appButton(t, 'android', 'ext-cta')}${appButton(t, 'mac', 'ext-cta')}</p>
         <ul class="facts">${t.hero.facts.map(f => `<li>${esc(f)}</li>`).join('')}</ul>
       </div>
       <a class="enso" href="${app}" aria-label="${esc(t.hero.play)}">
@@ -403,6 +437,8 @@ ${THEMES.map(th => {
         <p class="intro">${rich(t.install.intro)}</p>
         <div class="platforms">
 ${t.install.items.map(p => `          <div class="reveal"><h3>${esc(p.h)}</h3><ol>${p.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol></div>`).join('\n')}
+          ${appBlock(t, 'android')}
+          ${appBlock(t, 'mac')}
           <div class="reveal extension"><h3>${esc(t.install.extension.h)}</h3>${CHROME_STORE
             ? `<p class="ext-store">${esc(plain(t.install.extension.intro).split(/[.:]/)[0])}.</p><p>${extButton(t, 'link')}</p>`
             : `<ol>${t.install.extension.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol><p><a class="link" href="${EXTENSION}" download>${esc(t.install.extension.download)}</a></p>`}</div>
@@ -443,6 +479,8 @@ ${t.faq.items.map(q => `          <details class="reveal"><summary><h3>${esc(q.q
 </footer>
 
 ${extDialog(t)}
+${appDialog(t, 'android')}
+${appDialog(t, 'mac')}
 <div class="lang-banner" role="region" aria-label="${esc(t.nav.languages)}" hidden><p></p><a href="#"></a><button type="button">${icon('x')}</button></div>
 <script>
 // A visitor whose browser asks for another language we have gets a quiet link to it. No automatic
@@ -505,9 +543,8 @@ ${extDialog(t)}
   };
   const show = el => { if (el.classList.contains('hl')) place(el, !still); el.classList.add('in'); };
   // the Chrome extension dialog: steps, the .zip and a copy button for chrome://extensions (pages can't link it)
-  const dlg = document.querySelector('.ext-dialog');
-  document.querySelectorAll('[data-ext-open]').forEach(b => b.addEventListener('click', () => dlg?.showModal()));
-  dlg?.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+  document.querySelectorAll('[data-dl-open]').forEach(b => b.addEventListener('click', () => document.getElementById('dl-' + b.dataset.dlOpen)?.showModal()));
+  document.querySelectorAll('.ext-dialog').forEach(dlg => dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); }));
   document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', async () => {
     try { await navigator.clipboard.writeText(b.dataset.copy); } catch {}
     const was = b.textContent; b.textContent = b.dataset.done; setTimeout(() => { b.textContent = was; }, 1800);
@@ -553,6 +590,9 @@ function llms() {
     '## Pages', '',
     ...LANGS.map(l => `- [${l.name}](${urlOf(l.lang)}): ${l.title}`),
     `- [Player](${BASE}app/): the app itself`,
+    `- [Android app](${PLAY_STORE || APK}): the same player as a native Android app; the sound keeps playing with the screen off. ${PLAY_STORE ? 'On Google Play.' : t.install.android.steps.join(' ')}`,
+    `- [Mac app](${MAC_STORE || DMG}): the same player as a native Mac app (Apple Silicon and Intel). ${MAC_STORE ? 'On the Mac App Store.' : t.install.mac.steps.join(' ')}`,
+    `- [All downloads](${RELEASES})`,
     CHROME_STORE
       ? `- [Chrome extension](${CHROME_STORE}): Domentum in every new tab, and a mini player behind the toolbar icon. In the Chrome Web Store.`
       : `- [Chrome extension](${EXTENSION}): Domentum in every new tab, and a mini player behind the toolbar icon. ${t.install.extension.steps.join(' ')}`, '',

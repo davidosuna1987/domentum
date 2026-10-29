@@ -1,0 +1,15 @@
+{
+  "appId": "io.github.davidosuna1987.domentum",
+  "appName": "Domentum",
+  "webDir": "www",
+  "backgroundColor": "#f4f0e6",
+  "android": {
+    "allowMixedContent": false,
+    "webContentsDebuggingEnabled": false
+  },
+  "ios": {
+    "contentInset": "never",
+    "scrollEnabled": true,
+    "limitsNavigationsToAppBoundDomains": false
+  }
+}

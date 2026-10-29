@@ -1,0 +1,6 @@
+node_modules/
+www/
+# signing: never in git (see README.md)
+*.jks
+*.keystore
+keystore.properties

@@ -134,6 +134,19 @@ export default {
       { h: 'Computador', steps: ['Abra o Domentum no Chrome ou no Edge.', 'Clique no ícone de instalação na barra de endereços.', 'Ele abre em uma janela própria.'] },
     ],
     offline: 'Depois, abra o menu ⋯ do app e toque em “Descargar todo” (baixar tudo) para ouvir offline.',
+    android: {
+      h: 'App para Android',
+      steps: ['Baixe o app (.apk) no celular.', 'Abra o arquivo. Se o Android pedir, permita que o navegador instale apps.', 'Toque em Instalar. O som continua com a tela apagada.'],
+      download: 'Baixar o .apk',
+      cta: 'Baixar para Android',
+    },
+    mac: {
+      h: 'App para Mac',
+      steps: ['Baixe o Domentum para Mac (.dmg) e abra.', 'Arraste o Domentum para Aplicativos.', 'Na primeira vez, abra o app e vá em Ajustes do Sistema → Privacidade e Segurança → “Abrir Mesmo Assim”: ele ainda não está na App Store.'],
+      download: 'Baixar o .dmg',
+      cta: 'Baixar para Mac',
+    },
+    releases: 'Todas as versões no GitHub',
     extension: {
       h: 'Extensão do Chrome',
       steps: ['Baixe a extensão (.zip) e descompacte.', 'Abra chrome://extensions e ative o modo do desenvolvedor.', 'Clique em “Carregar sem compactação” e escolha a pasta. Cada nova aba passa a ser o Domentum, e o ícone dele abre um minirreprodutor.'],

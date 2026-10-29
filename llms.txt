@@ -29,6 +29,9 @@ The player's interface is in Spanish; this site is available in English, Españo
 - [Português](https://davidosuna1987.github.io/domentum/pt/): Domentum — Sons ambientes para se concentrar, relaxar e dormir
 - [Deutsch](https://davidosuna1987.github.io/domentum/de/): Domentum — Naturgeräusche zum Konzentrieren, Entspannen und Schlafen
 - [Player](https://davidosuna1987.github.io/domentum/app/): the app itself
+- [Android app](https://github.com/davidosuna1987/domentum/releases/latest/download/domentum-android.apk): the same player as a native Android app; the sound keeps playing with the screen off. Download the app (.apk) on your phone. Open it. If Android asks, allow your browser to install apps. Tap Install. The sound keeps playing with the screen off.
+- [Mac app](https://github.com/davidosuna1987/domentum/releases/latest/download/Domentum-mac.dmg): the same player as a native Mac app (Apple Silicon and Intel). Download Domentum for Mac (.dmg) and open it. Drag Domentum into Applications. The first time, open it and then go to System Settings → Privacy & Security → “Open Anyway”: it isn’t in the App Store yet.
+- [All downloads](https://github.com/davidosuna1987/domentum/releases)
 - [Chrome extension](https://github.com/davidosuna1987/domentum/releases/latest/download/domentum-chrome.zip): Domentum in every new tab, and a mini player behind the toolbar icon. Download the extension (.zip) and unzip it. Open chrome://extensions and turn on Developer mode. Click “Load unpacked” and choose the folder. Every new tab becomes Domentum, and its icon opens a mini player.
 
 ## Soundscapes
