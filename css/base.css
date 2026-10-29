@@ -63,13 +63,17 @@ a { color: var(--link); }
 .sheet-bg { position: fixed; inset: 0; z-index: 20; background: var(--scrim); opacity: 0; pointer-events: none; transition: opacity 0.25s; }
 .sheet {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 21; max-width: 560px; margin: 0 auto;
-  max-height: 86dvh; overflow: auto; overscroll-behavior: contain;
+  max-height: 86dvh; display: flex; flex-direction: column; overflow: hidden;
   background: var(--sheet); color: var(--sheet-text); border-radius: var(--sheet-radius) var(--sheet-radius) 0 0;
   padding: 8px 18px calc(var(--safe-b) + 22px);
   transform: translateY(105%); visibility: hidden;
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s 0.4s;
 }
 .sheet-grip { width: 40px; height: 5px; border-radius: 3px; background: var(--grip); margin: 4px auto 6px; }
+/* app.js splits every sheet: the head (close button, title, intro, Sistema/Claro/Oscuro) stays put and
+   only the body scrolls. The small negative margin keeps focus rings and shadows from being clipped. */
+.sheet-head { flex: none; }
+.sheet-body { flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; margin: 0 -6px; padding: 0 6px 4px; }
 body.sheet-open .sheet-bg, body.sheet-swap .sheet-bg { opacity: 1; pointer-events: auto; }
 /* The shadow only while open: a closed sheet waits just below the screen and its shadow would show */
 body.sheet-open .sheet { transform: none; visibility: visible; box-shadow: var(--sheet-shadow); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
@@ -127,7 +131,7 @@ body.sheet-open .sheet { transform: none; visibility: visible; box-shadow: var(-
 .row.static { cursor: default; padding-bottom: 6px; }
 .row.static:hover { background: none; }
 .scheme { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 0 0 10px; }
-.sheet > .scheme { margin-left: 2px; margin-right: 2px; }
+.sheet-head > .scheme, .sheet-body > .scheme { margin-left: 2px; margin-right: 2px; }
 .row.static + .scheme { padding-left: 46px; padding-right: 10px; }
 .scheme .opt { height: 44px; display: flex; align-items: center; justify-content: center; gap: 7px; font-size: 14px; }
 .scheme .ico { width: 17px; height: 17px; }

@@ -376,13 +376,13 @@ body { background: var(--bg); font-weight: 700; }
 @keyframes n-sink { 0% { opacity: 1; transform: none; box-shadow: var(--lift-n); } 55% { opacity: 1; box-shadow: var(--flat); } 100% { opacity: 0; transform: translateY(8px) scale(0.97); box-shadow: var(--flat); } }
 @keyframes n-part { from { opacity: 0; transform: translateY(8px); box-shadow: var(--flat); } }
 :root[data-menus="new"] body.sheet-open .sheet[data-again="false"]:not([data-sheet="pick"], [data-sheet="theme"]) :is(.sheet-head, .sheet-body) > * { animation: n-part 0.5s var(--ease) backwards; }
-:root[data-menus="new"] body.sheet-open .sheet-head > * { animation-delay: 70ms; }
-:root[data-menus="new"] body.sheet-open .sheet-body > :nth-child(1) { animation-delay: 120ms; }
-:root[data-menus="new"] body.sheet-open .sheet-body > :nth-child(2) { animation-delay: 160ms; }
-:root[data-menus="new"] body.sheet-open .sheet-body > :nth-child(3) { animation-delay: 200ms; }
-:root[data-menus="new"] body.sheet-open .sheet-body > :nth-child(4) { animation-delay: 235ms; }
-:root[data-menus="new"] body.sheet-open .sheet-body > :nth-child(5) { animation-delay: 270ms; }
-:root[data-menus="new"] body.sheet-open .sheet-body > :nth-child(n + 6) { animation-delay: 300ms; }
+:root[data-menus="new"] body.sheet-open .sheet[data-again="false"] .sheet-head > * { animation-delay: 70ms; }
+:root[data-menus="new"] body.sheet-open .sheet[data-again="false"] .sheet-body > :nth-child(1) { animation-delay: 120ms; }
+:root[data-menus="new"] body.sheet-open .sheet[data-again="false"] .sheet-body > :nth-child(2) { animation-delay: 160ms; }
+:root[data-menus="new"] body.sheet-open .sheet[data-again="false"] .sheet-body > :nth-child(3) { animation-delay: 200ms; }
+:root[data-menus="new"] body.sheet-open .sheet[data-again="false"] .sheet-body > :nth-child(4) { animation-delay: 235ms; }
+:root[data-menus="new"] body.sheet-open .sheet[data-again="false"] .sheet-body > :nth-child(5) { animation-delay: 270ms; }
+:root[data-menus="new"] body.sheet-open .sheet[data-again="false"] .sheet-body > :nth-child(n + 6) { animation-delay: 300ms; }
 :root[data-menus="new"] .sheet-bg { background: color-mix(in srgb, var(--dk) 30%, transparent); }
 :root[data-menus="new"] .sheet-grip { display: none; }
 

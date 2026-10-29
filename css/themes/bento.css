@@ -428,8 +428,17 @@ body { background: var(--bg); font-weight: 600; }
   left: 10px; right: 10px; top: calc(var(--safe-t) + 66px); bottom: auto; width: auto; max-width: none; margin: 0;
   max-height: calc(100dvh - var(--safe-t) - 78px); padding: 12px; border-radius: 28px;
   background: var(--bg); box-shadow: var(--panel-shadow);
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; align-content: start;
+  display: flex; flex-direction: column; overflow: hidden;
   opacity: 0; transform: none; transform-origin: calc(100% - 28px) -28px; pointer-events: none; transition: none;
+}
+/* fixed head (close, title, intro, Sistema/Claro/Oscuro); the body is the card board and the only thing that scrolls,
+   edge to edge so its scrollbar sits on the panel's edge */
+:root[data-menus="new"] .sheet-head { flex: none; display: grid; gap: 8px; padding-bottom: 8px; }
+:root[data-menus="new"] .sheet-body {
+  flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; align-content: start;
+  margin: 0 -12px -12px; padding: 8px 12px 16px; margin-top: -6px; scroll-padding: 8px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 8px); mask-image: linear-gradient(to bottom, transparent, #000 8px);
 }
 :root[data-menus="new"] body.sheet-open .sheet {
   opacity: 1; transform: none; visibility: visible; pointer-events: auto; box-shadow: var(--panel-shadow); transition: none;
@@ -439,19 +448,21 @@ body { background: var(--bg); font-weight: 600; }
 @keyframes b-menu-in { 0% { opacity: 0; transform: scale(0.3); } 28% { opacity: 1; } 62% { transform: scale(1.025); } 100% { opacity: 1; transform: none; } }
 @keyframes b-menu-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: scale(0.35); } }
 @keyframes b-card-in { from { opacity: 0; transform: translateY(12px) scale(0.94); } }
-:root[data-menus="new"] body.sheet-open .sheet:not([data-sheet="pick"], [data-sheet="theme"]) > * { animation: b-card-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.25) backwards; }
-:root[data-menus="new"] body.sheet-open .sheet > :nth-child(3) { animation-delay: 60ms; }
-:root[data-menus="new"] body.sheet-open .sheet > :nth-child(4) { animation-delay: 95ms; }
-:root[data-menus="new"] body.sheet-open .sheet > :nth-child(5) { animation-delay: 130ms; }
-:root[data-menus="new"] body.sheet-open .sheet > :nth-child(6) { animation-delay: 165ms; }
-:root[data-menus="new"] body.sheet-open .sheet > :nth-child(7) { animation-delay: 200ms; }
-:root[data-menus="new"] body.sheet-open .sheet > :nth-child(8) { animation-delay: 225ms; }
-:root[data-menus="new"] body.sheet-open .sheet > :nth-child(9) { animation-delay: 250ms; }
-:root[data-menus="new"] body.sheet-open .sheet > :nth-child(n + 10) { animation-delay: 275ms; }
+:root { --sheet-swap: 260ms; }
+/* cards land one after another on a fresh open (not when the sheet is redrawn after picking a sound or theme) */
+:root[data-menus="new"] body.sheet-open .sheet[data-again="false"] :is(.sheet-head, .sheet-body) > * { animation: b-card-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.25) backwards; }
+:root[data-menus="new"] body.sheet-open .sheet[data-again="false"] .sheet-head > * { animation-delay: 50ms; }
+:root[data-menus="new"] body.sheet-open .sheet[data-again="false"] .sheet-body > :nth-child(1) { animation-delay: 90ms; }
+:root[data-menus="new"] body.sheet-open .sheet[data-again="false"] .sheet-body > :nth-child(2) { animation-delay: 125ms; }
+:root[data-menus="new"] body.sheet-open .sheet[data-again="false"] .sheet-body > :nth-child(3) { animation-delay: 160ms; }
+:root[data-menus="new"] body.sheet-open .sheet[data-again="false"] .sheet-body > :nth-child(4) { animation-delay: 190ms; }
+:root[data-menus="new"] body.sheet-open .sheet[data-again="false"] .sheet-body > :nth-child(5) { animation-delay: 215ms; }
+:root[data-menus="new"] body.sheet-open .sheet[data-again="false"] .sheet-body > :nth-child(6) { animation-delay: 240ms; }
+:root[data-menus="new"] body.sheet-open .sheet[data-again="false"] .sheet-body > :nth-child(n + 7) { animation-delay: 260ms; }
 :root[data-menus="new"] .sheet-bg { background: rgba(15, 18, 34, 0.2); }
 :root[data-menus="new"][data-scheme="dark"] .sheet-bg { background: rgba(0, 0, 0, 0.5); }
 :root[data-menus="new"] .sheet-grip { display: none; }
-:root[data-menus="new"] .sheet > * { grid-column: 1 / -1; min-width: 0; }
+:root[data-menus="new"] .sheet-body > * { grid-column: 1 / -1; min-width: 0; }
 
 :root[data-menus="new"] .b-x {
   display: grid; place-items: center; position: absolute; top: 12px; right: 12px; z-index: 2; width: 40px; height: 40px; border-radius: 13px;
@@ -461,7 +472,7 @@ body { background: var(--bg); font-weight: 600; }
 :root[data-menus="new"] .b-x:hover { transform: rotate(90deg) scale(1.06); }
 :root[data-menus="new"] .b-x:active { transform: scale(0.88); }
 :root[data-menus="new"] .sheet h3 { margin: 2px 54px 2px 8px; min-height: 40px; font-size: 22px; }
-:root[data-menus="new"] .sheet .muted { margin: 0 8px 4px; }
+:root[data-menus="new"] .sheet .muted { margin: 0 8px; }
 :root[data-menus="new"] .sheet .muted.foot { margin: 4px 8px 0; }
 
 /* rows become cards; in the menu and the scene sheet they pair up two by two */
@@ -475,21 +486,25 @@ body { background: var(--bg); font-weight: 600; }
   flex: none; width: 38px; height: 38px; padding: 9px; border-radius: 12px; opacity: 1; color: #fff;
   background: linear-gradient(135deg, var(--k1, #2aa3bd), var(--k2, #0b5a78));
 }
-:root[data-menus="new"] .sheet > .row:nth-child(6n + 1) { --k1: #8b3dff; --k2: #3b0f73; }
-:root[data-menus="new"] .sheet > .row:nth-child(6n + 2) { --k1: #ff7a59; --k2: #c2431a; }
-:root[data-menus="new"] .sheet > .row:nth-child(6n + 3) { --k1: #3e8a55; --k2: #15452a; }
-:root[data-menus="new"] .sheet > .row:nth-child(6n + 4) { --k1: #d4b98c; --k2: #7a6343; }
-:root[data-menus="new"] .sheet > .row:nth-child(6n + 5) { --k1: #6f8299; --k2: #2f3b4b; }
+:root[data-menus="new"] .sheet-body > .row:nth-child(6n + 1) { --k1: #8b3dff; --k2: #3b0f73; }
+:root[data-menus="new"] .sheet-body > .row:nth-child(6n + 2) { --k1: #ff7a59; --k2: #c2431a; }
+:root[data-menus="new"] .sheet-body > .row:nth-child(6n + 3) { --k1: #3e8a55; --k2: #15452a; }
+:root[data-menus="new"] .sheet-body > .row:nth-child(6n + 4) { --k1: #d4b98c; --k2: #7a6343; }
+:root[data-menus="new"] .sheet-body > .row:nth-child(6n + 5) { --k1: #6f8299; --k2: #2f3b4b; }
 :root[data-menus="new"] .sheet .row small { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-:root[data-menus="new"] .sheet:is([data-sheet="menu"], [data-sheet="scene"]) > .row:not(.static) { grid-column: auto; flex-direction: column; align-items: flex-start; }
-:root[data-menus="new"] .sheet:is([data-sheet="menu"], [data-sheet="scene"]) > .row:not(.static) > span { flex: none; }
-:root[data-menus="new"] .sheet[data-sheet="menu"] > .row[data-act="theme"],
-:root[data-menus="new"] .sheet[data-sheet="scene"]:not(:has([data-act="offline-scene"])) > .row[data-act="save"] { grid-column: 1 / -1; flex-direction: row; align-items: center; }
+:root[data-menus="new"] .sheet:is([data-sheet="menu"], [data-sheet="scene"]) .sheet-body > .row:not(.static) { grid-column: auto; flex-direction: column; align-items: flex-start; }
+:root[data-menus="new"] .sheet:is([data-sheet="menu"], [data-sheet="scene"]) .sheet-body > .row:not(.static) > span { flex: none; }
+/* an odd card out goes wide: Créditos, unless the "Probar menús nuevos" switch is there to pair with it */
+:root[data-menus="new"] .sheet[data-sheet="menu"]:not(:has([data-act="menus"])) .sheet-body > .row[data-act="credits"],
+:root[data-menus="new"] .sheet[data-sheet="menu"] .sheet-body > .row[data-act="theme"],
+:root[data-menus="new"] .sheet[data-sheet="scene"]:not(:has([data-act="offline-scene"])) .sheet-body > .row[data-act="save"] { grid-column: 1 / -1; flex-direction: row; align-items: center; }
+:root[data-menus="new"] .sheet[data-sheet="menu"] .sheet-body > .row:is([data-act="theme"], [data-act="credits"]) > span,
+:root[data-menus="new"] .sheet[data-sheet="scene"] .sheet-body > .row[data-act="save"] > span { flex: 1 1 auto; min-width: 0; }
 :root[data-menus="new"] .sheet .row > .switch { position: absolute; top: 14px; right: 14px; }
-:root[data-menus="new"] .sheet > .row.static { grid-column: 1 / -1; flex-direction: row; align-items: center; padding-bottom: 6px; border-radius: 20px 20px 0 0; box-shadow: none; cursor: default; }
-:root[data-menus="new"] .sheet > .row.static:hover { transform: none; }
-:root[data-menus="new"] .sheet > .scheme { margin: 0; padding: 6px; border-radius: 18px; background: var(--card); box-shadow: var(--raise-1); }
-:root[data-menus="new"] .sheet > .row.static + .scheme { margin-top: -8px; padding: 4px 14px 14px; border-radius: 0 0 20px 20px; box-shadow: none; }
+:root[data-menus="new"] .sheet-body > .row.static { grid-column: 1 / -1; flex-direction: row; align-items: center; padding-bottom: 6px; border-radius: 20px 20px 0 0; box-shadow: none; cursor: default; }
+:root[data-menus="new"] .sheet-body > .row.static:hover { transform: none; }
+:root[data-menus="new"] .sheet .scheme { margin: 0; padding: 6px; border-radius: 18px; background: var(--card); box-shadow: var(--raise-1); }
+:root[data-menus="new"] .sheet-body > .row.static + .scheme { margin-top: -8px; padding: 4px 14px 14px; border-radius: 0 0 20px 20px; box-shadow: none; }
 :root[data-menus="new"] .sheet .scheme .opt { background: var(--soft); }
 :root[data-menus="new"] .sheet .scheme .opt.on, :root[data-menus="new"] .sheet .opt.on { background: var(--strong); color: var(--on-strong); }
 :root[data-menus="new"] .sheet .opts { gap: 8px; }
@@ -512,6 +527,8 @@ body { background: var(--bg); font-weight: 600; }
     left: auto; right: 22px; top: calc(var(--safe-t) + 76px); width: 460px; max-height: calc(100dvh - var(--safe-t) - 98px); padding: 14px;
     transform-origin: calc(100% - 30px) -34px;
   }
+  :root[data-menus="new"] .sheet-body { margin: -6px -14px -14px; padding: 8px 14px 18px; }
+  :root[data-menus="new"] .b-x { top: 14px; right: 14px; }
   :root[data-menus="new"] .sheet.wide { width: min(720px, calc(100vw - 44px)); }
   :root[data-menus="new"] .sheet .opts { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
@@ -519,7 +536,7 @@ body { background: var(--bg); font-weight: 600; }
 
 @media (prefers-reduced-motion: reduce) {
   :root { transition: none; }
-  :root[data-menus="new"] body.sheet-open .sheet, :root[data-menus="new"] body.sheet-open .sheet > * { animation: none; }
+  :root[data-menus="new"] body.sheet-open .sheet, :root[data-menus="new"] body.sheet-open .sheet :is(.sheet-head, .sheet-body) > * { animation: none; }
   :root[data-menus="new"] body.sheet-closing .sheet { animation: none; visibility: hidden; }
   :root[data-menus="new"] .sheet .row, :root[data-menus="new"] .b-x, .sound-opt { transition: none; }
   .b-logo, .eq i, .layer[data-status="loading"] .layer-ico, .b-prog i { animation: none; }

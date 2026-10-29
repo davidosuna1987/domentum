@@ -382,99 +382,44 @@ body.sheet-open { --sheet-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3); }
 
 
 /* ======================================================================================
-   Menus (data-menus="new"): every sheet is a panel of the deck with an amber LCD strip and a
-   close key. Three ways for it to come in, to compare with ?variante=:
-   lcd (default): it lights up like the display, the backlight scanning down, a brief amber glow;
-   bandeja: it slides out of a slot under the top bar like a CD tray, and back in;
-   rack: a rack module with handles slides in on rails from the side and locks into place.
+   Menus (data-menus="new"): every sheet is a panel of the deck, with screws in its corners, an
+   amber LCD strip with the sheet's name (and the timer) and a close key; the options are push keys
+   with LEDs. It moves and sits like the base sheet: a bottom sheet on phones, a centred card from
+   700 px. The head (LCD strip, title, intro) stays put and only .sheet-body scrolls.
    ====================================================================================== */
 .cs-sh { display: none; }
-:root[data-menus="new"] { --sheet-swap: 300ms; }
 :root[data-menus="new"] .sheet-grip { display: none; }
-:root[data-menus="new"] .sheet {
-  inset: calc(var(--safe-t) + 60px) 10px auto 10px; width: auto; max-width: none; margin: 0;
-  max-height: calc(100dvh - var(--safe-t) - 72px); padding: 0 12px 16px; border-radius: 8px; opacity: 1;
-  background:
-    radial-gradient(circle at 9px 9px, #8e877a 0 2px, #5a544a 2.5px 3.5px, transparent 4px),
-    radial-gradient(circle at calc(100% - 9px) 9px, #8e877a 0 2px, #5a544a 2.5px 3.5px, transparent 4px),
-    radial-gradient(circle at 9px calc(100% - 9px), #8e877a 0 2px, #5a544a 2.5px 3.5px, transparent 4px),
-    radial-gradient(circle at calc(100% - 9px) calc(100% - 9px), #8e877a 0 2px, #5a544a 2.5px 3.5px, transparent 4px),
-    var(--deck);
-  border: 1px solid var(--hi);
-  transform: none; clip-path: inset(0 0 100% 0);
-  transition: visibility 0s 0.4s;
-}
-:root[data-menus="new"] body.sheet-open .sheet {
-  transform: none; clip-path: inset(0); pointer-events: auto; transition: none;
-  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45), 0 3px 0 var(--key-edge);
-}
-:root[data-menus="new"] body.sheet-closing .sheet { pointer-events: none; }
-
-/* lcd: the backlight scans the panel on from the top, overexposed amber settling to normal */
-:root[data-menus="new"] body.sheet-open .sheet { animation: cs-scan 0.55s cubic-bezier(0.45, 0, 0.2, 1) both; }
-:root[data-menus="new"] body.sheet-closing .sheet { animation: cs-unscan 0.26s cubic-bezier(0.6, 0, 0.9, 0.4) both; }
-@keyframes cs-scan {
-  0% { clip-path: inset(0 0 100% 0); filter: brightness(1.7) sepia(0.7); }
-  65% { clip-path: inset(0); filter: brightness(1.3) sepia(0.35); }
-  100% { clip-path: inset(0); filter: none; }
-}
-@keyframes cs-unscan { from { clip-path: inset(0); } to { clip-path: inset(0 0 100% 0); filter: brightness(0.5); } }
-
-/* bandeja: out of a slot at its top edge, the content travelling down with it, and back in */
-:root[data-menus="new"][data-variant="bandeja"] body.sheet-open .sheet { animation: cs-tray 0.62s cubic-bezier(0.3, 0.1, 0.2, 1) both; }
-:root[data-menus="new"][data-variant="bandeja"] body.sheet-closing .sheet { animation: cs-tray-in 0.32s cubic-bezier(0.6, 0, 0.8, 0.4) both; }
-@keyframes cs-tray {
-  0% { transform: translateY(-100%); clip-path: inset(100% 0 0 0); }
-  86% { transform: translateY(1.2%); clip-path: inset(0); }
-  100% { transform: none; clip-path: inset(0); }
-}
-@keyframes cs-tray-in { from { transform: none; clip-path: inset(0); } to { transform: translateY(-100%); clip-path: inset(100% 0 0 0); } }
-
-/* rack: a module with two handles, sliding in on rails and locking with a small knock */
-:root[data-menus="new"][data-variant="rack"] .sheet {
-  padding-inline: 30px;
-  background:
-    linear-gradient(var(--rack-handle), var(--rack-handle)) 8px 50% / 7px 46% no-repeat,
-    linear-gradient(var(--rack-handle), var(--rack-handle)) calc(100% - 8px) 50% / 7px 46% no-repeat,
-    radial-gradient(circle at 9px 9px, #8e877a 0 2px, #5a544a 2.5px 3.5px, transparent 4px),
-    radial-gradient(circle at calc(100% - 9px) 9px, #8e877a 0 2px, #5a544a 2.5px 3.5px, transparent 4px),
-    radial-gradient(circle at 9px calc(100% - 9px), #8e877a 0 2px, #5a544a 2.5px 3.5px, transparent 4px),
-    radial-gradient(circle at calc(100% - 9px) calc(100% - 9px), #8e877a 0 2px, #5a544a 2.5px 3.5px, transparent 4px),
-    var(--deck);
-}
-:root[data-menus="new"][data-variant="rack"] .cs-sh { margin-inline: -30px; padding-inline: 40px; }
-:root { --rack-handle: #b3ab9b; }
-:root[data-scheme="dark"] { --rack-handle: #4a4743; }
-:root[data-menus="new"][data-variant="rack"] body.sheet-open .sheet { clip-path: none; animation: cs-rack 0.6s cubic-bezier(0.2, 0.8, 0.25, 1) both; }
-:root[data-menus="new"][data-variant="rack"] body.sheet-closing .sheet { clip-path: none; animation: cs-rack-out 0.3s cubic-bezier(0.6, 0, 0.9, 0.4) both; }
-@keyframes cs-rack {
-  0% { transform: translateX(calc(100% + 40px)); }
-  78% { transform: translateX(-7px); }
-  90% { transform: translateX(2px); }
-  100% { transform: none; }
-}
-@keyframes cs-rack-out { from { transform: none; } to { transform: translateX(calc(100% + 40px)); } }
 :root[data-menus="new"] .sheet-bg { background: rgba(20, 16, 13, 0.5); }
+:root[data-menus="new"] .sheet {
+  padding: 0;
+  background:
+    radial-gradient(circle at 9px 9px, #8e877a 0 2px, #5a544a 2.5px 3.5px, transparent 4px),
+    radial-gradient(circle at calc(100% - 9px) 9px, #8e877a 0 2px, #5a544a 2.5px 3.5px, transparent 4px),
+    radial-gradient(circle at 9px calc(100% - 9px), #8e877a 0 2px, #5a544a 2.5px 3.5px, transparent 4px),
+    radial-gradient(circle at calc(100% - 9px) calc(100% - 9px), #8e877a 0 2px, #5a544a 2.5px 3.5px, transparent 4px),
+    var(--deck);
+}
+:root[data-menus="new"] body.sheet-open .sheet { box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45), 0 3px 0 var(--key-edge); }
+:root[data-menus="new"] .sheet-head { padding: 0 14px; }
+:root[data-menus="new"] .sheet-body { margin: 0; padding: 4px 14px calc(var(--safe-b) + 20px); }
 
-/* The flap's header: an LCD strip and the close key, staying on top while the flap scrolls */
+/* The head: an LCD strip and the close key */
 :root[data-menus="new"] .cs-sh {
-  position: sticky; top: 0; z-index: 2; display: flex; align-items: center; gap: 10px;
-  margin: 0 -12px 10px; padding: 16px 22px 12px; background: var(--deck); border-bottom: 1px solid var(--hi);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
+  display: flex; align-items: center; gap: 10px;
+  margin: 0 -14px 10px; padding: 16px 22px 12px; border-bottom: 1px solid var(--hi); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
 }
 .cs-sh-lcd {
   flex: 1; min-width: 0; display: flex; justify-content: space-between; gap: 10px; padding: 9px 12px; border-radius: 5px;
   background: var(--lcd); color: var(--amber); font: 14px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; overflow: hidden;
   text-shadow: 0 0 8px rgba(255, 176, 59, 0.6); box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8), 0 1px 0 var(--hi);
 }
-:root[data-menus="new"] body.sheet-open .cs-sh-lcd > span:first-child { animation: cs-lcd-on 0.5s steps(1) 0.35s both; }
-@keyframes cs-lcd-on { 0% { opacity: 0; } 30% { opacity: 1; } 45% { opacity: 0.2; } 60% { opacity: 1; } }
 .cs-sh-x { flex: none; width: 44px; height: 34px; display: grid; place-items: center; border-radius: 4px; background: var(--key); box-shadow: var(--key-shadow); }
 .cs-sh-x:active { transform: translateY(2px); box-shadow: var(--key-sunk); }
 .cs-sh-x .ico { width: 17px; height: 17px; }
 
 /* Content as engraved labels and push keys */
 :root[data-menus="new"] .sheet h3 { margin: 4px 2px 10px; font-size: 13px; letter-spacing: 0.18em; color: var(--grey); }
+:root[data-menus="new"] .sheet-head > .scheme { margin-bottom: 14px; }
 :root[data-menus="new"] .sheet .row {
   margin-bottom: 8px; border-radius: 5px; background: var(--key); box-shadow: var(--key-shadow); transition: transform 0.08s, box-shadow 0.08s;
 }
@@ -494,18 +439,9 @@ body.sheet-open { --sheet-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3); }
 :root[data-menus="new"] .sound-opt.on::after { background: var(--orange); box-shadow: 0 0 7px var(--orange); }
 :root[data-menus="new"] .theme-opt { box-shadow: var(--key-shadow); }
 :root[data-menus="new"] .theme-opt.on { box-shadow: var(--key-sunk), inset 0 0 0 2px var(--orange); transform: translateY(2px); }
-
-@media (min-width: 700px) {
-  :root[data-menus="new"] .sheet { left: auto; right: 22px; top: calc(var(--safe-t) + 72px); width: 460px; max-height: calc(100dvh - var(--safe-t) - 96px); }
-  :root[data-menus="new"] .sheet.wide { width: min(720px, calc(100vw - 44px)); }
-}
-/* Desktop: the flap hangs under the plate keys, inside the deck */
-@media (min-width: 1100px) {
-  :root[data-menus="new"] .sheet { right: max(22px, calc((100vw - 1340px) / 2 + 54px)); top: 100px; max-height: calc(100dvh - 128px); }
-}
+:root[data-menus="new"] .sheet .themes { padding-top: 4px; }
 
 @media (prefers-reduced-motion: reduce) {
   .cs-spec i, .cs-needle, .layer::before { animation: none !important; }
-  :root[data-menus="new"] .sheet, :root[data-menus="new"] .cs-sh-lcd > span { animation: none !important; }
-  .slider .thumb, .cs-needle, .tile, .pill, .icon-btn, .play { transition: none !important; }
+    .slider .thumb, .cs-needle, .tile, .pill, .icon-btn, .play { transition: none !important; }
 }

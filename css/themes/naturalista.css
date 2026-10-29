@@ -335,11 +335,12 @@ body::before {
 
 /* ---------- menu proposal (data-menus="new"): every sheet is a page of the atlas turning in ---------- */
 .nt-folio, .nt-ribbon { display: none; }
+:root[data-menus="new"] { --sheet-swap: 400ms; }
 :root[data-menus="new"] .sheet-bg { background: linear-gradient(90deg, rgba(5, 14, 10, 0.3), rgba(5, 14, 10, 0.68)); transition: opacity 0.4s; }
 :root[data-menus="new"][data-scheme="light"] .sheet-bg { background: linear-gradient(90deg, rgba(70, 52, 20, 0.1), rgba(70, 52, 20, 0.34)); }
 :root[data-menus="new"] .sheet {
   top: 0; bottom: 0; right: 0; left: auto; margin: 0; width: min(calc(100vw - 18px), 470px); max-width: none; height: 100dvh; max-height: none;
-  padding: 0 24px calc(var(--safe-b) + 30px) 34px; border: 0; border-left: 1px solid var(--gold2); border-radius: 0;
+  padding: 0; border: 0; border-left: 1px solid var(--gold2); border-radius: 0;
   outline: 1px solid var(--gold2); outline-offset: -10px;
   background: linear-gradient(270deg, rgba(0, 0, 0, 0.26), rgba(0, 0, 0, 0.06) 22px, rgba(0, 0, 0, 0) 48px), var(--sheet);
   box-shadow: -18px 0 50px rgba(0, 0, 0, 0.35);
@@ -354,23 +355,24 @@ body::before {
   box-shadow: -18px 0 50px rgba(70, 52, 20, 0.2);
 }
 :root[data-menus="new"] .sheet.wide { width: min(calc(100vw - 18px), 700px); }
+/* the running head, ribbon, title and intro stay on the page; only the body scrolls (scrollbar at the hinge) */
+:root[data-menus="new"] .sheet-head { padding: 0 34px 0 26px; }
+:root[data-menus="new"] .sheet-body { margin: 0; padding: 2px 34px calc(var(--safe-b) + 34px) 26px; }
 :root[data-menus="new"] .sheet-grip { display: none; }
-:root[data-menus="new"] body.sheet-open .sheet { visibility: visible; pointer-events: auto; animation: nt-turn-in 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) both; }
+:root[data-menus="new"] body.sheet-open .sheet { visibility: visible; pointer-events: auto; animation: nt-turn-in 0.75s cubic-bezier(0.22, 0.7, 0.3, 1) both; }
 :root[data-menus="new"] body.sheet-closing .sheet { visibility: visible; animation: nt-turn-out 0.4s cubic-bezier(0.55, 0, 0.8, 0.3) forwards; }
 /* hinged on the screen's edge: it unfolds in from outside and folds back out */
 @keyframes nt-turn-in {
   0% { transform: perspective(2200px) rotateY(118deg); filter: brightness(0.55); }
-  58% { transform: perspective(2200px) rotateY(-6deg); filter: brightness(1.05); }
   100% { transform: perspective(2200px) rotateY(0); filter: none; }
 }
 @keyframes nt-turn-out { to { transform: perspective(2200px) rotateY(118deg); filter: brightness(0.6); } }
 /* running head with the page title, and a gold ribbon marker that closes the page */
 :root[data-menus="new"] .nt-folio {
-  position: sticky; top: 0; z-index: 2; display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
-  margin: 0 -2px 6px; padding: 26px 56px 10px 2px; background: var(--sheet); border-bottom: 1px solid var(--gold2);
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  margin: 0 -2px 6px; padding: 26px 30px 10px 2px; border-bottom: 1px solid var(--gold2);
   font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold);
 }
-:root[data-menus="new"][data-scheme="light"] .nt-folio { background: transparent; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
 .nt-folio > span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .nt-folio .nt-pg { flex: none; font-style: italic; letter-spacing: 0.06em; text-transform: none; font-size: 13px; color: var(--cream2); white-space: nowrap; }
 :root[data-menus="new"] .nt-ribbon {

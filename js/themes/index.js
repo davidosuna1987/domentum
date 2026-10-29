@@ -2,7 +2,7 @@
 // the picker shows icons/themes/<id>.jpg.
 export const THEMES = [
   { id: 'zen', name: 'Tinta zen', desc: 'Papel, tinta y un ensō. El de por defecto.' },
-  { id: 'original', name: 'Original', desc: 'Cristal oscuro sobre el paisaje animado.' },
+  { id: 'original', name: 'Cristal', desc: 'Cristal esmerilado sobre el paisaje animado.' },
   { id: 'editorial', name: 'Editorial suizo', desc: 'Papel, retícula y tipografía enorme.' },
   { id: 'consola', name: 'Consola hi-fi', desc: 'Faders, vúmetros y teclas de los 70.' },
   { id: 'terminal', name: 'Terminal', desc: 'Fósforo verde y texto monoespaciado.' },

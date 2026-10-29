@@ -299,21 +299,24 @@ body.sheet-open { --sheet-shadow: 0 -24px 60px rgba(17, 17, 17, 0.14); }
 .sound-opt.on { box-shadow: none; }
 
 /* ======================================================================================
-   Menu proposal (only with data-menus="new"): every sheet is a full page of the index.
-   It unrolls down from the masthead in a hard cut, a red rule sweeps across, the giant
-   title and the numbered entries rise; closing rolls the page back up.
+   Menus (data-menus="new"): every sheet is a full page of the index. It unrolls down from the
+   masthead in a hard cut, a red rule sweeps across, the giant title and the numbered entries
+   rise; closing rolls the page back up. The head (masthead, title, intro) stays put and only
+   .sheet-body scrolls; on desktop the head is the left column and the body the right one.
    ====================================================================================== */
 .ed-mast { display: none; }
+:root[data-menus="new"] { --sheet-swap: 320ms; --ed-gut: max(18px, env(safe-area-inset-left)); }
 :root[data-menus="new"] .sheet-bg { background: transparent; }
 :root[data-menus="new"] .sheet-grip { display: none; }
 :root[data-menus="new"] .sheet {
   inset: 0; width: auto; max-width: none; max-height: none; margin: 0; border: 0; border-radius: 0;
-  transform: none; opacity: 1; box-shadow: none; overflow: auto;
-  padding: 0 max(18px, env(safe-area-inset-right)) calc(var(--safe-b) + 48px) max(18px, env(safe-area-inset-left));
+  transform: none; opacity: 1; box-shadow: none; padding: 0;
   background: var(--paper); counter-reset: ed-m;
   clip-path: inset(0 0 100% 0);
   transition: visibility 0s 0.4s;
 }
+:root[data-menus="new"] .sheet-head { padding: 0 var(--ed-gut); }
+:root[data-menus="new"] .sheet-body { margin: 0; padding: 0 var(--ed-gut) calc(var(--safe-b) + 48px); }
 :root[data-menus="new"] body.sheet-open .sheet {
   clip-path: inset(0); pointer-events: auto; transition: none;
   animation: ed-unroll 0.5s cubic-bezier(0.7, 0, 0.2, 1) both;
@@ -321,28 +324,30 @@ body.sheet-open { --sheet-shadow: 0 -24px 60px rgba(17, 17, 17, 0.14); }
 :root[data-menus="new"] body.sheet-closing .sheet { pointer-events: none; animation: ed-rollup 0.32s cubic-bezier(0.7, 0, 0.2, 1) both; }
 @keyframes ed-unroll { from { clip-path: inset(0 0 100% 0); } }
 @keyframes ed-rollup { from { clip-path: inset(0); } to { clip-path: inset(0 0 100% 0); } }
-/* The entries rise one after another (not when the page is only re-rendered) */
-:root[data-menus="new"] body.sheet-open .sheet:not(:has(.ed-again)) > :not(.sheet-grip, .ed-mast) {
-  animation: ed-rise 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both; animation-delay: calc(140ms + var(--k, 8) * 40ms);
+/* The title and the entries rise one after another (not when the page is only redrawn) */
+:root[data-menus="new"] body.sheet-open .sheet:not([data-again="true"]) :is(.sheet-head > :is(h3, .muted, .scheme), .sheet-body > *) {
+  animation: ed-rise 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both; animation-delay: calc(140ms + var(--k, 9) * 40ms);
 }
-:root[data-menus="new"] .sheet > :nth-child(3) { --k: 0; }
-:root[data-menus="new"] .sheet > :nth-child(4) { --k: 1; }
-:root[data-menus="new"] .sheet > :nth-child(5) { --k: 2; }
-:root[data-menus="new"] .sheet > :nth-child(6) { --k: 3; }
-:root[data-menus="new"] .sheet > :nth-child(7) { --k: 4; }
-:root[data-menus="new"] .sheet > :nth-child(8) { --k: 5; }
-:root[data-menus="new"] .sheet > :nth-child(9) { --k: 6; }
-:root[data-menus="new"] .sheet > :nth-child(10) { --k: 7; }
+:root[data-menus="new"] .sheet-head > h3 { --k: 0; }
+:root[data-menus="new"] .sheet-head > .muted { --k: 1; }
+:root[data-menus="new"] .sheet-head > .scheme { --k: 2; }
+:root[data-menus="new"] .sheet-body > :nth-child(1) { --k: 2; }
+:root[data-menus="new"] .sheet-body > :nth-child(2) { --k: 3; }
+:root[data-menus="new"] .sheet-body > :nth-child(3) { --k: 4; }
+:root[data-menus="new"] .sheet-body > :nth-child(4) { --k: 5; }
+:root[data-menus="new"] .sheet-body > :nth-child(5) { --k: 6; }
+:root[data-menus="new"] .sheet-body > :nth-child(6) { --k: 7; }
+:root[data-menus="new"] .sheet-body > :nth-child(7) { --k: 8; }
 
 /* The page's own masthead, with the close button where "Menú" was */
 :root[data-menus="new"] .ed-mast {
-  position: sticky; top: 0; z-index: 2; display: flex; align-items: center; gap: 16px;
-  padding: calc(var(--safe-t) + 16px) 0 8px; margin-bottom: 18px; background: var(--paper); border-bottom: 3px solid var(--ink);
+  position: relative; display: flex; align-items: center; gap: 16px;
+  padding: calc(var(--safe-t) + 16px) 0 8px; margin-bottom: 18px; border-bottom: 3px solid var(--ink);
 }
 :root[data-menus="new"] .ed-mast::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: -3px; height: 3px; background: var(--red); transform-origin: left;
 }
-:root[data-menus="new"] body.sheet-open .ed-mast:not(.ed-again)::after { animation: ed-sweep-x 0.8s cubic-bezier(0.7, 0, 0.2, 1) 0.1s both; }
+:root[data-menus="new"] body.sheet-open .sheet:not([data-again="true"]) .ed-mast::after { animation: ed-sweep-x 0.8s cubic-bezier(0.7, 0, 0.2, 1) 0.1s both; }
 @keyframes ed-sweep-x { from { transform: scaleX(0); } }
 .ed-mbrand { font-weight: 900; font-size: 22px; line-height: 1; letter-spacing: -0.05em; }
 .ed-mbrand i { font-style: normal; color: var(--red); }
@@ -372,7 +377,7 @@ body.sheet-open { --sheet-shadow: 0 -24px 60px rgba(17, 17, 17, 0.14); }
 :root[data-menus="new"] .sheet .row.static { border-bottom: 0; padding-bottom: 8px; }
 :root[data-menus="new"] .sheet .row.static:hover { color: inherit; }
 :root[data-menus="new"] .row.static + .scheme { padding: 0 0 14px 40px; margin: 0; border-bottom: 1px solid var(--rule); }
-:root[data-menus="new"] .sheet > .scheme { margin: 0 0 18px; }
+:root[data-menus="new"] .sheet-head > .scheme { margin: 0 0 18px; }
 
 /* Timer: the durations as a column of big numbers */
 :root[data-menus="new"] .sheet .opts { gap: 0 24px; }
@@ -385,7 +390,7 @@ body.sheet-open { --sheet-shadow: 0 -24px 60px rgba(17, 17, 17, 0.14); }
 :root[data-menus="new"] .sheet .opts .opt.on { color: var(--red); }
 :root[data-menus="new"] .sheet .opts .opt.on::after { background: var(--red); box-shadow: none; }
 
-:root[data-menus="new"] .sheet .themes { gap: 18px 14px; }
+:root[data-menus="new"] .sheet .themes { gap: 18px 14px; padding-top: 4px; }
 :root[data-menus="new"] .theme-opt { padding: 0 0 10px; background: none; }
 :root[data-menus="new"] .theme-opt img { box-shadow: inset 0 0 0 1px var(--ink); }
 :root[data-menus="new"] .theme-opt.on { box-shadow: 0 0 0 3px var(--red); }
@@ -393,27 +398,32 @@ body.sheet-open { --sheet-shadow: 0 -24px 60px rgba(17, 17, 17, 0.14); }
 :root[data-menus="new"] .sound-opt { box-shadow: inset 0 -1px 0 var(--rule); padding: 0; background: none; font-size: 16px; }
 :root[data-menus="new"] .sound-opt:hover { color: var(--red); }
 :root[data-menus="new"] .sound-opt.on { background: none; color: var(--red); box-shadow: inset 0 -2px 0 var(--red); }
+:root[data-menus="new"] .save-form { padding-top: 4px; }
 :root[data-menus="new"] .save-form input { border-radius: 0; height: 56px; font-weight: 700; font-size: 20px; }
 :root[data-menus="new"] .save-form .btn { height: 56px; }
 
 @media (min-width: 700px) {
-  :root[data-menus="new"] .sheet { padding-inline: max(34px, env(safe-area-inset-left)); }
+  :root[data-menus="new"] { --ed-gut: max(34px, env(safe-area-inset-left)); }
   :root[data-menus="new"] .ed-mast { padding-top: calc(var(--safe-t) + 26px); }
   :root[data-menus="new"] .sheet .themes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
-/* Desktop: the giant title in the left column, the entries in the right one, like the app itself */
+/* Desktop: the masthead across the top, the fixed head (giant title, intro) in the left column and
+   the scrolling body in the right one, like the app itself. The body reaches the window's right edge
+   so its scrollbar sits there. */
 @media (min-width: 1100px) {
+  :root[data-menus="new"] { --ed-gut: max(40px, calc((100vw - 1520px) / 2 + 40px)); }
   :root[data-menus="new"] .sheet {
-    display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-content: start; column-gap: 40px;
-    padding-inline: max(40px, calc((100vw - 1520px) / 2 + 40px));
+    display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-rows: minmax(0, 1fr); column-gap: 40px;
+    padding: calc(var(--safe-t) + 103px) 0 0 var(--ed-gut);
   }
-  :root[data-menus="new"] .sheet > * { grid-column: 2; }
-  :root[data-menus="new"] .sheet > .ed-mast { grid-column: 1 / -1; margin-bottom: 26px; }
-  :root[data-menus="new"] .sheet > h3 { grid-column: 1; grid-row: 2 / span 60; align-self: start; position: sticky; top: 110px; font-size: min(5.2vw, 92px); margin-top: 0; }
+  :root[data-menus="new"] .sheet-head { padding: 0; min-height: 0; overflow: auto; }
+  :root[data-menus="new"] .ed-mast { position: absolute; top: 0; left: var(--ed-gut); right: var(--ed-gut); }
+  :root[data-menus="new"] .sheet-head > h3 { font-size: min(5.2vw, 92px); margin-top: 0; }
+  :root[data-menus="new"] .sheet-body { padding-right: var(--ed-gut); }
   :root[data-menus="new"] .sheet .themes { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .top::after, .now-title, .layer, .layer-ico { animation: none !important; }
-  :root[data-menus="new"] .sheet, :root[data-menus="new"] .sheet > *, :root[data-menus="new"] .ed-mast::after { animation: none !important; }
+  :root[data-menus="new"] .sheet, :root[data-menus="new"] .sheet :is(.sheet-head, .sheet-body) > *, :root[data-menus="new"] .ed-mast::after { animation: none !important; }
 }

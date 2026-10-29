@@ -16,7 +16,7 @@ const WAVE = Array.from({ length: PERIOD }, (_, i) => {
 
 const prompt = (dir = '~') => `<span class="t-p">dm@local <b>${dir}</b> $</span>`;
 
-// Menu proposal: each sheet opens as a new tmux window [2] that powers on like a CRT
+// Menus: each sheet opens as a new tmux window [2] that powers on like a CRT
 const SHEETS = { menu: 'menú', timer: 'temporizador', theme: 'tema', scene: 'paisaje', save: 'guardar', credits: 'créditos', install: 'instalar', pick: 'sonidos' };
 const CMDS = { menu: 'domentum --menu', timer: 'domentum timer', theme: 'domentum theme --list', save: 'domentum mix save', credits: 'cat CREDITOS.txt', install: 'domentum install', pick: 'ls -R paisajes/' };
 
@@ -49,11 +49,10 @@ export default {
         </div>
         <div class="t-line t-end">${prompt()} <i class="t-cursor"></i></div>`;
     },
-    // Re-rendered while already open (picking a sound or a theme): no power-on/typing that time
+    // The window's title bar and the command that opened it (in .sheet-head, so they stay put)
     sheet: (kind, c) => {
-      const again = document.body.classList.contains('sheet-open');
       const cmd = kind === 'scene' ? `domentum scene ${slug(c.scene.name)}` : CMDS[kind] || 'domentum';
-      return `<div class="t-sh${again ? ' t-again' : ''}"><span>[2] ${SHEETS[kind] || kind}</span><button class="t-sh-x" data-act="close" aria-label="Cerrar">[x] cerrar</button></div>
+      return `<div class="t-sh"><span>[2] ${SHEETS[kind] || kind}</span><button class="t-sh-x" data-act="close" aria-label="Cerrar">[x] cerrar</button></div>
         <div class="t-line t-sh-cmd">${prompt()} ${cmd}</div>`;
     },
     extra: c => `<nav class="t-win" aria-label="Paisajes sonando">${c.active.map((s, i) =>

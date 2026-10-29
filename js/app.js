@@ -664,14 +664,14 @@ function fillSheet(sh, html, cls, kind, again) {
   sh.dataset.sheet = kind;
   sh.dataset.again = again;
   sh.innerHTML = `<div class="sheet-grip"></div>${T.decor?.sheet?.(kind, { ...ctx(), again }) ?? ''}${html}`;
-  if (T.sheetHead) splitSheet(sh);
+  splitSheet(sh);
   clearTimeout(closingT);
   document.body.classList.remove('sheet-closing', 'sheet-swap');
   document.body.classList.add('sheet-open');
   sh.querySelector('input:not([type=checkbox]),button:not([data-act="close"])')?.focus({ preventScroll: true });
 }
 
-// For themes with sheetHead: the title, its intro and controls stay in .sheet-head; only .sheet-body scrolls
+// Every sheet: the close button, title, intro and controls stay in .sheet-head; only .sheet-body scrolls
 function splitSheet(sh) {
   const head = document.createElement('div');
   const body = document.createElement('div');
@@ -686,7 +686,7 @@ function splitSheet(sh) {
   sh.append(head, body);
 }
 
-// What scrolls in a sheet: its body when the theme splits it, else the sheet itself
+// What scrolls in a sheet
 const sheetScroller = () => $('#sheet .sheet-body') || $('#sheet');
 
 // Themes may animate the exit while body.sheet-closing is set (up to 400 ms)

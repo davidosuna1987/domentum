@@ -267,7 +267,7 @@ body::before { content: ""; position: fixed; inset: 0; pointer-events: none; opa
 :root[data-menus="new"] .sheet {
   inset: 0; width: auto; max-width: none; max-height: none; margin: 0; border: 0; border-radius: 0;
   background: var(--paper) var(--washi); box-shadow: none;
-  padding: calc(var(--safe-t) + 78px) 30px calc(var(--safe-b) + 44px);
+  padding: calc(var(--safe-t) + 78px) 30px 0;
   transform: none; opacity: 1; pointer-events: none;
   clip-path: inset(0 0 100% 0);
   transition: clip-path 0.42s cubic-bezier(0.6, 0, 0.4, 1), visibility 0s 0.42s;
@@ -277,6 +277,10 @@ body::before { content: ""; position: fixed; inset: 0; pointer-events: none; opa
   transition: clip-path 0.85s cubic-bezier(0.6, 0.05, 0.15, 1);
 }
 :root[data-menus="new"] .sheet-grip { display: none; }
+/* the head (close, title, intro) stays on the paper; only the body scrolls, its scrollbar at the panel's edge */
+:root[data-menus="new"] .sheet-body { margin: 0 -30px; padding: 0 30px calc(var(--safe-b) + 44px); }
+:root[data-menus="new"] .sheet-head > .muted { margin-top: -12px; }
+:root[data-menus="new"] .sheet-head > .scheme { margin-bottom: 18px; }
 :root[data-menus="new"] .zen-x {
   display: grid; place-items: center; position: absolute; top: calc(var(--safe-t) + 18px); right: 16px;
   width: 44px; height: 44px; color: var(--grey);
@@ -303,26 +307,27 @@ body::before { content: ""; position: fixed; inset: 0; pointer-events: none; opa
 }
 :root[data-menus="new"] .row.static + .scheme { padding-left: 40px; }
 /* the ink settles: each line comes out of a blur, one after another, and its rule is drawn */
-:root[data-menus="new"] body.sheet-open .sheet > :not(.zen-edge, .zen-x, .sheet-grip) { animation: settle 0.8s both cubic-bezier(0.2, 0.7, 0.2, 1); }
+:root[data-menus="new"] body.sheet-open .sheet :is(.sheet-head, .sheet-body) > :not(.zen-edge, .zen-x, .sheet-grip) { animation: settle 0.8s both cubic-bezier(0.2, 0.7, 0.2, 1); }
 :root[data-menus="new"] body.sheet-open .sheet .row::after { animation: edge 0.9s both cubic-bezier(0.6, 0.1, 0.2, 1); }
-:root[data-menus="new"] body.sheet-open .sheet > :nth-child(4) { animation-delay: 0.3s; }
-:root[data-menus="new"] body.sheet-open .sheet > :nth-child(5) { animation-delay: 0.36s; }
-:root[data-menus="new"] body.sheet-open .sheet > :nth-child(6) { animation-delay: 0.42s; }
-:root[data-menus="new"] body.sheet-open .sheet > :nth-child(7) { animation-delay: 0.48s; }
-:root[data-menus="new"] body.sheet-open .sheet > :nth-child(8) { animation-delay: 0.54s; }
-:root[data-menus="new"] body.sheet-open .sheet > :nth-child(9) { animation-delay: 0.6s; }
-:root[data-menus="new"] body.sheet-open .sheet > :nth-child(10) { animation-delay: 0.66s; }
-:root[data-menus="new"] body.sheet-open .sheet > :nth-child(11) { animation-delay: 0.72s; }
-:root[data-menus="new"] body.sheet-open .sheet > :nth-child(n+12) { animation-delay: 0.78s; }
-:root[data-menus="new"] body.sheet-open .sheet > :nth-child(4)::after { animation-delay: 0.45s; }
-:root[data-menus="new"] body.sheet-open .sheet > :nth-child(n+5)::after { animation-delay: 0.6s; }
+:root[data-menus="new"] body.sheet-open .sheet-head > * { animation-delay: 0.3s; }
+:root[data-menus="new"] body.sheet-open .sheet-body > :nth-child(1) { animation-delay: 0.36s; }
+:root[data-menus="new"] body.sheet-open .sheet-body > :nth-child(2) { animation-delay: 0.42s; }
+:root[data-menus="new"] body.sheet-open .sheet-body > :nth-child(3) { animation-delay: 0.48s; }
+:root[data-menus="new"] body.sheet-open .sheet-body > :nth-child(4) { animation-delay: 0.54s; }
+:root[data-menus="new"] body.sheet-open .sheet-body > :nth-child(5) { animation-delay: 0.6s; }
+:root[data-menus="new"] body.sheet-open .sheet-body > :nth-child(6) { animation-delay: 0.66s; }
+:root[data-menus="new"] body.sheet-open .sheet-body > :nth-child(7) { animation-delay: 0.72s; }
+:root[data-menus="new"] body.sheet-open .sheet-body > :nth-child(n+8) { animation-delay: 0.78s; }
+:root[data-menus="new"] body.sheet-open .sheet-body > :nth-child(1)::after { animation-delay: 0.45s; }
+:root[data-menus="new"] body.sheet-open .sheet-body > :nth-child(n+2)::after { animation-delay: 0.6s; }
 @keyframes settle { from { opacity: 0; filter: blur(5px); transform: translateY(8px); } }
-:root[data-menus="new"] body.sheet-closing .sheet > * { opacity: 0; transition: opacity 0.18s; }
+:root[data-menus="new"] body.sheet-closing .sheet :is(.sheet-head, .sheet-body) > * { opacity: 0; transition: opacity 0.18s; }
 /* redrawn while open (a sound or a theme was picked): no second entrance */
-:root[data-menus="new"] body.sheet-open .sheet[data-again="true"] > *,
+:root[data-menus="new"] body.sheet-open .sheet[data-again="true"] :is(.sheet-head, .sheet-body) > *,
 :root[data-menus="new"] body.sheet-open .sheet[data-again="true"] .row::after { animation: none; transform: none; }
 @media (min-width: 700px) {
-  :root[data-menus="new"] .sheet { left: auto; width: min(460px, 100vw); padding: 86px 44px 44px; clip-path: inset(0 0 0 100%); }
+  :root[data-menus="new"] .sheet { left: auto; width: min(460px, 100vw); padding: 86px 44px 0; clip-path: inset(0 0 0 100%); }
+  :root[data-menus="new"] .sheet-body { margin: 0 -44px; padding: 0 44px 44px; }
   :root[data-menus="new"] .sheet.wide { width: min(620px, 100vw); }
   :root[data-menus="new"] .zen-edge { left: 0; right: auto; top: 0; bottom: 0; width: 1.6px; height: auto; transform-origin: top; transform: scaleY(0);
     -webkit-mask-image: linear-gradient(#000 75%, #0000); mask-image: linear-gradient(#000 75%, #0000); }
@@ -334,5 +339,5 @@ body::before { content: ""; position: fixed; inset: 0; pointer-events: none; opa
   .play.on .enso, .enso.draw .brush, .enso.lift .ink, .layer[data-status="loading"] .layer-ico { animation: none; }
   .slider .fill, .slider .thumb { transition: none; }
   :root[data-menus="new"] .sheet, :root[data-menus="new"] body.sheet-open .sheet { transition: none; }
-  :root[data-menus="new"] body.sheet-open .sheet > *, :root[data-menus="new"] body.sheet-open .sheet .row::after, :root[data-menus="new"] body.sheet-open .zen-edge { animation: none; transform: none; }
+  :root[data-menus="new"] body.sheet-open .sheet :is(.sheet-head, .sheet-body) > *, :root[data-menus="new"] body.sheet-open .sheet .row::after, :root[data-menus="new"] body.sheet-open .zen-edge { animation: none; transform: none; }
 }

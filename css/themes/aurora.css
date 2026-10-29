@@ -403,6 +403,7 @@ body { background: var(--night); }
 /* ---------- menu proposal (data-menus="new"): a glass panel blooming out of a small orb ---------- */
 .au-top { display: none; }
 :root[data-menus="new"] {
+  --sheet-swap: 380ms;
   --panel: rgba(16, 13, 34, 0.9);
   --rim: linear-gradient(135deg, rgba(127, 227, 240, 0.75), rgba(106, 60, 255, 0.6) 50%, rgba(255, 143, 200, 0.75));
 }
@@ -415,13 +416,16 @@ body { background: var(--night); }
 :root[data-menus="new"] .sheet {
   left: 50%; right: auto; top: 50%; bottom: auto; margin: 0;
   width: min(calc(100vw - 24px), 520px); max-width: none; max-height: min(calc(100dvh - 32px), 800px);
-  padding: 0 20px 24px; border-radius: 32px; border: 1px solid transparent;
+  padding: 0 0 14px; border-radius: 32px; border: 1px solid transparent;
   background: linear-gradient(var(--panel), var(--panel)) padding-box, var(--rim) border-box;
   box-shadow: 0 0 70px rgba(106, 60, 255, 0.32), 0 0 160px rgba(127, 227, 240, 0.14);
   transform: translate(-50%, -50%); opacity: 1; visibility: hidden; pointer-events: none; transition: none;
 }
 :root[data-menus="new"][data-scheme="light"] .sheet { box-shadow: 0 0 60px rgba(180, 150, 255, 0.4), 0 20px 60px rgba(60, 45, 120, 0.14); }
 :root[data-menus="new"] .sheet.wide { width: min(calc(100vw - 24px), 740px); }
+/* the orb, close button, title and intro stay in the head; the body scrolls with its bar at the panel edge */
+:root[data-menus="new"] .sheet-head { padding: 0 20px; }
+:root[data-menus="new"] .sheet-body { margin: 0; padding: 2px 20px 12px; }
 :root[data-menus="new"] .sheet-grip { display: none; }
 :root[data-menus="new"] body.sheet-open .sheet { visibility: visible; pointer-events: auto; animation: au-bloom 0.62s cubic-bezier(0.2, 0.9, 0.25, 1) both; }
 :root[data-menus="new"] body.sheet-closing .sheet { visibility: visible; animation: au-fold 0.38s cubic-bezier(0.6, 0, 0.8, 0.4) forwards; }
@@ -435,10 +439,7 @@ body { background: var(--night); }
   100% { clip-path: circle(0% at 50% 34px); transform: translate(-50%, -50%) scale(0.8); filter: brightness(1.8); opacity: 0.4; }
 }
 /* the little orb the panel blooms out of, and the close button */
-:root[data-menus="new"] .au-top {
-  position: sticky; top: 0; z-index: 2; display: flex; justify-content: center; margin: 0 -20px; padding: 16px 0 6px;
-  background: linear-gradient(var(--panel) 72%, transparent);
-}
+:root[data-menus="new"] .au-top { display: flex; justify-content: center; margin: 0 -20px; padding: 16px 0 6px; }
 .au-mini {
   width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; color: #fff;
   background: radial-gradient(circle at 34% 28%, #effeff 0%, color-mix(in srgb, var(--s2) 60%, #8ee8f2) 22%, color-mix(in srgb, var(--s2) 70%, #2f86dc) 55%, color-mix(in srgb, var(--s1) 55%, #2a1f72) 100%);
@@ -446,7 +447,7 @@ body { background: var(--night); }
 }
 :root[data-scheme="light"] .au-mini { color: var(--ui); background: radial-gradient(circle at 34% 28%, #fff, color-mix(in srgb, var(--s2) 22%, #eee7ff) 55%, color-mix(in srgb, var(--s1) 20%, #d0c2f3)); }
 .au-mini .ico { width: 20px; height: 20px; }
-:root[data-menus="new"] .sheet:not([data-sheet="pick"]) .au-mini { animation: au-pop 0.7s cubic-bezier(0.3, 1.6, 0.5, 1) both; }
+:root[data-menus="new"] .sheet:not([data-again="true"]) .au-mini { animation: au-pop 0.7s cubic-bezier(0.3, 1.6, 0.5, 1) both; }
 @keyframes au-pop { 0% { scale: 0.3; } 100% { scale: 1; } }
 .au-x { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: rgb(var(--ui-rgb) / 0.08); border: 1px solid rgb(var(--ui-rgb) / 0.14); transition: background 0.2s; }
 .au-x:hover { background: rgb(var(--ui-rgb) / 0.16); }

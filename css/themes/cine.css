@@ -451,6 +451,7 @@ body { background: var(--night); }
 /* ---------- menu proposal (data-menus="new"): a film frame projected over the scene ---------- */
 .cn-slate { display: none; }
 :root[data-menus="new"] {
+  --sheet-swap: 380ms;
   --frame: #07080f;
   --frame-text: #fff;
   --hole: rgba(255, 255, 255, 0.13);
@@ -467,18 +468,24 @@ body { background: var(--night); }
 :root[data-menus="new"][data-scheme="light"] .sheet-bg::before, :root[data-menus="new"][data-scheme="light"] .sheet-bg::after { background: #141a33; }
 :root[data-menus="new"] .sheet-bg::before { top: 0; transform: translateY(-100%); }
 :root[data-menus="new"] .sheet-bg::after { bottom: 0; transform: translateY(100%); }
-:root[data-menus="new"] body.sheet-open .sheet-bg::before, :root[data-menus="new"] body.sheet-open .sheet-bg::after { transform: none; }
-/* the frame: sprocket holes run down both edges and scroll with the film */
+:root[data-menus="new"] body:is(.sheet-open, .sheet-swap) .sheet-bg::before, :root[data-menus="new"] body:is(.sheet-open, .sheet-swap) .sheet-bg::after { transform: none; }
+/* the frame: the slate and title stay put, the film (the body) scrolls under them */
 :root[data-menus="new"] .sheet {
+  --gutter: 34px; --hole-w: 9px; --hole-at: 12px;
   left: 50%; right: auto; top: 50%; bottom: auto; margin: 0;
   width: min(calc(100vw - 20px), 560px); max-width: none; max-height: min(calc(100dvh - 14vh - 16px), 780px);
-  padding: 0 34px 26px; border-radius: 4px; color: var(--frame-text);
-  background-color: var(--frame);
-  background-image: linear-gradient(var(--hole) 0 11px, transparent 11px), linear-gradient(var(--hole) 0 11px, transparent 11px);
-  background-size: 9px 22px; background-repeat: repeat-y; background-position: 12px 8px, calc(100% - 12px) 8px; background-attachment: local;
+  padding: 0; border-radius: 4px; color: var(--frame-text); background: var(--frame);
   box-shadow: 0 0 0 1px rgb(var(--ui-rgb) / 0.08), 0 30px 90px rgba(0, 0, 0, 0.55);
   transform: translate(-50%, -50%); opacity: 1; visibility: hidden; pointer-events: none; transition: none;
 }
+/* sprocket holes down both edges: still beside the slate, running with the film in the body */
+:root[data-menus="new"] .sheet-head, :root[data-menus="new"] .sheet-body {
+  padding-left: var(--gutter); padding-right: var(--gutter);
+  background-image: linear-gradient(var(--hole) 0 11px, transparent 11px), linear-gradient(var(--hole) 0 11px, transparent 11px);
+  background-size: var(--hole-w) 22px; background-repeat: repeat-y;
+  background-position: var(--hole-at) 8px, calc(100% - var(--hole-at)) 8px;
+}
+:root[data-menus="new"] .sheet-body { margin: 0; padding-top: 2px; padding-bottom: 26px; background-attachment: local; }
 :root[data-menus="new"] .sheet.wide { width: min(calc(100vw - 20px), 780px); }
 :root[data-menus="new"] .sheet-grip { display: none; }
 :root[data-menus="new"] body.sheet-open .sheet { visibility: visible; pointer-events: auto; animation: cn-project 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
@@ -497,8 +504,8 @@ body { background: var(--night); }
 }
 /* the slate: roll, title and running timecode, always visible at the top of the frame */
 :root[data-menus="new"] .cn-slate {
-  position: sticky; top: 0; z-index: 2; display: flex; align-items: center; gap: 10px; margin: 0 -8px 4px; padding: 14px 8px 12px;
-  background: var(--frame); border-bottom: 1px solid rgb(var(--ui-rgb) / 0.12);
+  display: flex; align-items: center; gap: 10px; margin: 0 -8px 4px; padding: 14px 8px 12px;
+  border-bottom: 1px solid rgb(var(--ui-rgb) / 0.12);
   font-size: 10.5px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
 }
 .cn-rec { width: 8px; height: 8px; border-radius: 50%; background: #ff5a4f; box-shadow: 0 0 10px #ff5a4f; animation: cn-rec 1.6s steps(1) infinite; }
@@ -511,7 +518,8 @@ body { background: var(--night); }
 :root[data-menus="new"] .sheet h3 { font-size: 34px; margin-top: 14px; }
 :root[data-menus="new"] .sheet .row, :root[data-menus="new"] .sheet .opt, :root[data-menus="new"] .sheet .sound-opt, :root[data-menus="new"] .sheet .theme-opt { border-radius: 4px; }
 @media (min-width: 700px) {
-  :root[data-menus="new"] .sheet { padding: 0 44px 30px; background-size: 11px 26px; background-position: 15px 8px, calc(100% - 15px) 8px; }
+  :root[data-menus="new"] .sheet { --gutter: 44px; --hole-w: 11px; --hole-at: 15px; }
+  :root[data-menus="new"] .sheet-body { padding-bottom: 30px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

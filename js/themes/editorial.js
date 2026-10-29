@@ -2,7 +2,7 @@
 // decor.now draws the kicker line ("01 / 14 — Sonando") and tells the CSS how long the longest word of
 // the title is, so the huge headline always fits its column. A hidden .ed-fresh marker is emitted only
 // when the scene changes, so the headline and the layer rows rise once instead of on every re-render.
-// decor.sheet is the masthead of the menu proposal (a full page of the index), shown only with data-menus="new".
+// decor.sheet is the masthead of its menus (a full page of the index), shown only with data-menus="new".
 
 const pad = n => String(n).padStart(2, '0');
 let lastTitle = '';
@@ -32,11 +32,10 @@ export default {
       lastMix = key;
       return fresh ? '<i class="ed-fresh" hidden></i>' : '';
     },
-    // Re-rendered while already open (picking a sound or a theme): no entrance animation that time
+    // The masthead of every sheet (in .sheet-head, so it stays put while the body scrolls)
     sheet: kind => {
-      const again = document.body.classList.contains('sheet-open');
       const label = SHEETS[kind] || 'Domentum';
-      return `<div class="ed-mast${again ? ' ed-again' : ''}">
+      return `<div class="ed-mast">
         <span class="ed-mbrand">domentum<i>.</i></span>
         <span class="ed-mkick">§ ${pad(ORDER.indexOf(kind) + 1)} — ${label}</span>
         <button class="ed-close" data-act="close" aria-label="Cerrar">Cerrar <i>×</i></button>

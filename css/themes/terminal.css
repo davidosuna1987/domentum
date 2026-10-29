@@ -348,15 +348,16 @@ body.sheet-open { --sheet-shadow: 0 0 0 4px var(--bg), 0 0 24px rgba(77, 255, 14
 
 
 /* ======================================================================================
-   Menu proposal (only with data-menus="new"): every sheet is a new tmux window, [2].
+   Menus (data-menus="new"): every sheet is a new tmux window, [2].
    It powers on like a CRT (a dot, a line, then the picture) and its lines are typed in one
    after another; closing powers it off back into a line. Desktop: a pane split on the right.
    ====================================================================================== */
 .t-sh, .t-sh-cmd { display: none; }
 :root[data-menus="new"] .sheet-grip { display: none; }
+:root[data-menus="new"] { --sheet-swap: 320ms; }
 :root[data-menus="new"] .sheet {
   inset: calc(var(--safe-t) + 8px) 14px calc(var(--safe-b) + var(--sb) + 12px) 14px;
-  width: auto; max-width: none; max-height: none; margin: 0; padding: 0 12px 14px; border-radius: 0; opacity: 1;
+  width: auto; max-width: none; max-height: none; margin: 0; padding: 0; border-radius: 0; opacity: 1;
   border: 1px solid var(--g); background: var(--bg); box-shadow: 0 0 24px rgba(77, 255, 148, 0.12);
   transform: scale(0, 0.004); transition: visibility 0s 0.4s;
 }
@@ -377,35 +378,41 @@ body.sheet-open { --sheet-shadow: 0 0 0 4px var(--bg), 0 0 24px rgba(77, 255, 14
 :root[data-scheme="light"][data-menus="new"] .sheet { box-shadow: 4px 4px 0 rgba(30, 39, 33, 0.18); }
 :root[data-scheme="light"][data-menus="new"] .sheet-bg { background: rgba(246, 244, 236, 0.6); }
 
-/* The window's title bar (inverted, like tmux) and the command that opened it */
+/* The head: the window's title bar (inverted, like tmux), the command that opened it, the title and
+   intro; it stays put while .sheet-body scrolls */
+:root[data-menus="new"] .sheet-head > :not(.t-sh, .sheet-grip) { margin-inline: 12px; }
+:root[data-menus="new"] .sheet-body { margin: 0; padding: 0 12px 14px; }
 :root[data-menus="new"] .t-sh {
-  position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 1ch;
-  margin: 0 -12px 0.6em; padding: 0 0 0 1ch; height: calc(var(--sb) + 2px);
+  display: flex; align-items: center; justify-content: space-between; gap: 1ch;
+  margin: 0 0 0.6em; padding: 0 0 0 1ch; height: calc(var(--sb) + 2px);
   background: var(--g); color: var(--bg); text-shadow: none; font-weight: 700;
 }
 .t-sh-x { height: 100%; padding: 0 1ch; color: var(--bg); font-weight: 500; }
 .t-sh-x:hover { background: var(--amber); }
 :root[data-menus="new"] .t-sh-cmd { display: block; margin-bottom: 0.6em; }
-/* Lines are typed in one after another (not when the window is only re-rendered) */
-:root[data-menus="new"] body.sheet-open .sheet:not(:has(.t-again)) > :not(.sheet-grip, .t-sh) {
+/* Lines are typed in one after another (not when the window is only redrawn) */
+:root[data-menus="new"] body.sheet-open .sheet:not([data-again="true"]) :is(.sheet-head > :not(.sheet-grip, .t-sh), .sheet-body > *) {
   animation: t-type 0.2s steps(12, end) both; animation-delay: calc(220ms + var(--k, 9) * 30ms);
 }
 @keyframes t-type { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
-:root[data-menus="new"] .sheet > :nth-child(3) { --k: 0; }
-:root[data-menus="new"] .sheet > :nth-child(4) { --k: 1; }
-:root[data-menus="new"] .sheet > :nth-child(5) { --k: 2; }
-:root[data-menus="new"] .sheet > :nth-child(6) { --k: 3; }
-:root[data-menus="new"] .sheet > :nth-child(7) { --k: 4; }
-:root[data-menus="new"] .sheet > :nth-child(8) { --k: 5; }
-:root[data-menus="new"] .sheet > :nth-child(9) { --k: 6; }
-:root[data-menus="new"] .sheet > :nth-child(10) { --k: 7; }
-:root[data-menus="new"] .sheet > :nth-child(11) { --k: 8; }
+:root[data-menus="new"] .sheet-head > .t-sh-cmd { --k: 0; }
+:root[data-menus="new"] .sheet-head > h3 { --k: 1; }
+:root[data-menus="new"] .sheet-head > .muted { --k: 2; }
+:root[data-menus="new"] .sheet-head > .scheme { --k: 3; }
+:root[data-menus="new"] .sheet-body > :nth-child(1) { --k: 3; }
+:root[data-menus="new"] .sheet-body > :nth-child(2) { --k: 4; }
+:root[data-menus="new"] .sheet-body > :nth-child(3) { --k: 5; }
+:root[data-menus="new"] .sheet-body > :nth-child(4) { --k: 6; }
+:root[data-menus="new"] .sheet-body > :nth-child(5) { --k: 7; }
+:root[data-menus="new"] .sheet-body > :nth-child(6) { --k: 8; }
 
 /* Content as plain text: rows are entries of a list, options are [ ] / [*] */
-:root[data-menus="new"] .sheet h3 { margin: 0 0 0.4em; font-size: inherit; }
+:root[data-menus="new"] .sheet h3 { margin-top: 0; margin-bottom: 0.4em; font-size: inherit; }
 :root[data-menus="new"] .sheet h3 .ico { display: none; }
 :root[data-menus="new"] .sheet h3::before { content: "#"; }
-:root[data-menus="new"] .sheet .muted { margin: 0 0 0.8em; font-size: inherit; color: var(--dim); }
+:root[data-menus="new"] .sheet .muted { margin-top: 0; margin-bottom: 0.8em; font-size: inherit; color: var(--dim); }
+:root[data-menus="new"] .sheet-body > .muted { margin-inline: 0; }
+:root[data-menus="new"] .sheet-head > .scheme { margin-bottom: 0.8em; }
 :root[data-menus="new"] .sheet .row { gap: 1.5ch; padding: 0.45em 1ch; font-size: inherit; }
 :root[data-menus="new"] .sheet .row > .ico { width: 1.1em; height: 1.1em; }
 :root[data-menus="new"] .sheet .row b { font-size: inherit; font-weight: 500; }
@@ -442,5 +449,5 @@ body.sheet-open { --sheet-shadow: 0 0 0 4px var(--bg), 0 0 24px rgba(77, 255, 14
 
 @media (prefers-reduced-motion: reduce) {
   body::after, .t-wave span, .t-cursor, .layer::before { animation: none !important; }
-  :root[data-menus="new"] .sheet, :root[data-menus="new"] .sheet > * { animation: none !important; }
+  :root[data-menus="new"] .sheet, :root[data-menus="new"] .sheet :is(.sheet-head, .sheet-body) > * { animation: none !important; }
 }

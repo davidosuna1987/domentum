@@ -11,7 +11,7 @@ En línea: https://davidosuna1987.github.io/domentum/
 - Modo claro, oscuro o como el sistema (menú ⋯ → Apariencia), en todos los temas.
 - «Todos los sonidos» (menú ⋯ o «Elegir sonidos» en Personal): elige sonidos sueltos de cualquier paisaje y júntalos con tus audios en una mezcla propia.
 - Cada tema tiene sus propios menús, con su animación de entrada y salida (`?menus=clasico` muestra los de antes, para comparar).
-- 11 temas para elegir en el menú ⋯ → Tema: Tinta zen (por defecto), Original, Editorial suizo, Consola hi-fi, Terminal, Cine, Atlas naturalista, Aurora orbital, Bento, Neumórfico y Pop neobrutal. Cada tema es `css/themes/<id>.css` más `js/themes/<id>.js`; cómo se hacen está en `design/THEMES.md`.
+- 11 temas para elegir en el menú ⋯ → Tema: Tinta zen (por defecto), Cristal, Editorial suizo, Consola hi-fi, Terminal, Cine, Atlas naturalista, Aurora orbital, Bento, Neumórfico y Pop neobrutal. Cada tema es `css/themes/<id>.css` más `js/themes/<id>.js`; cómo se hacen está en `design/THEMES.md`.
 - Grabaciones de campo CC0 de [Freesound](https://freesound.org). Los créditos están en `sounds/credits.json` y en la app (menú ⋯ → Créditos).
 
 ## Desarrollo

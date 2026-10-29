@@ -28,8 +28,6 @@
       root.dataset.theme = t;
       root.dataset.scheme = sc;
       root.dataset.menus = q.get('menus') === 'clasico' ? 'classic' : 'new';
-      // ?variante=… compares alternative designs a theme offers (e.g. consola's menus)
-      if (/^[a-z]+$/.test(q.get('variante') || '')) root.dataset.variant = q.get('variante');
       document.write('<link rel="stylesheet" id="themeCss" href="css/themes/' + t + '.css">');
     })();
   </script>

@@ -1,4 +1,5 @@
-/* Original: dark glass over the animated canvas backdrop (light: frosted white glass, the landscape behind a veil). */
+/* Cristal (id "original", the first look): dark glass over the animated canvas backdrop
+   (light: frosted white glass, the landscape behind a veil). */
 body { background: #06141a; }
 
 :root {
@@ -304,17 +305,19 @@ body { background: #06141a; }
 :root[data-scheme="light"] .sheet { box-shadow: var(--sheet-shadow); }
 
 /* ======================================================================================
-   Menu proposal (only with data-menus="new"): every sheet is a glass bubble that blooms out
-   of the top-right buttons (a circular reveal), its contents surfacing after it; closing
-   draws it back into the button. Phones: a floating glass card under the buttons.
+   Menus (data-menus="new"): every sheet is a glass bubble that blooms out of the top-right
+   buttons (a circular reveal), its contents surfacing after it; closing draws it back into the
+   button. Phones: a floating glass card under the buttons. The head (close button, title,
+   intro) stays put and only .sheet-body scrolls.
    ====================================================================================== */
 .og-x { display: none; }
+:root[data-menus="new"] { --sheet-swap: 340ms; }
 :root[data-menus="new"] .sheet-grip { display: none; }
 :root[data-menus="new"] .sheet-bg { background: rgba(3, 12, 16, 0.32); }
 :root[data-scheme="light"][data-menus="new"] .sheet-bg { background: rgba(210, 226, 230, 0.32); }
 :root[data-menus="new"] .sheet {
   inset: calc(var(--safe-t) + 64px) 10px auto 10px; width: auto; max-width: none; margin: 0;
-  max-height: calc(100dvh - var(--safe-t) - 76px); padding: 14px 16px 18px; border-radius: 26px; opacity: 1; transform: none;
+  max-height: calc(100dvh - var(--safe-t) - 76px); padding: 0; border-radius: 26px; opacity: 1; transform: none;
   background: rgba(14, 32, 38, 0.6); border: 1px solid rgba(255, 255, 255, 0.16);
   -webkit-backdrop-filter: blur(28px) saturate(160%); backdrop-filter: blur(28px) saturate(160%);
   clip-path: circle(0 at calc(100% - 28px) -24px);
@@ -329,23 +332,26 @@ body { background: #06141a; }
 :root[data-menus="new"] body.sheet-closing .sheet { pointer-events: none; animation: og-sink 0.34s cubic-bezier(0.6, 0, 0.8, 0.4) both; }
 @keyframes og-bloom { from { clip-path: circle(22px at calc(100% - 28px) -24px); } }
 @keyframes og-sink { from { clip-path: circle(150% at calc(100% - 28px) -24px); } to { clip-path: circle(0 at calc(100% - 28px) -24px); } }
-/* Contents surface one after another (not when the bubble is only re-rendered) */
-:root[data-menus="new"] body.sheet-open .sheet:not(:has(.og-again)) > :not(.sheet-grip, .og-x) {
+:root[data-menus="new"] .sheet-head { position: relative; padding: 14px 16px 0; }
+:root[data-menus="new"] .sheet-body { margin: 0; padding: 2px 16px 18px; }
+/* Contents surface one after another (not when the bubble is only redrawn) */
+:root[data-menus="new"] body.sheet-open .sheet:not([data-again="true"]) :is(.sheet-head > :is(h3, .muted, .scheme), .sheet-body > *) {
   animation: og-surface 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; animation-delay: calc(120ms + var(--k, 8) * 35ms);
 }
 @keyframes og-surface { from { opacity: 0; transform: translateY(10px); } }
-:root[data-menus="new"] .sheet > :nth-child(3) { --k: 0; }
-:root[data-menus="new"] .sheet > :nth-child(4) { --k: 1; }
-:root[data-menus="new"] .sheet > :nth-child(5) { --k: 2; }
-:root[data-menus="new"] .sheet > :nth-child(6) { --k: 3; }
-:root[data-menus="new"] .sheet > :nth-child(7) { --k: 4; }
-:root[data-menus="new"] .sheet > :nth-child(8) { --k: 5; }
-:root[data-menus="new"] .sheet > :nth-child(9) { --k: 6; }
-:root[data-menus="new"] .sheet > :nth-child(10) { --k: 7; }
+:root[data-menus="new"] .sheet-head > h3 { --k: 0; }
+:root[data-menus="new"] .sheet-head > .muted { --k: 1; }
+:root[data-menus="new"] .sheet-head > .scheme { --k: 2; }
+:root[data-menus="new"] .sheet-body > :nth-child(1) { --k: 2; }
+:root[data-menus="new"] .sheet-body > :nth-child(2) { --k: 3; }
+:root[data-menus="new"] .sheet-body > :nth-child(3) { --k: 4; }
+:root[data-menus="new"] .sheet-body > :nth-child(4) { --k: 5; }
+:root[data-menus="new"] .sheet-body > :nth-child(5) { --k: 6; }
+:root[data-menus="new"] .sheet-body > :nth-child(6) { --k: 7; }
 
-/* A round glass close button that stays in the corner while the bubble scrolls */
+/* A round glass close button in the corner of the head */
 :root[data-menus="new"] .og-x {
-  position: sticky; top: 0; z-index: 2; display: grid; place-items: center; width: 38px; height: 38px; margin: 0 0 -38px auto; border-radius: 50%;
+  position: absolute; top: 14px; right: 14px; z-index: 2; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%;
   background: rgba(255, 255, 255, 0.14); border: 1px solid rgba(255, 255, 255, 0.2);
 }
 :root[data-menus="new"] .og-x:hover { background: rgba(255, 255, 255, 0.26); }
@@ -353,6 +359,7 @@ body { background: #06141a; }
 :root[data-scheme="light"][data-menus="new"] .og-x { background: rgba(16, 36, 42, 0.07); border-color: rgba(16, 36, 42, 0.08); }
 :root[data-scheme="light"][data-menus="new"] .og-x:hover { background: rgba(16, 36, 42, 0.13); }
 :root[data-menus="new"] .sheet h3 { padding-right: 46px; min-height: 38px; margin-top: 0; }
+:root[data-menus="new"] .sheet-head > .scheme { margin-bottom: 12px; }
 :root[data-menus="new"] .sheet .row { margin-bottom: 4px; background: rgba(255, 255, 255, 0.06); border-radius: 18px; }
 :root[data-menus="new"] .sheet .row:hover { background: rgba(255, 255, 255, 0.12); }
 :root[data-menus="new"] .sheet .row.static { background: none; }
@@ -373,6 +380,6 @@ body { background: #06141a; }
 
 @media (prefers-reduced-motion: reduce) {
   .eq i, .layer[data-status="loading"] .layer-ico::after { animation: none; }
-  :root[data-menus="new"] .sheet, :root[data-menus="new"] .sheet > * { animation: none !important; }
+  :root[data-menus="new"] .sheet, :root[data-menus="new"] .sheet :is(.sheet-head, .sheet-body) > * { animation: none !important; }
   .tile-art { transition: none; }
 }

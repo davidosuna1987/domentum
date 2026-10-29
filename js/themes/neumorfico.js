@@ -5,8 +5,6 @@ export default {
   scheme: 'light',
   backdrop: 'off',
   orient: { layer: 'knob', master: 'knob', scene: 'knob' },
-  // Menus: the title, its intro and controls stay fixed at the top; only the content scrolls
-  sheetHead: true,
   decor: {
     logo: () => '',
     // Menu proposal only: a raised close button (data-act="close" is handled by app.js)
