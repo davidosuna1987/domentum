@@ -354,12 +354,12 @@ function renderLibrary(c) {
 }
 
 // ---------- actions ----------
-function setPlaying(on) {
+function setPlaying(on, fade) {
   state.playing = on;
   if (on) {
     engine.apply(state);
     engine.play();
-  } else engine.pause();
+  } else engine.pause(fade);
   render();
   updateMedia();
 }
@@ -1092,8 +1092,19 @@ function updateMedia() {
     navigator.mediaSession.playbackState = state.playing ? 'playing' : 'paused';
   } catch {}
 }
-// "Pausar" in the Android notification
-bgAudio?.addListener('action', e => { if (e.action === 'pause' && state.playing) setPlaying(false); });
+// Headphones unplugged or Bluetooth gone: the sound would jump to the speaker, maybe loud. The apps tell the
+// player (Android: becoming noisy; iPhone: route change; Mac: output switched to the speakers) and it stops at once.
+function outputLost() {
+  if (!state.playing) return;
+  setPlaying(false, 0.02);
+  toast('En pausa: se han desconectado los auriculares');
+}
+addEventListener('domentum:output-lost', outputLost);
+// "Pausar" in the Android notification, and the Android version of the above
+bgAudio?.addListener('action', e => {
+  if (e.action === 'pause' && state.playing) setPlaying(false);
+  if (e.action === 'output-lost') outputLost();
+});
 if ('mediaSession' in navigator) {
   const h = (a, f) => { try { navigator.mediaSession.setActionHandler(a, f); } catch {} };
   h('play', () => setPlaying(true));

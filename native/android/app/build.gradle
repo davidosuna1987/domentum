@@ -2,6 +2,8 @@ apply plugin: 'com.android.application'
 
 android {
     namespace = "io.github.davidosuna1987.domentum"
+    // BuildConfig.DEBUG gates a test hook in PlaybackService
+    buildFeatures { buildConfig = true }
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "io.github.davidosuna1987.domentum"

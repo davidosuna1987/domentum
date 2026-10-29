@@ -5,23 +5,54 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.os.IBinder;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
-/** A foreground service of type mediaPlayback: while it runs, Android keeps the player (and its sound) alive. */
+/**
+ * A foreground service of type mediaPlayback: while it runs, Android keeps the player (and its sound) alive.
+ * It also listens for headphones being unplugged or Bluetooth going away ("becoming noisy"): Android says so just
+ * before the sound moves to the speaker, and the player pauses at once.
+ */
 public class PlaybackService extends Service {
+    // debug builds only: lets a test send it with adb, since the system's own broadcast can't be faked
+    static final String TEST_OUTPUT_LOST = BuildConfig.APPLICATION_ID + ".TEST_OUTPUT_LOST";
     static final String ACTION_START = "start";
     static final String ACTION_PAUSE = "pause";
     private static final String CHANNEL = "playback";
     private static final int ID = 1;
 
+    private final BroadcastReceiver noisy = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (BackgroundAudioPlugin.instance != null) BackgroundAudioPlugin.instance.fromService("output-lost");
+        }
+    };
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        ContextCompat.registerReceiver(this, noisy, new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY), ContextCompat.RECEIVER_NOT_EXPORTED);
+        if (BuildConfig.DEBUG) ContextCompat.registerReceiver(this, noisy, new IntentFilter(TEST_OUTPUT_LOST), ContextCompat.RECEIVER_EXPORTED);
+    }
+
+    @Override
+    public void onDestroy() {
+        unregisterReceiver(noisy);
+        super.onDestroy();
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null && ACTION_PAUSE.equals(intent.getAction())) {
-            if (BackgroundAudioPlugin.instance != null) BackgroundAudioPlugin.instance.fromNotification("pause");
+            if (BackgroundAudioPlugin.instance != null) BackgroundAudioPlugin.instance.fromService("pause");
             stopSelf();
             return START_NOT_STICKY;
         }

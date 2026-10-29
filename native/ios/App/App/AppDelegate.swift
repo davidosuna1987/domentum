@@ -12,6 +12,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // UIBackgroundModes audio in Info.plist), and the silent switch doesn't mute it
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
         try? AVAudioSession.sharedInstance().setActive(true)
+        // Headphones unplugged or Bluetooth gone: tell the player before a loud mix comes out of the speaker
+        NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: .main) { note in
+            guard let raw = note.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt,
+                  AVAudioSession.RouteChangeReason(rawValue: raw) == .oldDeviceUnavailable else { return }
+            let player = UIApplication.shared.connectedScenes
+                .compactMap { ($0 as? UIWindowScene)?.windows.first?.rootViewController as? CAPBridgeViewController }
+                .first
+            player?.webView?.evaluateJavaScript("dispatchEvent(new Event('domentum:output-lost'))")
+        }
         return true
     }
 

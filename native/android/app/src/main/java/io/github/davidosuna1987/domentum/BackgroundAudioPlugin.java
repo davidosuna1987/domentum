@@ -16,7 +16,7 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 /**
  * The player calls start() when sound begins and stop() when it pauses. While it plays, a foreground service
  * (PlaybackService) with a notification keeps the app alive, so the sound goes on with the screen off or in
- * another app. The notification's "Pausar" comes back to the player as an "action" event.
+ * another app. The notification's "Pausar" and unplugged headphones come back to the player as "action" events.
  */
 @CapacitorPlugin(name = "BackgroundAudio")
 public class BackgroundAudioPlugin extends Plugin {
@@ -69,8 +69,9 @@ public class BackgroundAudioPlugin extends Plugin {
         }
     }
 
-    void fromNotification(String action) {
-        if ("pause".equals(action)) playing = false;
+    // "pause" from the notification, "output-lost" when the headphones go away
+    void fromService(String action) {
+        playing = false;
         JSObject data = new JSObject();
         data.put("action", action);
         notifyListeners("action", data, true);
