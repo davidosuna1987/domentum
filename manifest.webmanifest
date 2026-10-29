@@ -1,0 +1,19 @@
+{
+  "name": "Domentum · Paisajes sonoros",
+  "short_name": "Domentum",
+  "description": "Paisajes sonoros para concentrarte, relajarte y dormir. Mezcla cada capa a tu gusto, sin límite de tiempo.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#06141a",
+  "theme_color": "#06233a",
+  "categories": ["health", "lifestyle", "music", "productivity"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
