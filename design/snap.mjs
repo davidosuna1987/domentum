@@ -82,7 +82,7 @@ async function shot(name, url, dev) {
     await page.send('Page.bringToFront');
     await page.send('Runtime.evaluate', { expression: `document.fonts.ready.then(() => new Promise(r => setTimeout(r, ${wait}))).then(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))))`, awaitPromise: true });
     if (process.env.STILL) await page.send('Runtime.evaluate', { expression: `document.head.insertAdjacentHTML('beforeend', '<style>*,*::before,*::after{animation:none!important;transition:none!important}</style>')` });
-    if (process.env.STILL) await page.send('Runtime.evaluate', { expression: `(document.querySelectorAll('.hl, .draw').forEach(e => e.classList.add('in')), Promise.all([...document.images].map(i => { i.loading = 'eager'; return i.decode().catch(() => {}); })))`, awaitPromise: true });
+    if (process.env.STILL) await page.send('Runtime.evaluate', { expression: `(document.documentElement.classList.remove('js'), document.querySelectorAll('.draw').forEach(e => e.classList.add('in')), Promise.all([...document.images].map(i => { i.loading = 'eager'; return i.decode().catch(() => {}); })))`, awaitPromise: true });
     let shotOpts = { format: 'png' };
     if (process.env.FULL) {
       const { cssContentSize: c } = await page.send('Page.getLayoutMetrics');

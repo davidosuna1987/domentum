@@ -92,16 +92,27 @@ ul, ol { padding: 0; list-style: none; }
 :root[data-scheme="dark"] .scheme-btn .ico:last-child { display: block; }
 
 /* ---------- brush strokes ---------- */
-/* ==phrase== in the texts: an ink-wash swipe behind the words, painted left to right on every line */
+/* ==phrase== in the texts: an ink-wash swipe behind the words. Without JavaScript it is simply there. With it,
+   each line gets its own stroke behind the text (.stroke, placed by the page script), always at its real size,
+   uncovered from left to right by a soft-edged mask, one line after another, like a brush going across */
 .hl {
   color: inherit; font-weight: 500; padding: 0.04em 0.22em; margin: 0 -0.12em;
   background: var(--hl) no-repeat 0 55% / 100% 100%;
   -webkit-box-decoration-break: clone; box-decoration-break: clone;
 }
-.js .hl { background-size: 0% 100%; transition: background-size 1.15s cubic-bezier(0.55, 0.05, 0.2, 1); }
-.js .hl.in { background-size: 100% 100%; }
-.hero .hl { transition-delay: 1.1s; padding-block: 0; }
-.lede .hl { color: var(--ink); transition-delay: 1.6s; }
+.js .hl { background: none; }
+/* the earlier highlighter swipe, to compare: ?trazo=viejo */
+:root[data-trazo="viejo"] { --hl: url("brush/hl-old-light.svg"); }
+:root[data-trazo="viejo"][data-scheme="dark"] { --hl: url("brush/hl-old-dark.svg"); }
+.lede .hl { color: var(--ink); }
+.strokes { position: absolute; top: 0; left: 0; z-index: -1; width: 0; height: 0; pointer-events: none; }
+.stroke {
+  position: absolute; background: var(--hl) no-repeat 0 55% / 100% 100%;
+  -webkit-mask: linear-gradient(90deg, #000 46%, transparent 54%) no-repeat 100% 0 / 230% 100%;
+  mask: linear-gradient(90deg, #000 46%, transparent 54%) no-repeat 100% 0 / 230% 100%;
+  transition-property: -webkit-mask-position, mask-position; transition-timing-function: cubic-bezier(0.4, 0.05, 0.35, 1);
+}
+.stroke.in { -webkit-mask-position: 0 0; mask-position: 0 0; }
 /* a short dab of ink above each feature, drawn in */
 .features h3::before, .uses h3::before {
   content: ""; display: block; width: 34px; height: 7px; margin-bottom: 14px; background: var(--ink);
@@ -273,6 +284,6 @@ ul, ol { padding: 0; list-style: none; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .enso .brush, .enso .breath, .lang-banner { animation: none; }
-  .js .hl, .js .draw h3::before, .js .arrow path { transition: none; }
+  .stroke, .js .draw h3::before, .js .arrow path { transition: none !important; }
   .styles img, .enso .tri { transition: none; }
 }

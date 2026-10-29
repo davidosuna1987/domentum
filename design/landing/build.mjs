@@ -72,6 +72,39 @@ function highlight(color) {
   const core = 'M' + pts([[8, 11], [W - 14, 10], [W - 10, 20], [10, 21]]) + 'Z';
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} 30" preserveAspectRatio="none"><path fill="${color}" fill-opacity=".36" fill-rule="evenodd" d="${main}${streaks}"/><path fill="${color}" fill-opacity=".14" d="${core}"/></svg>\n`;
 }
+// A brush stroke built like the ensō: the brush lands round and full, the pressure wavers along the body, the
+// tail thins and splits into dry bristles, and an ink filter roughens the edges. Vermilion wash, denser at the core.
+function pincelada(color) {
+  const R = rng(23), W = 400, N = 160, Hm = 15, top = [], bot = [], core = [[], []];
+  const at = t => {
+    const x = 6 + t * (W - 12);
+    const y = 20 + 1.6 * Math.sin(t * Math.PI * 1.3 + 0.4) - 1.4 * t;
+    const land = 0.62 + 0.38 * Math.min(1, t / 0.05);
+    const tail = t > 0.8 ? Math.pow(1 - (t - 0.8) / 0.2, 0.75) * 0.82 + 0.18 : 1;
+    const hw = Hm * land * tail * (1 - 0.14 * t + 0.05 * Math.sin(t * 11));
+    return [x, y, hw];
+  };
+  for (let i = 0; i <= N; i++) {
+    const t = i / N, [x, y, hw] = at(t);
+    top.push([x, y - hw * (1 + (R() - 0.5) * 0.08)]);
+    bot.push([x, y + hw * (1 + (R() - 0.5) * 0.08)]);
+    if (t < 0.72) { core[0].push([x, y - hw * 0.5]); core[1].push([x, y + hw * 0.55]); }
+  }
+  // the round start where the brush touches the paper
+  const [x0, y0, h0] = at(0), cap = [];
+  for (let k = 1; k < 12; k++) { const a = Math.PI / 2 + (k / 12) * Math.PI; cap.push([x0 + Math.cos(a) * h0 * 0.8, y0 - Math.sin(a) * h0]); }
+  const outline = 'M' + pts([...top, ...bot.reverse(), ...cap]) + 'Z';
+  // dry-brush gaps opening up along the tail
+  const gaps = [-0.5, -0.08, 0.32, 0.62].map(f => {
+    const t0 = 0.55 + R() * 0.2, seg = [];
+    for (let i = 0; i <= 24; i++) { const t = t0 + (0.985 - t0) * (i / 24), [x, y, hw] = at(t); seg.push([x, y + f * hw]); }
+    const back = seg.map(([x, y], i) => [x, y + (0.4 + 1.3 * (i / 24)) * (0.7 + R() * 0.5)]).reverse();
+    return 'M' + pts([...seg, ...back]) + 'Z';
+  }).join('');
+  const coreD = 'M' + pts([...core[0], ...core[1].reverse()]) + 'Z';
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} 40" preserveAspectRatio="none"><defs><filter id="i" x="-4%" y="-20%" width="108%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".018 .55" numOctaves="2" seed="9" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/></filter></defs><g filter="url(#i)" fill="${color}"><path fill-opacity=".58" fill-rule="evenodd" d="${outline}${gaps}"/><path fill-opacity=".18" d="${coreD}"/></g></svg>\n`;
+}
+
 // A short tapered dab of ink, used as a mask (its colour comes from CSS)
 function dash() {
   const R = rng(5), up = [], dn = [];
@@ -144,7 +177,7 @@ ${LANGS.map(l => `<link rel="alternate" hreflang="${l.lang}" href="${urlOf(l.lan
 <link rel="alternate" hreflang="x-default" href="${BASE}">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="theme-color" content="#f4f0e6">
-<script>/* light unless the visitor picked dark here; then animate the brush strokes in */ (() => { const d = document.documentElement; d.classList.add('js'); try { if (localStorage.getItem('domentum:landing-scheme') === 'dark') { d.dataset.scheme = 'dark'; document.querySelector('meta[name=theme-color]').content = '#151412'; } } catch {} })();</script>
+<script>/* light unless the visitor picked dark here; then animate the brush strokes in */ (() => { const d = document.documentElement; d.classList.add('js'); if (/[?&]trazo=viejo/.test(location.search)) d.dataset.trazo = 'viejo'; try { if (localStorage.getItem('domentum:landing-scheme') === 'dark') { d.dataset.scheme = 'dark'; document.querySelector('meta[name=theme-color]').content = '#151412'; } } catch {} })();</script>
 <link rel="icon" href="${r}app/icons/icon.svg" type="image/svg+xml">
 <link rel="icon" href="${r}app/icons/icon-192.png" sizes="192x192" type="image/png">
 <link rel="apple-touch-icon" href="${r}app/icons/apple-touch-icon.png">
@@ -387,10 +420,50 @@ ${t.faq.items.map(q => `          <details class="reveal"><summary><h3>${esc(q.q
     try { localStorage.setItem('domentum:landing-scheme', d.dataset.scheme || 'light'); } catch {}
     paint();
   });
+  // Brush highlights: one stroke per line of each ==phrase==, painted in one line after the other
+  const layer = document.createElement('div');
+  layer.className = 'strokes';
+  layer.setAttribute('aria-hidden', 'true');
+  document.body.append(layer);
+  const drawn = new Map(); // mark → its strokes
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const place = (mark, animate) => {
+    (drawn.get(mark) || []).forEach(s => s.remove());
+    let wait = animate ? (mark.closest('.hero') ? (mark.closest('h1') ? 1100 : 1700) : 120) : 0;
+    const strokes = [...mark.getClientRects()].filter(r => r.width > 2).map(r => {
+      const s = document.createElement('i');
+      s.className = 'stroke';
+      Object.assign(s.style, { left: r.left + scrollX + 'px', top: r.top + scrollY + 'px', width: r.width + 'px', height: r.height + 'px' });
+      const ms = Math.min(1100, 260 + r.width * 1.1);
+      s.style.transitionDuration = animate ? ms + 'ms' : '0s';
+      s.style.transitionDelay = wait + 'ms';
+      wait += ms * 0.85;
+      layer.append(s);
+      return s;
+    });
+    drawn.set(mark, strokes);
+    if (animate) requestAnimationFrame(() => requestAnimationFrame(() => strokes.forEach(s => s.classList.add('in'))));
+    else strokes.forEach(s => s.classList.add('in'));
+  };
+  const show = el => { if (el.classList.contains('hl')) place(el, !still); el.classList.add('in'); };
   const marks = document.querySelectorAll('.hl, .draw');
-  if (!('IntersectionObserver' in window)) return marks.forEach(m => m.classList.add('in'));
-  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -12% 0px', threshold: 0.6 });
-  marks.forEach(m => io.observe(m));
+  if (!('IntersectionObserver' in window)) marks.forEach(show);
+  else {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { show(e.target); io.unobserve(e.target); } }), { rootMargin: '0px 0px -12% 0px', threshold: 0.6 });
+    marks.forEach(m => io.observe(m));
+  }
+  // lines move when the page reflows: move each stroke to where its words are now, without restarting it
+  // (only if the phrase now wraps into a different number of lines is it redrawn, already painted)
+  let t, first = true;
+  const follow = () => drawn.forEach((strokes, m) => {
+    const rects = [...m.getClientRects()].filter(r => r.width > 2);
+    if (rects.length !== strokes.length) return place(m, false);
+    rects.forEach((r, i) => Object.assign(strokes[i].style, { left: r.left + scrollX + 'px', top: r.top + scrollY + 'px', width: r.width + 'px', height: r.height + 'px' }));
+  });
+  const reflow = () => { clearTimeout(t); t = setTimeout(follow, 120); };
+  addEventListener('resize', reflow);
+  document.fonts?.ready.then(reflow);
+  new ResizeObserver(() => { if (first) first = false; else reflow(); }).observe(document.body);
 })();
 </script>
 </body>
@@ -479,8 +552,11 @@ for (const t of LANGS) {
   console.log('wrote', dst.replace(root + '/', ''));
 }
 mkdirSync(join(root, 'assets', 'brush'), { recursive: true });
-writeFileSync(join(root, 'assets', 'brush', 'hl-light.svg'), highlight('#c4352a'));
-writeFileSync(join(root, 'assets', 'brush', 'hl-dark.svg'), highlight('#e0503f'));
+writeFileSync(join(root, 'assets', 'brush', 'hl-light.svg'), pincelada('#c4352a'));
+writeFileSync(join(root, 'assets', 'brush', 'hl-dark.svg'), pincelada('#e0503f'));
+// the earlier highlighter swipe, kept for comparison with ?trazo=viejo
+writeFileSync(join(root, 'assets', 'brush', 'hl-old-light.svg'), highlight('#c4352a'));
+writeFileSync(join(root, 'assets', 'brush', 'hl-old-dark.svg'), highlight('#e0503f'));
 writeFileSync(join(root, 'assets', 'brush', 'dash.svg'), dash());
 writeFileSync(join(root, 'sitemap.xml'), sitemap());
 writeFileSync(join(root, 'robots.txt'), robots);

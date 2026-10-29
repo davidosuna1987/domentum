@@ -16,7 +16,7 @@
 <link rel="alternate" hreflang="x-default" href="https://davidosuna1987.github.io/domentum/">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="theme-color" content="#f4f0e6">
-<script>/* light unless the visitor picked dark here; then animate the brush strokes in */ (() => { const d = document.documentElement; d.classList.add('js'); try { if (localStorage.getItem('domentum:landing-scheme') === 'dark') { d.dataset.scheme = 'dark'; document.querySelector('meta[name=theme-color]').content = '#151412'; } } catch {} })();</script>
+<script>/* light unless the visitor picked dark here; then animate the brush strokes in */ (() => { const d = document.documentElement; d.classList.add('js'); if (/[?&]trazo=viejo/.test(location.search)) d.dataset.trazo = 'viejo'; try { if (localStorage.getItem('domentum:landing-scheme') === 'dark') { d.dataset.scheme = 'dark'; document.querySelector('meta[name=theme-color]').content = '#151412'; } } catch {} })();</script>
 <link rel="icon" href="../app/icons/icon.svg" type="image/svg+xml">
 <link rel="icon" href="../app/icons/icon-192.png" sizes="192x192" type="image/png">
 <link rel="apple-touch-icon" href="../app/icons/apple-touch-icon.png">
@@ -686,10 +686,50 @@
     try { localStorage.setItem('domentum:landing-scheme', d.dataset.scheme || 'light'); } catch {}
     paint();
   });
+  // Brush highlights: one stroke per line of each ==phrase==, painted in one line after the other
+  const layer = document.createElement('div');
+  layer.className = 'strokes';
+  layer.setAttribute('aria-hidden', 'true');
+  document.body.append(layer);
+  const drawn = new Map(); // mark → its strokes
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const place = (mark, animate) => {
+    (drawn.get(mark) || []).forEach(s => s.remove());
+    let wait = animate ? (mark.closest('.hero') ? (mark.closest('h1') ? 1100 : 1700) : 120) : 0;
+    const strokes = [...mark.getClientRects()].filter(r => r.width > 2).map(r => {
+      const s = document.createElement('i');
+      s.className = 'stroke';
+      Object.assign(s.style, { left: r.left + scrollX + 'px', top: r.top + scrollY + 'px', width: r.width + 'px', height: r.height + 'px' });
+      const ms = Math.min(1100, 260 + r.width * 1.1);
+      s.style.transitionDuration = animate ? ms + 'ms' : '0s';
+      s.style.transitionDelay = wait + 'ms';
+      wait += ms * 0.85;
+      layer.append(s);
+      return s;
+    });
+    drawn.set(mark, strokes);
+    if (animate) requestAnimationFrame(() => requestAnimationFrame(() => strokes.forEach(s => s.classList.add('in'))));
+    else strokes.forEach(s => s.classList.add('in'));
+  };
+  const show = el => { if (el.classList.contains('hl')) place(el, !still); el.classList.add('in'); };
   const marks = document.querySelectorAll('.hl, .draw');
-  if (!('IntersectionObserver' in window)) return marks.forEach(m => m.classList.add('in'));
-  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -12% 0px', threshold: 0.6 });
-  marks.forEach(m => io.observe(m));
+  if (!('IntersectionObserver' in window)) marks.forEach(show);
+  else {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { show(e.target); io.unobserve(e.target); } }), { rootMargin: '0px 0px -12% 0px', threshold: 0.6 });
+    marks.forEach(m => io.observe(m));
+  }
+  // lines move when the page reflows: move each stroke to where its words are now, without restarting it
+  // (only if the phrase now wraps into a different number of lines is it redrawn, already painted)
+  let t, first = true;
+  const follow = () => drawn.forEach((strokes, m) => {
+    const rects = [...m.getClientRects()].filter(r => r.width > 2);
+    if (rects.length !== strokes.length) return place(m, false);
+    rects.forEach((r, i) => Object.assign(strokes[i].style, { left: r.left + scrollX + 'px', top: r.top + scrollY + 'px', width: r.width + 'px', height: r.height + 'px' }));
+  });
+  const reflow = () => { clearTimeout(t); t = setTimeout(follow, 120); };
+  addEventListener('resize', reflow);
+  document.fonts?.ready.then(reflow);
+  new ResizeObserver(() => { if (first) first = false; else reflow(); }).observe(document.body);
 })();
 </script>
 </body>
