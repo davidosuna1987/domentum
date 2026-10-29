@@ -8,6 +8,7 @@ En línea: https://davidosuna1987.github.io/domentum/
 - Volumen independiente por capa y sin límite de tiempo. Los bucles se encadenan con fundido cruzado, así que no se oye el corte.
 - Puedes sumar hasta 4 paisajes a la vez, guardar mezclas y usar un temporizador opcional con fundido final.
 - El ruido (marrón, rosa, gris, blanco, avión, tapa voces) y los binaurales (δ θ α β γ y música generativa) se generan en tiempo real.
+- Modo zen (botón de la cabecera, menú ⋯ o tecla Z): solo lo que suena, a pantalla completa en el ordenador y sin que se apague la pantalla mientras suena. Esc o Z para salir.
 - Modo claro, oscuro o como el sistema (menú ⋯ → Apariencia), en todos los temas.
 - «Todos los sonidos» (menú ⋯ o «Elegir sonidos» en Personal): elige sonidos sueltos de cualquier paisaje y júntalos con tus audios en una mezcla propia.
 - Cada tema tiene sus propios menús, con su animación de entrada y salida (`?menus=clasico` muestra los de antes, para comparar).

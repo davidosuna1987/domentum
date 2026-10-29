@@ -40,6 +40,12 @@ export default {
       <path class="base" d="${STROKE}" filter="url(#zen-ink)"/>
       <g class="ink" mask="url(#zen-reveal)"><path d="${STROKE}" filter="url(#zen-ink)"/></g>
     </svg>`,
+    // Zen mode: the ensō, painted in one stroke as it opens
+    zen: () => `<svg class="enso draw zen-enso" viewBox="0 0 200 200" aria-hidden="true">
+      <mask id="zen-reveal-2"><path class="brush" d="${GUIDE}" stroke="#fff" stroke-width="60" fill="none" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0"/></mask>
+      <path class="base" d="${STROKE}" filter="url(#zen-ink)"/>
+      <g class="ink" mask="url(#zen-reveal-2)"><path d="${STROKE}" filter="url(#zen-ink)"/></g>
+    </svg>`,
     // Menu proposal (data-menus="new"): an ink line that draws the panel's edge, and a close mark
     sheet: () => `<i class="zen-edge" aria-hidden="true"></i><button class="zen-x" data-act="close" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>`,
   },

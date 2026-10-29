@@ -211,6 +211,7 @@ function render() {
   document.title = state.playing ? `${c.title} · Domentum` : 'Domentum';
   wasPlaying = state.playing;
   if (state.playing) played = true;
+  paintZen(c);
   paintTimer();
 }
 
@@ -579,8 +580,9 @@ document.addEventListener('keydown', e => {
     onSlide(el.dataset.key, nv);
     return;
   }
-  if (e.key === 'Escape') return closeSheet();
+  if (e.key === 'Escape') return zenOn && !document.body.classList.contains('sheet-open') ? exitZen() : closeSheet();
   const typing = /INPUT|TEXTAREA|SELECT/.test(e.target.tagName);
+  if ((e.key === 'z' || e.key === 'Z') && !typing && !e.metaKey && !e.ctrlKey && !e.altKey) return zenOn ? exitZen() : enterZen();
   if (e.code === 'Space' && !typing && !e.target.closest('button,[role="button"]')) {
     e.preventDefault();
     setPlaying(!state.playing);
@@ -604,6 +606,8 @@ document.addEventListener('click', e => {
   }
   if (t.id === 'timerBtn') return timerSheet();
   if (t.id === 'menuBtn') return menuSheet();
+  if (t.id === 'zenBtn') return enterZen();
+  if (t.id === 'zenPlay') return setPlaying(!state.playing);
   if (d.themePick) return pickTheme(d.themePick);
   if (d.schemePick) return pickScheme(d.schemePick);
   if (d.pick) return pickSound(d.pick);
@@ -741,6 +745,7 @@ function menuSheet() {
     <button class="row" data-act="theme">${icon('palette')}<span><b>Tema</b><small>${esc(THEME[state.theme].name)} · elige entre ${THEMES.length} estilos</small></span></button>
     <div class="row static">${icon(scheme() === 'dark' ? 'moon' : 'sun')}<span><b>Apariencia</b><small>Claro, oscuro o como tu dispositivo.</small></span></div>
     ${schemeControl()}
+    <button class="row" data-act="zen">${icon('zen')}<span><b>Modo zen</b><small>Solo lo que suena, sin nada más en pantalla. Atajo: Z.</small></span></button>
     <button class="row" data-act="pick">${icon('grid')}<span><b>Todos los sonidos</b><small>Elige sonidos sueltos de cualquier paisaje y júntalos en Personal.</small></span></button>
     <button class="row" data-act="offline">${icon('download')}<span><b>Descargar todo para usar sin conexión</b><small id="offlineInfo">${offlineLabel()}</small></span></button>
     <label class="row">${icon('sparkles')}<span><b>Variación natural</b><small>Cada capa sube y baja muy levemente su volumen, como pasa en la naturaleza. Así el bucle nunca se nota.</small></span><input type="checkbox" class="switch" data-act="breathe" ${state.breathe ? 'checked' : ''}></label>
@@ -905,6 +910,8 @@ function installHelp() {
 function action(act, el) {
   const id = el.dataset.id;
   if (act === 'close') return closeSheet();
+  if (act === 'zen') return enterZen();
+  if (act === 'zen-exit') return exitZen();
   if (act === 'theme') return themeSheet();
   if (act === 'pick') return pickSheet();
   if (act === 'offline') return downloadOffline(allSoundUrls(), 'todos los sonidos');
@@ -925,6 +932,89 @@ function action(act, el) {
     return commit();
   }
 }
+
+// ---------- zen mode ----------
+// Only what is playing: the app fades out, the theme's backdrop stays, and in the middle a slow breathing
+// visual (or the theme's own, decor.zen) with play/pause, the title and the time left. Controls and the
+// cursor hide when idle; on a computer it goes full screen, and the screen stays on while it plays.
+let zenOn = false, zenFull = false, zenIdleT, zenHideT, wakeLock = null;
+const zenEl = $('#zen');
+
+function zenMarkup(c) {
+  return `
+    <button class="zen-x" data-act="zen-exit" aria-label="Salir del modo zen">${icon('x')}</button>
+    <div class="zen-center">
+      <div class="zen-art" aria-hidden="true">${T.decor?.zen?.(c) ?? '<span class="zen-breath"></span><span class="zen-breath two"></span>'}</div>
+      <button class="zen-play" id="zenPlay"></button>
+    </div>
+    <p class="zen-title"></p>
+    <p class="zen-sub"></p>
+    <p class="zen-timer" data-timer-text></p>
+    <p class="zen-hint">Esc o Z para salir</p>`;
+}
+
+function paintZen(c) {
+  if (!zenOn) return;
+  const play = $('#zenPlay');
+  play.innerHTML = icon(state.playing ? 'pause' : 'play');
+  play.setAttribute('aria-label', state.playing ? 'Pausar' : 'Reproducir');
+  play.classList.toggle('on', state.playing);
+  $('.zen-title', zenEl).textContent = c.title;
+  $('.zen-sub', zenEl).textContent = c.sub;
+  keepAwake();
+}
+
+async function keepAwake() {
+  const want = zenOn && state.playing && !document.hidden;
+  try {
+    if (want && !wakeLock && 'wakeLock' in navigator) {
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', () => { wakeLock = null; });
+    } else if (!want && wakeLock) await wakeLock.release();
+  } catch {}
+}
+document.addEventListener('visibilitychange', keepAwake);
+
+function zenAwake() {
+  zenEl.classList.remove('idle');
+  clearTimeout(zenIdleT);
+  zenIdleT = setTimeout(() => zenEl.classList.add('idle'), 2800);
+}
+
+function enterZen() {
+  if (zenOn) return;
+  closeSheet();
+  zenOn = true;
+  clearTimeout(zenHideT);
+  zenEl.innerHTML = zenMarkup(ctx());
+  zenEl.hidden = false;
+  paintZen(ctx());
+  paintTimer();
+  requestAnimationFrame(() => requestAnimationFrame(() => { document.documentElement.dataset.zen = 'on'; }));
+  $('#zenPlay').focus({ preventScroll: true, focusVisible: false });
+  zenAwake();
+  const el = document.documentElement;
+  const touch = matchMedia('(hover: none)').matches;
+  if (!touch && el.requestFullscreen && !document.fullscreenElement) el.requestFullscreen().then(() => { zenFull = true; }).catch(() => {});
+}
+
+function exitZen() {
+  if (!zenOn) return;
+  zenOn = false;
+  delete document.documentElement.dataset.zen;
+  clearTimeout(zenIdleT);
+  zenHideT = setTimeout(() => { zenEl.hidden = true; zenEl.innerHTML = ''; }, 900);
+  if (zenFull && document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  zenFull = false;
+  keepAwake();
+  $('#zenBtn')?.focus({ preventScroll: true });
+}
+
+zenEl.addEventListener('pointermove', zenAwake);
+zenEl.addEventListener('pointerdown', zenAwake);
+document.addEventListener('keydown', () => { if (zenOn) zenAwake(); });
+// leaving full screen with the browser's own Esc also leaves zen mode
+document.addEventListener('fullscreenchange', () => { if (zenFull && !document.fullscreenElement) { zenFull = false; exitZen(); } });
 
 // ---------- timer ----------
 function fmt(sec) {
@@ -999,6 +1089,7 @@ await applyTheme(state.theme);
 tickTimer();
 if (dev) {
   window.__domentum = { engine, state, applyTheme, applyScheme };
+  if (params.has('zen')) enterZen();
   const sheets = { menu: menuSheet, timer: timerSheet, theme: themeSheet, save: saveSheet, credits: creditsSheet, pick: pickSheet, scene: () => sceneSheet(state.focus) };
   sheets[params.get('sheet')]?.();
 }

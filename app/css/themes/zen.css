@@ -258,6 +258,22 @@ body::before { content: ""; position: fixed; inset: 0; pointer-events: none; opa
 .sheet { border: 1px solid var(--line); border-bottom: 0; }
 @media (min-width: 700px) { .sheet { border-bottom: 1px solid var(--line); } }
 
+/* ---------- zen mode: the paper alone and the ensō ---------- */
+:root { --zen-veil: color-mix(in srgb, var(--paper) 92%, transparent); }
+.zen { -webkit-backdrop-filter: none; backdrop-filter: none; }
+.zen-center { width: min(74vw, 340px); }
+.zen-enso { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; fill: var(--ink); }
+.zen-enso .ink { opacity: 0.92; transition: opacity 1.6s ease; }
+html[data-playing="false"] .zen-enso .ink { opacity: 0; }
+.zen-enso .brush { animation: brush 3s 0.3s cubic-bezier(0.6, 0.1, 0.2, 1) both; }
+html[data-playing="true"] .zen-enso { animation: breathe 10s ease-in-out infinite; }
+.zen-play { background: none; color: var(--ink); width: 56px; height: 56px; }
+.zen-play:hover { background: none; transform: scale(1.25); color: var(--red); }
+.zen-play .ico { width: 20px; height: 20px; opacity: 0.8; }
+.zen-title { font-weight: 500; letter-spacing: 0.34em; padding-left: 0.34em; }
+.zen-sub { letter-spacing: 0.3em; }
+@media (prefers-reduced-motion: reduce) { .zen-enso, .zen-enso .brush { animation: none; } }
+
 /* ---------- menu proposal (data-menus="new"): a paper panel unrolled from the edge by a line of ink ---------- */
 .zen-edge, .zen-x { display: none; }
 :root[data-menus="new"] .sheet-bg {

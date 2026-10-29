@@ -68,6 +68,7 @@ const P = {
   monitor: '<rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8M12 17v4"/>',
   grid: '<rect width="7" height="7" x="3" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="3" rx="1.5"/><rect width="7" height="7" x="3" y="14" rx="1.5"/><rect width="7" height="7" x="14" y="14" rx="1.5"/>',
   globe: '<circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19M12 2.5c2.6 2.6 3.9 5.8 3.9 9.5s-1.3 6.9-3.9 9.5c-2.6-2.6-3.9-5.8-3.9-9.5s1.3-6.9 3.9-9.5Z"/>',
+  zen: '<path d="M13.5 3.1A9 9 0 1 0 21 12.3"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/>',
   layers: '<path d="m12.8 2.2 8.6 3.9a.9.9 0 0 1 0 1.7l-8.6 3.9a2 2 0 0 1-1.7 0L2.6 7.8a.9.9 0 0 1 0-1.7l8.6-3.9a2 2 0 0 1 1.6 0Z"/><path d="m22 17.6-9.2 4.2a2 2 0 0 1-1.6 0L2 17.6"/><path d="m22 12.6-9.2 4.2a2 2 0 0 1-1.6 0L2 12.6"/>',
 };
 

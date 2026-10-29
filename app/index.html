@@ -47,6 +47,9 @@
           <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M10 2h4M12 14l3-3"/><circle cx="12" cy="14" r="8"/></svg>
           <span id="timerLabel">∞</span>
         </button>
+        <button class="icon-btn" id="zenBtn" aria-label="Modo zen" title="Modo zen (Z)">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M13.5 3.1A9 9 0 1 0 21 12.3"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg>
+        </button>
         <button class="icon-btn" id="menuBtn" aria-label="Menú">
           <svg class="ico" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/></svg>
         </button>
@@ -69,6 +72,7 @@
     <div class="extra" id="extra"></div>
   </div>
 
+  <div class="zen" id="zen" role="dialog" aria-modal="true" aria-label="Modo zen" hidden></div>
   <div class="sheet-bg" id="sheetBg"></div>
   <div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>

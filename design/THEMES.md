@@ -224,3 +224,12 @@ layers can be sounds picked from other scenes (name like "Gaviotas · Océano", 
 
 New dev params: `&scheme=light|dark`, `&menus=clasico`. `ctx.stopped` is true on the render right after
 playback paused.
+
+## Zen mode (added later)
+
+`<html data-zen="on">` while the player is in zen mode (top-bar `#zenBtn`, the menu row or the Z key; Esc, Z
+or `.zen-x` leave it). The app fades out (`.app` opacity 0) and `#zen` covers the screen over the theme's backdrop:
+`.zen-x`, `.zen-center` > `.zen-art` (visual) + `button.zen-play`, `.zen-title`, `.zen-sub`,
+`.zen-timer[data-timer-text]`, `.zen-hint`; `.zen.idle` after a few seconds without input. Base styles use the
+tokens; `--zen-veil` sets the veil over the backdrop. `decor.zen(ctx)` replaces the default breathing circles
+in `.zen-art`. Dev: `?zen` opens it on load.
