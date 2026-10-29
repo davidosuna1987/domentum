@@ -2,6 +2,7 @@
 // phone widths are real). Picks a free port, so several runs can go at once.
 // usage: node design/snap.mjs <out-dir> <name>=<url> [<name>=<url> ...]
 //   SIZES=movil,tablet,escritorio (default all)   WAIT=ms extra wait before the shot (default 700)
+//   FULL=1 the whole page (at 1x)   SCHEME=dark|light emulated colour scheme   STILL=1 no animations or transitions
 import { spawn } from 'node:child_process';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -9,7 +10,9 @@ import { tmpdir } from 'node:os';
 
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const ALL = { movil: [390, 844, true], tablet: [820, 1180, true], escritorio: [1440, 900, false] };
-const sizes = (process.env.SIZES || Object.keys(ALL).join(',')).split(',').filter(s => ALL[s]);
+// besides the presets, any WIDTHxHEIGHT (e.g. 1200x630) is shot as a desktop page of that size
+for (const k of (process.env.SIZES || '').split(',')) { const m = /^(\d+)x(\d+)$/.exec(k); if (m) ALL[k] = [+m[1], +m[2], false]; }
+const sizes = (process.env.SIZES || 'movil,tablet,escritorio').split(',').filter(s => ALL[s]);
 const wait = +(process.env.WAIT || 700);
 const [out, ...specs] = process.argv.slice(2);
 if (!out || !specs.length) { console.error('usage: node design/snap.mjs <out-dir> <name>=<url> ...'); process.exit(1); }
@@ -65,7 +68,8 @@ async function shot(name, url, dev) {
   const errors = [];
   try {
     await limit(page.ready, 5000, 'connect');
-    await page.send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 2, mobile });
+    await page.send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: process.env.FULL ? 1 : 2, mobile });
+    if (process.env.SCHEME) await page.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: process.env.SCHEME }] });
     await page.send('Page.enable');
     await page.send('Runtime.enable');
     page.on(m => {
@@ -77,7 +81,14 @@ async function shot(name, url, dev) {
     await limit(loaded, 20000, 'load');
     await page.send('Page.bringToFront');
     await page.send('Runtime.evaluate', { expression: `document.fonts.ready.then(() => new Promise(r => setTimeout(r, ${wait}))).then(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))))`, awaitPromise: true });
-    const { data } = await page.send('Page.captureScreenshot', { format: 'png' });
+    if (process.env.STILL) await page.send('Runtime.evaluate', { expression: `document.head.insertAdjacentHTML('beforeend', '<style>*,*::before,*::after{animation:none!important;transition:none!important}</style>')` });
+    if (process.env.STILL) await page.send('Runtime.evaluate', { expression: `(document.querySelectorAll('.hl, .draw').forEach(e => e.classList.add('in')), Promise.all([...document.images].map(i => { i.loading = 'eager'; return i.decode().catch(() => {}); })))`, awaitPromise: true });
+    let shotOpts = { format: 'png' };
+    if (process.env.FULL) {
+      const { cssContentSize: c } = await page.send('Page.getLayoutMetrics');
+      shotOpts = { format: 'png', captureBeyondViewport: true, clip: { x: 0, y: 0, width, height: Math.min(Math.ceil(c.height), 16000), scale: 1 } };
+    }
+    const { data } = await page.send('Page.captureScreenshot', shotOpts);
     const dst = join(out, `${name}-${dev}.png`);
     writeFileSync(dst, Buffer.from(data, 'base64'));
     return { dst, errors };

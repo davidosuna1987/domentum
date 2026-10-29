@@ -1,11 +1,11 @@
-# The Domentum mark: a vermilion brush ensō with a sound wave inside. Writes icons/mark.svg (the mark alone)
+# The Domentum mark: a vermilion brush ensō with a sound wave inside. Writes app/icons/mark.svg (the mark alone)
 # and the app icons: icon.svg, icon-192.png, icon-512.png transparent; maskable-512.png, apple-touch-icon.png on rice paper.
 # usage: python3 design/logo.py
 import math, os
 from PIL import Image, ImageDraw
 
 RED, PAPER = '#c4352a', '#f4f0e6'
-root = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'icons')
+root = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'app', 'icons')
 
 
 def enso(cx, cy, r, wmax, a0=-100, sweep=318, n=480):

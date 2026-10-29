@@ -1,0 +1,140 @@
+# Domentum
+
+> Free ambient sound mixer: rain, ocean, fire, forest, café, brown, white and pink noise and binaural beats. A volume for every layer, no time limit, works offline.
+
+Domentum is a free ambient sound mixer that runs in your browser. It has 14 soundscapes — ocean, rain, campfire, forest, café, thunderstorm and more — and each one is made of layers you can mix: the waves, the gulls and the sailboat, each at its own volume.
+
+The nature sounds are real field recordings. The noise (brown, pink, white and grey) and the binaural beats are generated on your device, so they never repeat. It plays with no time limit, works offline and installs on your phone like an app.
+
+The player's interface is in Spanish; this site is available in English, Español, Català, Français, Italiano, Português, Deutsch.
+
+## Key facts
+
+- Free
+- No account
+- No ads
+- No time limit
+- Works offline
+- 14 soundscapes, 34 recorded layers plus noise and binaural beats synthesized live
+- Installable web app (PWA): iPhone, iPad, Android, Windows, macOS, Linux
+- Field recordings from Freesound, public domain (CC0)
+
+## Pages
+
+- [English](https://davidosuna1987.github.io/domentum/): Domentum — Ambient sounds to focus, relax and sleep
+- [Español](https://davidosuna1987.github.io/domentum/es/): Domentum — Sonidos ambientales para concentrarte, relajarte y dormir
+- [Català](https://davidosuna1987.github.io/domentum/ca/): Domentum — Sons ambientals per concentrar-te, relaxar-te i dormir
+- [Français](https://davidosuna1987.github.io/domentum/fr/): Domentum — Sons d’ambiance pour se concentrer, se détendre et dormir
+- [Italiano](https://davidosuna1987.github.io/domentum/it/): Domentum — Suoni ambientali per concentrarsi, rilassarsi e dormire
+- [Português](https://davidosuna1987.github.io/domentum/pt/): Domentum — Sons ambientes para se concentrar, relaxar e dormir
+- [Deutsch](https://davidosuna1987.github.io/domentum/de/): Domentum — Naturgeräusche zum Konzentrieren, Entspannen und Schlafen
+- [Player](https://davidosuna1987.github.io/domentum/app/): the app itself
+
+## Soundscapes
+
+Each one opens directly with `?paisaje=<id>` on the player URL.
+
+- [Ocean](https://davidosuna1987.github.io/domentum/app/?paisaje=ocean): Open sea from a sailboat: waves, gulls, breakers, the sound underwater and whale song. Layers: Sailboat, Waves, Gulls, Breakers, Underwater, Whales.
+- [Rain](https://davidosuna1987.github.io/domentum/app/?paisaje=rain): Steady rain and drops drumming on an umbrella. A classic for sleeping or focusing. Layers: Rain, Umbrella.
+- [Noise](https://davidosuna1987.github.io/domentum/app/?paisaje=noise): Brown, pink, grey and white noise, an aircraft cabin and a voice mask. Generated live, so it never repeats. Layers: Brown, Pink, Grey, White, Airplane, Voice mask.
+- [Binaural](https://davidosuna1987.github.io/domentum/app/?paisaje=binaural): Delta, theta, alpha, beta and gamma binaural beats, plus a version over generative ambient music. Use headphones. Layers: Delta, Theta, Alpha, Beta, Gamma, Music.
+- [Campfire](https://davidosuna1987.github.io/domentum/app/?paisaje=campfire): A crackling fire and a quiet night at camp. Layers: Fire, Night.
+- [Beach](https://davidosuna1987.github.io/domentum/app/?paisaje=beach): Waves on the shore, a sea breeze and gulls in the distance. Layers: Waves, Breeze, Gulls.
+- [Train](https://davidosuna1987.github.io/domentum/app/?paisaje=train): The rhythm of the tracks and the wind of a long train ride. Layers: Tracks, Wind.
+- [Forest](https://davidosuna1987.github.io/domentum/app/?paisaje=forest): Birdsong, wind in the trees and insects. Layers: Birds, Wind, Insects.
+- [Garden](https://davidosuna1987.github.io/domentum/app/?paisaje=garden): Wind chimes, insects and a soft breeze. Layers: Chimes, Insects, Wind.
+- [Café](https://davidosuna1987.github.io/domentum/app/?paisaje=cafe): The murmur of a coffee shop, with the espresso machine in the background. Layers: Chatter, Espresso machine.
+- [Thunderstorm](https://davidosuna1987.github.io/domentum/app/?paisaje=storm): Thunder, a downpour, wind and rain on an umbrella. Layers: Thunder, Downpour, Wind, Umbrella.
+- [Creek](https://davidosuna1987.github.io/domentum/app/?paisaje=creek): Water running over stones and a light wind. Layers: Water, Wind.
+- [Office](https://davidosuna1987.github.io/domentum/app/?paisaje=office): Voices, a printer, air conditioning, a copier and typing: office noise for working from home. Layers: Voices, Printer, Air conditioning, Copier, Keyboard.
+- [Personal](https://davidosuna1987.github.io/domentum/app/?paisaje=custom): Your own mix: any sound from any soundscape, plus your own audio files.
+
+## Noise and binaural beats, made on your device
+
+- Brown noise: Deep and enveloping, with most of its energy in the low frequencies. Many people find it the best for focus.
+- Pink noise: Balanced, like steady rain. Softer than white noise.
+- Grey noise: Tuned so the human ear hears every frequency at the same loudness.
+- White noise: Bright and even. Good at covering high-pitched sounds.
+- Airplane cabin: The steady hum of a plane at cruising altitude.
+- Voice mask: Concentrated in the speech band, to cover nearby conversations.
+- Binaural beats: Each ear hears a slightly different tone, and your brain perceives the difference as a slow pulse. They only work with headphones. Delta 2 Hz (Deep sleep); Theta 6 Hz (Meditation and creativity); Alpha 10 Hz (Calm alertness); Beta 16 Hz (Active focus); Gamma 40 Hz (Intense concentration); Music 10 Hz (Alpha over a generative ambient pad that never repeats).
+
+## How it works
+
+- A volume for every layer: Each soundscape is made of layers. Turn up the rain, lower the thunder, mute the gulls: you decide the mix.
+- No time limit: It plays for as long as you want. The loops cross-fade, so you never hear the cut.
+- Up to four at once: Rain on a campfire night, a café during a storm… Combine up to four soundscapes.
+- Every sound, à la carte: Pick single sounds from any soundscape and build your own mix in Personal.
+- Your own audio: Import mp3, m4a or wav files. They stay on your device and loop without gaps.
+- Saved mixes: Save what is playing and get back to it with one tap. Five ready-made mixes are included.
+- Sleep timer: From 15 minutes to 3 hours, with a 30-second fade-out at the end.
+- Natural variation: Each layer drifts gently in volume, the way sounds do in nature, so the loop never feels mechanical.
+- Works offline: Install it and download everything (59 MB) to listen without a connection.
+- Private by design: No account, no ads, no tracking. Your settings and files never leave your device.
+
+## Eleven styles, in light and dark
+
+The sound stays the same; the look is up to you. Each style has its own controls, animations and menus.
+
+- [Zen ink](https://davidosuna1987.github.io/domentum/app/?theme=zen): Rice paper, ink and an ensō. The default.
+- [Glass](https://davidosuna1987.github.io/domentum/app/?theme=original): Frosted glass over an animated landscape.
+- [Swiss editorial](https://davidosuna1987.github.io/domentum/app/?theme=editorial): Paper, a strict grid and huge type.
+- [Hi-fi console](https://davidosuna1987.github.io/domentum/app/?theme=consola): Faders, VU meters and seventies keys.
+- [Terminal](https://davidosuna1987.github.io/domentum/app/?theme=terminal): Green phosphor and monospaced text.
+- [Cinema](https://davidosuna1987.github.io/domentum/app/?theme=cine): The landscape in full screen.
+- [Naturalist atlas](https://davidosuna1987.github.io/domentum/app/?theme=naturalista): Plates in forest green and gold.
+- [Orbital aurora](https://davidosuna1987.github.io/domentum/app/?theme=aurora): Layers orbiting a glowing orb.
+- [Bento](https://davidosuna1987.github.io/domentum/app/?theme=bento): Light cards of different sizes.
+- [Neumorphic](https://davidosuna1987.github.io/domentum/app/?theme=neumorfico): Soft relief, dials and knobs.
+- [Neo-brutal pop](https://davidosuna1987.github.io/domentum/app/?theme=pop): Yellow, thick borders and stickers.
+
+## Frequently asked questions
+
+### Is Domentum free?
+
+Yes. Everything is free: no account, no ads, no subscription and no daily limit.
+
+### Is there a time limit?
+
+No. Sounds play for as long as you like. If you want, set a timer and it fades out by itself.
+
+### Does it work offline?
+
+Yes. Install it and download all the sounds (59 MB) from the menu; after that it works without a connection. The layers you have already listened to are saved automatically.
+
+### Do I need an account?
+
+No. Your mixes, volumes and settings are saved only on your device.
+
+### Can I mix several soundscapes?
+
+Yes, up to four at once, each with its own volumes. With “Todos los sonidos” (every sound) you can also combine single layers from different soundscapes.
+
+### What is brown noise?
+
+A noise with more energy in the low frequencies than white or pink noise. It sounds deep, like a distant waterfall, and many people use it to focus or to sleep.
+
+### Do binaural beats work through speakers?
+
+No. Each ear has to hear a different tone, so you need headphones.
+
+### Can I use my own sounds?
+
+Yes. Import mp3, m4a, wav and other audio files into Personal. They stay on your device and loop without gaps.
+
+### Where do the sounds come from?
+
+The recordings are field recordings from Freesound, released into the public domain (CC0). The noise and the binaural beats are generated live on your device.
+
+### Which devices does it work on?
+
+Any modern browser: iPhone, iPad, Android, Windows, macOS and Linux. You can also install it as an app.
+
+### What language is the app in?
+
+The player is in Spanish for now. It is simple to use, and the sounds need no words.
+
+## Optional
+
+- [Source code](https://github.com/davidosuna1987/domentum)
+- [Sound credits](https://davidosuna1987.github.io/domentum/app/sounds/credits.json)

@@ -1,6 +1,6 @@
 // Shared demo state for the restyle mockups: same content in every style so they compare fairly.
-import { SCENES, SCENE } from '../../js/catalog.js';
-import { icon } from '../../js/icons.js';
+import { SCENES, SCENE } from '../../app/js/catalog.js';
+import { icon } from '../../app/js/icons.js';
 
 export { SCENES, SCENE, icon };
 

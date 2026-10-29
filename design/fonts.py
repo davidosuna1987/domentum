@@ -1,5 +1,5 @@
 # Self-hosts the themes' Google Fonts (latin subset only) so every theme also works offline.
-# Writes fonts/<family>.css and fonts/files/*.woff2. Usage: python3 design/fonts.py
+# Writes app/fonts/<family>.css and app/fonts/files/*.woff2. Usage: python3 design/fonts.py
 import hashlib, os, re, urllib.parse, urllib.request
 
 FAMILIES = [
@@ -19,7 +19,7 @@ FAMILIES = [
     'Bricolage Grotesque:opsz,wght@12..96,500..800',
 ]
 UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36'
-root = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'fonts')
+root = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'app', 'fonts')
 os.makedirs(os.path.join(root, 'files'), exist_ok=True)
 
 def get(url):

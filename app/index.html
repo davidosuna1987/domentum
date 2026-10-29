@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Domentum</title>
+  <meta name="description" content="Paisajes sonoros para concentrarte, relajarte y dormir. Mezcla cada capa a tu gusto, sin límite de tiempo.">
+  <meta name="theme-color" content="#f4f0e6">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Domentum">
+  <link rel="stylesheet" href="css/base.css">
+  <script>
+    // Theme stylesheet and light/dark before the first paint, so nothing flashes
+    (() => {
+      const q = new URLSearchParams(location.search);
+      let saved = {};
+      try { saved = JSON.parse(localStorage.getItem('domentum:v1') || '{}'); } catch {}
+      let t = q.get('theme') || saved.theme;
+      if (!/^[a-z]+$/.test(t || '')) t = 'zen';
+      let sc = q.get('scheme') || saved.scheme || 'system';
+      if (sc !== 'light' && sc !== 'dark') sc = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      const root = document.documentElement;
+      root.dataset.theme = t;
+      root.dataset.scheme = sc;
+      root.dataset.menus = q.get('menus') === 'clasico' ? 'classic' : 'new';
+      document.write('<link rel="stylesheet" id="themeCss" href="css/themes/' + t + '.css">');
+    })();
+  </script>
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <canvas id="bg" aria-hidden="true"></canvas>
+  <div class="decor" id="decor" aria-hidden="true"></div>
+  <div class="app">
+    <header class="top">
+      <div class="brand">
+        <span class="logo" id="logo"><img class="mark" src="icons/mark.svg" alt="" width="30" height="30"></span>
+        <span class="brand-name">domentum</span>
+      </div>
+      <div class="top-actions">
+        <button class="pill" id="timerBtn" aria-label="Temporizador">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M10 2h4M12 14l3-3"/><circle cx="12" cy="14" r="8"/></svg>
+          <span id="timerLabel">∞</span>
+        </button>
+        <button class="icon-btn" id="menuBtn" aria-label="Menú">
+          <svg class="ico" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="col-main">
+        <div class="now glass" id="now"></div>
+        <div class="panel" id="mixer"></div>
+      </section>
+      <section class="col-lib">
+        <nav class="tabs" role="tablist">
+          <button role="tab" data-tab="scenes" aria-selected="true">Paisajes</button>
+          <button role="tab" data-tab="mixes" aria-selected="false">Mezclas</button>
+        </nav>
+        <div id="library"></div>
+      </section>
+    </main>
+    <div class="extra" id="extra"></div>
+  </div>
+
+  <div class="sheet-bg" id="sheetBg"></div>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

@@ -14,13 +14,19 @@ En línea: https://davidosuna1987.github.io/domentum/
 - 11 temas para elegir en el menú ⋯ → Tema: Tinta zen (por defecto), Cristal, Editorial suizo, Consola hi-fi, Terminal, Cine, Atlas naturalista, Aurora orbital, Bento, Neumórfico y Pop neobrutal. Cada tema es `css/themes/<id>.css` más `js/themes/<id>.js`; cómo se hacen está en `design/THEMES.md`.
 - Grabaciones de campo CC0 de [Freesound](https://freesound.org). Los créditos están en `sounds/credits.json` y en la app (menú ⋯ → Créditos).
 
+## Estructura
+
+- `/` es la landing, en inglés; `/es/`, `/ca/`, `/fr/`, `/it/`, `/pt/` y `/de/` son las demás versiones. Se generan con `node design/landing/build.mjs` a partir de los textos de `design/landing/i18n/<idioma>.mjs` (en `==así==` van las frases con subrayado de pincel). `node design/landing/check.mjs <idioma>` comprueba que una traducción tiene todo; `node design/landing/og.mjs` rehace las imágenes para redes.
+- `/app/` es el reproductor (la app instalable). `app/?paisaje=rain` abre un paisaje concreto y `app/?theme=pop` un estilo.
+- `sitemap.xml`, `robots.txt` y `llms.txt` se generan con la landing.
+
 ## Desarrollo
 
 ```bash
 python3 .claude/serve.py 5180
 ```
 
-Abre http://localhost:5180. En localhost el service worker está desactivado para que no sirva código viejo; actívalo con `?sw`. `?theme=<id>` abre un tema concreto.
+Abre http://localhost:5180 (landing) o http://localhost:5180/app/ (reproductor). En localhost el service worker está desactivado para que no sirva código viejo; actívalo con `?sw`. `?theme=<id>` abre un tema concreto.
 
 ## Publicar
 

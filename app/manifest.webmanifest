@@ -3,6 +3,7 @@
   "short_name": "Domentum",
   "description": "Paisajes sonoros para concentrarte, relajarte y dormir. Mezcla cada capa a tu gusto, sin límite de tiempo.",
   "lang": "es",
+  "id": "./",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

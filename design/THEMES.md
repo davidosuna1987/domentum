@@ -1,5 +1,7 @@
 # How a Domentum theme is built
 
+The player lives in `app/` (the site root is the landing page); paths below are relative to `app/`.
+
 Domentum is a static PWA of soundscapes (vanilla JS, ES modules, no build step, UI in Spanish).
 `js/app.js` owns state, audio and every interaction, and renders the same semantic markup for every
 theme. A theme changes **only how that markup looks** and adds optional decoration. Nothing a user can
@@ -7,8 +9,8 @@ do (play, volumes, mixes, timer, sheets) may get lost in any theme.
 
 A theme is two files you own completely:
 
-- `css/themes/<id>.css` — all the visuals of the app shell, plus the sheet/toast tokens.
-- `js/themes/<id>.js` — `export default { … }` with the options below.
+- `app/css/themes/<id>.css` — all the visuals of the app shell, plus the sheet/toast tokens.
+- `app/js/themes/<id>.js` — `export default { … }` with the options below.
 
 `css/base.css` is always loaded first (resets, slider mechanics, sheets, toast, theme picker) and is
 recoloured through tokens. **Do not edit** `js/app.js`, `css/base.css`, `index.html`, `js/themes/index.js`
@@ -174,13 +176,13 @@ caveat, unbounded, manrope, nunito, bricolage-grotesque (variable opsz/wght). No
 
 ## Testing
 
-Dev server: `http://localhost:5181/` (if it is down: `python3 .claude/serve.py 5181` from the project
+Dev server: `http://localhost:5181/app/` (if it is down: `python3 .claude/serve.py 5181` from the project
 root, in the background). On localhost these URL params set the state (dev only):
 `?theme=<id>` · `&demo` (shows it as playing with a 45:00 timer) · `&scene=rain,campfire,noise` (what
 plays; first is focused) · `&tab=mixes` · `&sheet=menu|timer|theme|scene|save|credits`.
 
 Screenshots (headless Chrome, real phone widths, prints page errors):
-`node design/snap.mjs design/snaps/<id> "ocean=http://localhost:5181/?theme=<id>&demo" "multi=…" …`
+`node design/snap.mjs design/snaps/<id> "ocean=http://localhost:5181/app/?theme=<id>&demo" "multi=…" …`
 then `python3 design/grid.py design/snaps/<id> <out.png> ocean multi …` for one review image (open it
 with the Read tool). Check at least: `ocean` (6 layers), `rain` (2), multi `rain,campfire,noise`,
 `noise`, `binaural`, `custom` (empty, shows the import box), `tab=mixes`, and `sheet=menu`,

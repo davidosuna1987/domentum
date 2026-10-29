@@ -38,6 +38,13 @@ if (['system', 'light', 'dark'].includes(params.get('scheme'))) state.scheme = p
 // The new menus are the default; ?menus=clasico shows the old ones, to compare
 state.menus = params.get('menus') === 'clasico' ? '' : 'new';
 
+// Links from the landing page: ?paisaje=rain opens the app with that scene ready (it doesn't start playing)
+if (SCENE[params.get('paisaje')]) {
+  state.active = [params.get('paisaje')];
+  state.focus = params.get('paisaje');
+  state.tab = 'scenes';
+}
+
 // Dev-only switches for screenshots: ?scene=rain,campfire&tab=mixes&demo&sheet=menu
 const demo = dev && params.has('demo');
 if (dev) {
