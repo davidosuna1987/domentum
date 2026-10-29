@@ -12,7 +12,9 @@
   --red: #c4352a;
   --font: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
   --w: 1180px;
-  --hl: url("brush/hl-light.svg");
+  --hl1: url("brush/hl-light-1.svg"); --hl2: url("brush/hl-light-2.svg"); --hl3: url("brush/hl-light-3.svg");
+  --hl4: url("brush/hl-light-4.svg"); --hl5: url("brush/hl-light-5.svg"); --hl6: url("brush/hl-light-6.svg");
+  --hl: var(--hl1);
   --washi: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .35' numOctaves='3' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .4 0 0 0 0 .3 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 :root[data-scheme="dark"] {
@@ -24,7 +26,9 @@
   --faint: rgba(235, 228, 212, 0.4);
   --line: rgba(235, 228, 212, 0.13);
   --red: #dd4a3b;
-  --hl: url("brush/hl-dark.svg");
+  --hl1: url("brush/hl-dark-1.svg"); --hl2: url("brush/hl-dark-2.svg"); --hl3: url("brush/hl-dark-3.svg");
+  --hl4: url("brush/hl-dark-4.svg"); --hl5: url("brush/hl-dark-5.svg"); --hl6: url("brush/hl-dark-6.svg");
+  --hl: var(--hl1);
   --washi: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .35' numOctaves='3' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .92 0 0 0 0 .88 0 0 0 0 .8 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -101,9 +105,9 @@ ul, ol { padding: 0; list-style: none; }
   -webkit-box-decoration-break: clone; box-decoration-break: clone;
 }
 .js .hl { background: none; }
-/* the earlier highlighter swipe, to compare: ?trazo=viejo */
-:root[data-trazo="viejo"] { --hl: url("brush/hl-old-light.svg"); }
-:root[data-trazo="viejo"][data-scheme="dark"] { --hl: url("brush/hl-old-dark.svg"); }
+/* six brush strokes, one per line in a fixed order (set by the page script), so lines don't all look alike */
+.stroke[data-v="2"] { --hl: var(--hl2); } .stroke[data-v="3"] { --hl: var(--hl3); } .stroke[data-v="4"] { --hl: var(--hl4); }
+.stroke[data-v="5"] { --hl: var(--hl5); } .stroke[data-v="6"] { --hl: var(--hl6); }
 .lede .hl { color: var(--ink); }
 .strokes { position: absolute; top: 0; left: 0; z-index: -1; width: 0; height: 0; pointer-events: none; }
 .stroke {
@@ -278,6 +282,9 @@ ul, ol { padding: 0; list-style: none; }
   @media (prefers-reduced-motion: no-preference) {
     .reveal { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
     @keyframes rise { from { opacity: 0; filter: blur(3px); transform: translateY(16px); } }
+    /* blocks with a brush highlight only fade in: their strokes are placed where the words are, so the words mustn't move */
+    .reveal:has(.hl) { animation-name: settle-in; }
+    @keyframes settle-in { from { opacity: 0; filter: blur(3px); } }
   }
 }
 

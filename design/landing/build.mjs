@@ -56,53 +56,55 @@ const GUIDE = (() => {
 // Brush strokes, deterministic so rebuilds don't change them
 function rng(seed) { let x = seed; return () => (x = (x * 16807) % 2147483647) / 2147483647; }
 const pts = a => a.map(p => p.map(n => n.toFixed(1)).join(' ')).join('L');
-// A wide highlighter swipe of ink wash: ragged top and bottom, a slanted start, a frayed end, dry streaks
-function highlight(color) {
-  const R = rng(11), W = 300, top = [], bot = [];
-  for (let x = 4; x <= W - 4; x += 5) {
-    top.push([x, 5.5 + R() * 2.6 + Math.sin(x / 37) * 0.9]);
-    bot.push([x, 25 - R() * 2.6 + Math.sin(x / 29 + 1) * 0.9]);
-  }
-  const end = [[W, 8 + R() * 2], [W - 3, 12], [W + 1, 15], [W - 4, 19], [W, 23]];
-  const main = 'M' + pts([[0, 10], ...top, ...end, ...bot.reverse(), [2, 23], [6, 16]]) + 'Z';
-  const streaks = [11, 15.5, 20].map(y => {
-    const a = 20 + R() * 90, b = a + 90 + R() * 150, w = 0.5 + R() * 0.7;
-    return 'M' + pts([[a, y], [b, y + R() - 0.5], [b - 4, y + w], [a + 6, y + w]]) + 'Z';
-  }).join('');
-  const core = 'M' + pts([[8, 11], [W - 14, 10], [W - 10, 20], [10, 21]]) + 'Z';
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} 30" preserveAspectRatio="none"><path fill="${color}" fill-opacity=".36" fill-rule="evenodd" d="${main}${streaks}"/><path fill="${color}" fill-opacity=".14" d="${core}"/></svg>\n`;
-}
 // A brush stroke built like the ensō: the brush lands round and full, the pressure wavers along the body, the
 // tail thins and splits into dry bristles, and an ink filter roughens the edges. Vermilion wash, denser at the core.
-function pincelada(color) {
-  const R = rng(23), W = 400, N = 160, Hm = 15, top = [], bot = [], core = [[], []];
-  const at = t => {
+// Six variants, so the lines of a page don't all carry the same stroke.
+const STROKES = [
+  { seed: 23, hm: 15, land: 0.62, wave: 1.6, phase: 0.4, tilt: -1.4, tail: 0.8, end: 0.18, gaps: [-0.5, -0.08, 0.32, 0.62] },
+  { seed: 41, hm: 13.5, land: 0.75, wave: 2.4, phase: 2.1, tilt: 1.2, tail: 0.72, end: 0.1, gaps: [-0.35, 0.2, 0.55] },
+  { seed: 7, hm: 16, land: 0.55, wave: 1.1, phase: 1.2, tilt: -2.2, tail: 0.86, end: 0.28, gaps: [-0.6, -0.25, 0.1, 0.42, 0.7] },
+  { seed: 58, hm: 14.5, land: 0.7, wave: 2, phase: 3.4, tilt: 0.4, tail: 0.76, end: 0.14, gaps: [-0.45, 0.05, 0.5], twice: true },
+  { seed: 90, hm: 15.5, land: 0.6, wave: 1.3, phase: 0.9, tilt: -0.6, tail: 0.83, end: 0.22, gaps: [-0.55, -0.15, 0.25, 0.6], slant: true },
+  { seed: 15, hm: 14, land: 0.68, wave: 2.8, phase: 4.6, tilt: 1.8, tail: 0.7, end: 0.12, gaps: [-0.3, 0.35] },
+];
+function pincelada(color, v) {
+  const R = rng(v.seed), W = 400, N = 160;
+  const at = (t, k = 1) => {
     const x = 6 + t * (W - 12);
-    const y = 20 + 1.6 * Math.sin(t * Math.PI * 1.3 + 0.4) - 1.4 * t;
-    const land = 0.62 + 0.38 * Math.min(1, t / 0.05);
-    const tail = t > 0.8 ? Math.pow(1 - (t - 0.8) / 0.2, 0.75) * 0.82 + 0.18 : 1;
-    const hw = Hm * land * tail * (1 - 0.14 * t + 0.05 * Math.sin(t * 11));
+    const y = 20 + v.wave * k * Math.sin(t * Math.PI * 1.3 + v.phase) + v.tilt * (t - 0.5);
+    const land = v.land + (1 - v.land) * Math.min(1, t / 0.05);
+    const tail = t > v.tail ? Math.pow(1 - (t - v.tail) / (1 - v.tail), 0.75) * (1 - v.end) + v.end : 1;
+    const hw = v.hm * land * tail * (1 - 0.14 * t + 0.05 * Math.sin(t * 11 + v.phase));
     return [x, y, hw];
   };
-  for (let i = 0; i <= N; i++) {
-    const t = i / N, [x, y, hw] = at(t);
-    top.push([x, y - hw * (1 + (R() - 0.5) * 0.08)]);
-    bot.push([x, y + hw * (1 + (R() - 0.5) * 0.08)]);
-    if (t < 0.72) { core[0].push([x, y - hw * 0.5]); core[1].push([x, y + hw * 0.55]); }
-  }
-  // the round start where the brush touches the paper
-  const [x0, y0, h0] = at(0), cap = [];
-  for (let k = 1; k < 12; k++) { const a = Math.PI / 2 + (k / 12) * Math.PI; cap.push([x0 + Math.cos(a) * h0 * 0.8, y0 - Math.sin(a) * h0]); }
-  const outline = 'M' + pts([...top, ...bot.reverse(), ...cap]) + 'Z';
+  const body = (scale = 1, dy = 0, k = 1) => {
+    const top = [], bot = [];
+    for (let i = 0; i <= N; i++) {
+      const t = i / N, [x, y, hw] = at(t, k);
+      top.push([x, y + dy - hw * scale * (1 + (R() - 0.5) * 0.08)]);
+      bot.push([x, y + dy + hw * scale * (1 + (R() - 0.5) * 0.08)]);
+    }
+    // where the brush touches the paper: round, or cut at a slant
+    const [x0, y0, h0] = at(0, k), cap = [];
+    if (v.slant) cap.push([x0 + h0 * 0.5, y0 + dy + h0 * scale], [x0 - h0 * 0.4, y0 + dy - h0 * scale * 0.6]);
+    else for (let j = 1; j < 12; j++) { const a = Math.PI / 2 + (j / 12) * Math.PI; cap.push([x0 + Math.cos(a) * h0 * 0.8, y0 + dy - Math.sin(a) * h0 * scale]); }
+    return 'M' + pts([...top, ...bot.reverse(), ...cap]) + 'Z';
+  };
   // dry-brush gaps opening up along the tail
-  const gaps = [-0.5, -0.08, 0.32, 0.62].map(f => {
-    const t0 = 0.55 + R() * 0.2, seg = [];
+  const gaps = v.gaps.map(f => {
+    const t0 = v.tail - 0.25 + R() * 0.2, seg = [];
     for (let i = 0; i <= 24; i++) { const t = t0 + (0.985 - t0) * (i / 24), [x, y, hw] = at(t); seg.push([x, y + f * hw]); }
     const back = seg.map(([x, y], i) => [x, y + (0.4 + 1.3 * (i / 24)) * (0.7 + R() * 0.5)]).reverse();
     return 'M' + pts([...seg, ...back]) + 'Z';
   }).join('');
-  const coreD = 'M' + pts([...core[0], ...core[1].reverse()]) + 'Z';
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} 40" preserveAspectRatio="none"><defs><filter id="i" x="-4%" y="-20%" width="108%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".018 .55" numOctaves="2" seed="9" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/></filter></defs><g filter="url(#i)" fill="${color}"><path fill-opacity=".58" fill-rule="evenodd" d="${outline}${gaps}"/><path fill-opacity=".18" d="${coreD}"/></g></svg>\n`;
+  const core = (() => {
+    const a = [], b = [];
+    for (let i = 0; i <= N * 0.72; i++) { const t = i / N, [x, y, hw] = at(t); a.push([x, y - hw * 0.5]); b.push([x, y + hw * 0.55]); }
+    return 'M' + pts([...a, ...b.reverse()]) + 'Z';
+  })();
+  // one variant goes over itself twice, a thinner second pass slightly off the first
+  const second = v.twice ? `<path fill-opacity=".22" d="${body(0.62, -2.5, -0.7)}"/>` : '';
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} 40" preserveAspectRatio="none"><defs><filter id="i" x="-4%" y="-20%" width="108%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".018 .55" numOctaves="2" seed="${v.seed}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/></filter></defs><g filter="url(#i)" fill="${color}"><path fill-opacity=".58" fill-rule="evenodd" d="${body()}${gaps}"/><path fill-opacity=".18" d="${core}"/>${second}</g></svg>\n`;
 }
 
 // A short tapered dab of ink, used as a mask (its colour comes from CSS)
@@ -177,7 +179,7 @@ ${LANGS.map(l => `<link rel="alternate" hreflang="${l.lang}" href="${urlOf(l.lan
 <link rel="alternate" hreflang="x-default" href="${BASE}">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="theme-color" content="#f4f0e6">
-<script>/* light unless the visitor picked dark here; then animate the brush strokes in */ (() => { const d = document.documentElement; d.classList.add('js'); if (/[?&]trazo=viejo/.test(location.search)) d.dataset.trazo = 'viejo'; try { if (localStorage.getItem('domentum:landing-scheme') === 'dark') { d.dataset.scheme = 'dark'; document.querySelector('meta[name=theme-color]').content = '#151412'; } } catch {} })();</script>
+<script>/* light unless the visitor picked dark here; then animate the brush strokes in */ (() => { const d = document.documentElement; d.classList.add('js'); try { if (localStorage.getItem('domentum:landing-scheme') === 'dark') { d.dataset.scheme = 'dark'; document.querySelector('meta[name=theme-color]').content = '#151412'; } } catch {} })();</script>
 <link rel="icon" href="${r}app/icons/icon.svg" type="image/svg+xml">
 <link rel="icon" href="${r}app/icons/icon-192.png" sizes="192x192" type="image/png">
 <link rel="apple-touch-icon" href="${r}app/icons/apple-touch-icon.png">
@@ -426,13 +428,16 @@ ${t.faq.items.map(q => `          <details class="reveal"><summary><h3>${esc(q.q
   layer.setAttribute('aria-hidden', 'true');
   document.body.append(layer);
   const drawn = new Map(); // mark → its strokes
+  const order = new Map(); // mark → its place on the page, to pick a stroke variant per line
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const place = (mark, animate) => {
     (drawn.get(mark) || []).forEach(s => s.remove());
     let wait = animate ? (mark.closest('.hero') ? (mark.closest('h1') ? 1100 : 1700) : 120) : 0;
-    const strokes = [...mark.getClientRects()].filter(r => r.width > 2).map(r => {
+    const n = order.get(mark) ?? 0;
+    const strokes = [...mark.getClientRects()].filter(r => r.width > 2).map((r, line) => {
       const s = document.createElement('i');
       s.className = 'stroke';
+      s.dataset.v = ((n * 4 + line * 5) % 6) + 1;
       Object.assign(s.style, { left: r.left + scrollX + 'px', top: r.top + scrollY + 'px', width: r.width + 'px', height: r.height + 'px' });
       const ms = Math.min(1100, 260 + r.width * 1.1);
       s.style.transitionDuration = animate ? ms + 'ms' : '0s';
@@ -447,6 +452,7 @@ ${t.faq.items.map(q => `          <details class="reveal"><summary><h3>${esc(q.q
   };
   const show = el => { if (el.classList.contains('hl')) place(el, !still); el.classList.add('in'); };
   const marks = document.querySelectorAll('.hl, .draw');
+  document.querySelectorAll('.hl').forEach((m, i) => order.set(m, i));
   if (!('IntersectionObserver' in window)) marks.forEach(show);
   else {
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { show(e.target); io.unobserve(e.target); } }), { rootMargin: '0px 0px -12% 0px', threshold: 0.6 });
@@ -552,11 +558,10 @@ for (const t of LANGS) {
   console.log('wrote', dst.replace(root + '/', ''));
 }
 mkdirSync(join(root, 'assets', 'brush'), { recursive: true });
-writeFileSync(join(root, 'assets', 'brush', 'hl-light.svg'), pincelada('#c4352a'));
-writeFileSync(join(root, 'assets', 'brush', 'hl-dark.svg'), pincelada('#e0503f'));
-// the earlier highlighter swipe, kept for comparison with ?trazo=viejo
-writeFileSync(join(root, 'assets', 'brush', 'hl-old-light.svg'), highlight('#c4352a'));
-writeFileSync(join(root, 'assets', 'brush', 'hl-old-dark.svg'), highlight('#e0503f'));
+STROKES.forEach((v, i) => {
+  writeFileSync(join(root, 'assets', 'brush', `hl-light-${i + 1}.svg`), pincelada('#c4352a', v));
+  writeFileSync(join(root, 'assets', 'brush', `hl-dark-${i + 1}.svg`), pincelada('#e0503f', v));
+});
 writeFileSync(join(root, 'assets', 'brush', 'dash.svg'), dash());
 writeFileSync(join(root, 'sitemap.xml'), sitemap());
 writeFileSync(join(root, 'robots.txt'), robots);

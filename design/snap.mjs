@@ -3,6 +3,7 @@
 // usage: node design/snap.mjs <out-dir> <name>=<url> [<name>=<url> ...]
 //   SIZES=movil,tablet,escritorio (default all)   WAIT=ms extra wait before the shot (default 700)
 //   FULL=1 the whole page (at 1x)   SCHEME=dark|light emulated colour scheme   STILL=1 no animations or transitions
+//   SCROLL=1 scroll through the page first (to trigger what appears on scroll)
 import { spawn } from 'node:child_process';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -83,6 +84,8 @@ async function shot(name, url, dev) {
     await page.send('Runtime.evaluate', { expression: `document.fonts.ready.then(() => new Promise(r => setTimeout(r, ${wait}))).then(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))))`, awaitPromise: true });
     if (process.env.STILL) await page.send('Runtime.evaluate', { expression: `document.head.insertAdjacentHTML('beforeend', '<style>*,*::before,*::after{animation:none!important;transition:none!important}</style>')` });
     if (process.env.STILL) await page.send('Runtime.evaluate', { expression: `(document.documentElement.classList.remove('js'), document.querySelectorAll('.draw').forEach(e => e.classList.add('in')), Promise.all([...document.images].map(i => { i.loading = 'eager'; return i.decode().catch(() => {}); })))`, awaitPromise: true });
+    // SCROLL=1: go down the whole page first, so whatever appears on scroll has appeared
+    if (process.env.SCROLL) await page.send('Runtime.evaluate', { expression: `(async () => { for (let y = 0; y < document.documentElement.scrollHeight; y += innerHeight / 2) { scrollTo(0, y); await new Promise(r => setTimeout(r, 160)); } scrollTo(0, 0); await new Promise(r => setTimeout(r, 4500)); })()`, awaitPromise: true });
     let shotOpts = { format: 'png' };
     if (process.env.FULL) {
       const { cssContentSize: c } = await page.send('Page.getLayoutMetrics');
