@@ -35,7 +35,8 @@ if (!SCENE[state.focus]) state.focus = state.active[0];
 if (THEME[params.get('theme')]) state.theme = params.get('theme');
 if (!THEME[state.theme]) state.theme = DEFAULT_THEME;
 if (['system', 'light', 'dark'].includes(params.get('scheme'))) state.scheme = params.get('scheme');
-if (params.has('menus')) state.menus = params.get('menus') === 'nuevo' ? 'new' : '';
+// The new menus are the default; ?menus=clasico shows the old ones, to compare
+state.menus = params.get('menus') === 'clasico' ? '' : 'new';
 
 // Dev-only switches for screenshots: ?scene=rain,campfire&tab=mixes&demo&sheet=menu
 const demo = dev && params.has('demo');
@@ -634,12 +635,6 @@ document.addEventListener('change', e => {
     state.breathe = e.target.checked;
     commit(false);
   }
-  if (e.target.dataset.act === 'menus') {
-    state.menus = e.target.checked ? 'new' : '';
-    saveState(state);
-    applyScheme();
-    menuSheet();
-  }
 });
 
 // ---------- sheets ----------
@@ -702,7 +697,6 @@ function menuSheet() {
     <label class="row">${icon('sparkles')}<span><b>Variación natural</b><small>Cada capa sube y baja muy levemente su volumen, como pasa en la naturaleza. Así el bucle nunca se nota.</small></span><input type="checkbox" class="switch" data-act="breathe" ${state.breathe ? 'checked' : ''}></label>
     <button class="row" data-act="install">${icon('phone')}<span><b>Instalar en el móvil</b><small>Funciona como una app, a pantalla completa y sin conexión.</small></span></button>
     <button class="row" data-act="credits">${icon('info')}<span><b>Créditos de los sonidos</b><small>Grabaciones de campo con licencia CC0 (dominio público).</small></span></button>
-    <label class="row">${icon('sparkles')}<span><b>Probar menús nuevos</b><small>Propuesta: cómo se abrirían los menús en cada tema.</small></span><input type="checkbox" class="switch" data-act="menus" ${state.menus ? 'checked' : ''}></label>
     <p class="muted foot">Atajo: barra espaciadora para reproducir o pausar.</p>`, '', 'menu');
 }
 

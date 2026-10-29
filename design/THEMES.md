@@ -205,8 +205,8 @@ maybe a `.switch`), `.row.static`, `.scheme` (three `.opt` buttons: Sistema/Clar
 (timer), `.themes/.theme-opt` (picker), `.pick-group > h4 + .picks > .sound-opt` (all sounds),
 `.save-form` with `input` + `.btn`, `.credits`, `.steps`. `?sheet=pick` opens the all-sounds sheet.
 
-`<html data-menus="new|classic">`: **menu proposals are previewed only under `:root[data-menus="new"]`**
-(the menu's "Probar menús nuevos" switch, or `?menus=nuevo`). `classic` must stay exactly as it is.
+`<html data-menus="new|classic">`: each theme's own menus live under `:root[data-menus="new"]`, which is now
+the default (`state.menus` is always `'new'`). `?menus=clasico` shows the old generic sheets, to compare.
 
 ## Personal (added later)
 
@@ -214,5 +214,5 @@ The custom scene now has two add boxes inside `.layers`: `<button class="layer a
 ("Elegir sonidos", opens the all-sounds sheet) and the `label.layer.add` import box; `--n` counts both. Its
 layers can be sounds picked from other scenes (name like "Gaviotas · Océano", real icon).
 
-New dev params: `&scheme=light|dark`, `&menus=nuevo`. `ctx.stopped` is true on the render right after
+New dev params: `&scheme=light|dark`, `&menus=clasico`. `ctx.stopped` is true on the render right after
 playback paused.

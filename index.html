@@ -27,7 +27,7 @@
       const root = document.documentElement;
       root.dataset.theme = t;
       root.dataset.scheme = sc;
-      root.dataset.menus = (q.has('menus') ? q.get('menus') === 'nuevo' : saved.menus) ? 'new' : 'classic';
+      root.dataset.menus = q.get('menus') === 'clasico' ? 'classic' : 'new';
       document.write('<link rel="stylesheet" id="themeCss" href="css/themes/' + t + '.css">');
     })();
   </script>
