@@ -95,6 +95,18 @@ export default {
       { h: 'Block out noise', p: 'The voice mask and white noise against neighbours, open-plan offices or traffic.' },
     ],
   },
+  compare: {
+    label: 'Alternatives',
+    h2: 'A free alternative to Momentum, Noisli and other sound apps',
+    intro: 'Came looking for Momentum’s soundscapes, a Noisli mix, A Soft Murmur or myNoise? Domentum does the same in one web app that is ==free, with no account and no daily limit==.',
+    items: [
+      { h: 'No daily limit', p: 'Some apps cap how long you can listen for free: Momentum’s soundscapes, for instance, give you one free hour a day. In Domentum every soundscape plays for as long as you like.' },
+      { h: 'No paid tier', p: 'Many sound apps keep their best sounds behind a subscription. Domentum has nothing to unlock: all 14 soundscapes, the noise and the binaural beats are free.' },
+      { h: 'Layer by layer', p: 'Like Noisli or A Soft Murmur, you mix sounds; Domentum also splits each soundscape into layers you set one by one, and lets you combine up to four.' },
+      { h: 'Its own app, not an extension', p: 'Momentum lives in your browser’s new tab. Domentum is a standalone app: it installs on your phone or computer and works offline.' },
+    ],
+    note: 'Domentum is an independent project and is not affiliated with Momentum, Noisli, A Soft Murmur, myNoise or any other app mentioned. Their names belong to their owners.',
+  },
   styles: {
     h2: 'Eleven styles, in light and dark',
     intro: 'The sound stays the same; ==the look is up to you==. Each style has its own controls, animations and menus.',
@@ -127,6 +139,8 @@ export default {
     h2: 'Frequently asked questions',
     items: [
       { q: 'Is Domentum free?', a: 'Yes. Everything is free: no account, no ads, no subscription and no daily limit.' },
+      { q: 'Is Domentum the same as Momentum?', a: 'No. The names are alike, but Domentum is an independent ambient sound app, not related to the Momentum browser extension. Its sounds are free and play with no time limit.' },
+      { q: 'Is Domentum a free alternative to Noisli?', a: 'Yes. Like Noisli, it lets you mix ambient sounds; Domentum is completely free, splits each soundscape into layers and works offline.' },
       { q: 'Is there a time limit?', a: 'No. Sounds play for as long as you like. If you want, set a timer and it fades out by itself.' },
       { q: 'Does it work offline?', a: 'Yes. Install it and download all the sounds (59 MB) from the menu; after that it works without a connection. The layers you have already listened to are saved automatically.' },
       { q: 'Do I need an account?', a: 'No. Your mixes, volumes and settings are saved only on your device.' },

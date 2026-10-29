@@ -95,6 +95,18 @@ export default {
       { h: 'Tapar el soroll', p: 'La màscara de veu i el soroll blanc contra els veïns, les oficines obertes o el trànsit.' },
     ],
   },
+  compare: {
+    label: 'Alternatives',
+    h2: 'Una alternativa gratuïta a Momentum, Noisli i altres apps de sons',
+    intro: 'Buscaves els paisatges sonors de Momentum, una mescla de Noisli, A Soft Murmur o myNoise? Domentum fa el mateix en una sola app web, ==gratuïta, sense compte i sense límit diari==.',
+    items: [
+      { h: 'Sense límit diari', p: 'Algunes apps limiten quant pots escoltar de franc: els paisatges sonors de Momentum, per exemple, donen una hora gratuïta al dia. A Domentum cada paisatge sona tot el temps que vulguis.' },
+      { h: 'Sense versió de pagament', p: 'Moltes apps de sons guarden els millors darrere d’una subscripció. A Domentum no hi ha res per desbloquejar: els 14 paisatges, el soroll i les ones binaurals són gratuïts.' },
+      { h: 'Capa a capa', p: 'Com a Noisli o A Soft Murmur, hi mescles sons; Domentum, a més, divideix cada paisatge en capes que ajustes una a una, i et deixa combinar-ne fins a quatre.' },
+      { h: 'Una app pròpia, no una extensió', p: 'Momentum viu a la pestanya nova del navegador. Domentum és una app independent: s’instal·la al mòbil o a l’ordinador i funciona sense connexió.' },
+    ],
+    note: 'Domentum és un projecte independent i no té cap relació amb Momentum, Noisli, A Soft Murmur, myNoise ni cap altra app esmentada. Els seus noms pertanyen als seus propietaris.',
+  },
   styles: {
     h2: 'Onze estils, en clar i en fosc',
     intro: 'El so és el mateix; ==l’aspecte el tries tu==. Cada estil té els seus propis controls, animacions i menús.',
@@ -127,6 +139,8 @@ export default {
     h2: 'Preguntes freqüents',
     items: [
       { q: 'Domentum és gratuït?', a: 'Sí. Tot és gratuït: sense compte, sense anuncis, sense subscripció i sense límit diari.' },
+      { q: 'Domentum és el mateix que Momentum?', a: 'No. Els noms s’assemblen, però Domentum és una app independent de sons ambientals, sense relació amb l’extensió de navegador Momentum. Els seus sons són gratuïts i sonen sense límit de temps.' },
+      { q: 'Domentum és una alternativa gratuïta a Noisli?', a: 'Sí. Com Noisli, et permet mesclar sons ambientals; Domentum és totalment gratuït, divideix cada paisatge en capes i funciona sense connexió.' },
       { q: 'Té límit de temps?', a: 'No. Pots escoltar tant de temps com vulguis. Si vols, posa un temporitzador i el so s’apagarà tot sol, a poc a poc.' },
       { q: 'Funciona sense connexió?', a: 'Sí. Instal·la-la i descarrega tots els sons (59 MB) des del menú; a partir d’aquí funciona sense connexió. Les capes que ja has escoltat es desen automàticament.' },
       { q: 'Cal crear un compte?', a: 'No. Les teves mescles, volums i ajustos es desen només al teu dispositiu.' },

@@ -45,7 +45,14 @@
 <meta name="twitter:image:alt" content="Domentum: a vermilion ensō brush circle with a sound wave inside, on rice paper.">
 <link rel="stylesheet" href="app/fonts/shippori-mincho.css">
 <link rel="stylesheet" href="assets/landing.css">
-<script>/* opened as the installed app: go straight to the player */ if (matchMedia('(display-mode: standalone)').matches || navigator.standalone) location.replace('app/');</script>
+<script>/* opened as the installed app: go straight to the player */ if (matchMedia('(display-mode: standalone)').matches || navigator.standalone) location.replace('app/');
+/* the root page: open in the visitor's language when there is a version of it (a language they picked here wins; ?lang=en stays) */
+(() => { try {
+  const have = ["en","es","ca","fr","it","pt","de"];
+  let pick = localStorage.getItem('domentum:lang');
+  if (!have.includes(pick)) pick = (navigator.languages || [navigator.language]).map(l => String(l || '').slice(0, 2).toLowerCase()).find(l => have.includes(l));
+  if (pick && pick !== 'en' && !/[?&]lang=en/.test(location.search)) location.replace(pick + '/' + location.hash);
+} catch {} })();</script>
 <script type="application/ld+json">
 {
  "@context": "https://schema.org",
@@ -247,6 +254,22 @@
      "acceptedAnswer": {
       "@type": "Answer",
       "text": "Yes. Everything is free: no account, no ads, no subscription and no daily limit."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Is Domentum the same as Momentum?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. The names are alike, but Domentum is an independent ambient sound app, not related to the Momentum browser extension. Its sounds are free and play with no time limit."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Is Domentum a free alternative to Noisli?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Like Noisli, it lets you mix ambient sounds; Domentum is completely free, splits each soundscape into layers and works offline."
      }
     },
     {
@@ -551,9 +574,26 @@
     </div>
   </section>
 
+  <section class="sec" id="alternatives">
+    <div class="wrap">
+      <p class="label" aria-hidden="true"><span class="num">六</span><span>Alternatives</span></p>
+      <div class="body">
+        <h2>A free alternative to Momentum, Noisli and other sound apps</h2>
+        <p class="intro">Came looking for Momentum’s soundscapes, a Noisli mix, A Soft Murmur or myNoise? Domentum does the same in one web app that is <mark class="hl">free, with no account and no daily limit</mark>.</p>
+        <ul class="features">
+          <li class="reveal draw"><h3>No daily limit</h3><p>Some apps cap how long you can listen for free: Momentum’s soundscapes, for instance, give you one free hour a day. In Domentum every soundscape plays for as long as you like.</p></li>
+          <li class="reveal draw"><h3>No paid tier</h3><p>Many sound apps keep their best sounds behind a subscription. Domentum has nothing to unlock: all 14 soundscapes, the noise and the binaural beats are free.</p></li>
+          <li class="reveal draw"><h3>Layer by layer</h3><p>Like Noisli or A Soft Murmur, you mix sounds; Domentum also splits each soundscape into layers you set one by one, and lets you combine up to four.</p></li>
+          <li class="reveal draw"><h3>Its own app, not an extension</h3><p>Momentum lives in your browser’s new tab. Domentum is a standalone app: it installs on your phone or computer and works offline.</p></li>
+        </ul>
+        <p class="note">Domentum is an independent project and is not affiliated with Momentum, Noisli, A Soft Murmur, myNoise or any other app mentioned. Their names belong to their owners.</p>
+      </div>
+    </div>
+  </section>
+
   <section class="sec" id="styles">
     <div class="wrap">
-      <p class="label" aria-hidden="true"><span class="num">六</span><span>Styles</span></p>
+      <p class="label" aria-hidden="true"><span class="num">七</span><span>Styles</span></p>
       <div class="body">
         <h2>Eleven styles, in light and dark</h2>
         <p class="intro">The sound stays the same; <mark class="hl">the look is up to you</mark>. Each style has its own controls, animations and menus.</p>
@@ -609,7 +649,7 @@
 
   <section class="sec" id="install">
     <div class="wrap">
-      <p class="label" aria-hidden="true"><span class="num">七</span><span>Install it on your phone</span></p>
+      <p class="label" aria-hidden="true"><span class="num">八</span><span>Install it on your phone</span></p>
       <div class="body">
         <h2>Install it on your phone</h2>
         <p class="intro">Domentum is a web app: it installs from the browser, <mark class="hl">with no app store</mark>, and opens full screen like any other app.</p>
@@ -626,11 +666,13 @@
 
   <section class="sec" id="faq">
     <div class="wrap">
-      <p class="label" aria-hidden="true"><span class="num">八</span><span>FAQ</span></p>
+      <p class="label" aria-hidden="true"><span class="num">九</span><span>FAQ</span></p>
       <div class="body">
         <h2>Frequently asked questions</h2>
         <div class="faq">
           <details class="reveal"><summary><h3>Is Domentum free?</h3></summary><p>Yes. Everything is free: no account, no ads, no subscription and no daily limit.</p></details>
+          <details class="reveal"><summary><h3>Is Domentum the same as Momentum?</h3></summary><p>No. The names are alike, but Domentum is an independent ambient sound app, not related to the Momentum browser extension. Its sounds are free and play with no time limit.</p></details>
+          <details class="reveal"><summary><h3>Is Domentum a free alternative to Noisli?</h3></summary><p>Yes. Like Noisli, it lets you mix ambient sounds; Domentum is completely free, splits each soundscape into layers and works offline.</p></details>
           <details class="reveal"><summary><h3>Is there a time limit?</h3></summary><p>No. Sounds play for as long as you like. If you want, set a timer and it fades out by itself.</p></details>
           <details class="reveal"><summary><h3>Does it work offline?</h3></summary><p>Yes. Install it and download all the sounds (59 MB) from the menu; after that it works without a connection. The layers you have already listened to are saved automatically.</p></details>
           <details class="reveal"><summary><h3>Do I need an account?</h3></summary><p>No. Your mixes, volumes and settings are saved only on your device.</p></details>

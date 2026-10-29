@@ -72,6 +72,16 @@ Each one opens directly with `?paisaje=<id>` on the player URL.
 - Works offline: Install it and download everything (59 MB) to listen without a connection.
 - Private by design: No account, no ads, no tracking. Your settings and files never leave your device.
 
+## A free alternative to Momentum, Noisli and other sound apps
+
+Came looking for Momentum’s soundscapes, a Noisli mix, A Soft Murmur or myNoise? Domentum does the same in one web app that is free, with no account and no daily limit.
+
+- No daily limit: Some apps cap how long you can listen for free: Momentum’s soundscapes, for instance, give you one free hour a day. In Domentum every soundscape plays for as long as you like.
+- No paid tier: Many sound apps keep their best sounds behind a subscription. Domentum has nothing to unlock: all 14 soundscapes, the noise and the binaural beats are free.
+- Layer by layer: Like Noisli or A Soft Murmur, you mix sounds; Domentum also splits each soundscape into layers you set one by one, and lets you combine up to four.
+- Its own app, not an extension: Momentum lives in your browser’s new tab. Domentum is a standalone app: it installs on your phone or computer and works offline.
+- Domentum is an independent project and is not affiliated with Momentum, Noisli, A Soft Murmur, myNoise or any other app mentioned. Their names belong to their owners.
+
 ## Eleven styles, in light and dark
 
 The sound stays the same; the look is up to you. Each style has its own controls, animations and menus.
@@ -93,6 +103,14 @@ The sound stays the same; the look is up to you. Each style has its own controls
 ### Is Domentum free?
 
 Yes. Everything is free: no account, no ads, no subscription and no daily limit.
+
+### Is Domentum the same as Momentum?
+
+No. The names are alike, but Domentum is an independent ambient sound app, not related to the Momentum browser extension. Its sounds are free and play with no time limit.
+
+### Is Domentum a free alternative to Noisli?
+
+Yes. Like Noisli, it lets you mix ambient sounds; Domentum is completely free, splits each soundscape into layers and works offline.
 
 ### Is there a time limit?
 

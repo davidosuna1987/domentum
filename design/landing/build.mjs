@@ -160,7 +160,7 @@ function page(t) {
   const og = `${BASE}assets/og/${t.lang}.png`;
   const sections = [
     ['what', t.about.h2], ['soundscapes', t.nav.scenes], ['noise', t.noise.h2], ['how', t.nav.how],
-    ['uses', t.uses.h2], ['styles', t.nav.styles], ['install', t.install.h2], ['faq', t.nav.faq],
+    ['uses', t.uses.h2], ['compare', t.compare.label], ['styles', t.nav.styles], ['install', t.install.h2], ['faq', t.nav.faq],
   ];
   const num = id => NUMS[sections.findIndex(s => s[0] === id)];
   const label = (id, text) => `<p class="label" aria-hidden="true"><span class="num">${num(id)}</span><span>${esc(text)}</span></p>`;
@@ -203,7 +203,14 @@ ${LANGS.filter(l => l.lang !== t.lang).map(l => `<meta property="og:locale:alter
 <meta name="twitter:image:alt" content="${esc(t.ogAlt)}">
 <link rel="stylesheet" href="${r}app/fonts/shippori-mincho.css">
 <link rel="stylesheet" href="${r}assets/landing.css">
-<script>/* opened as the installed app: go straight to the player */ if (matchMedia('(display-mode: standalone)').matches || navigator.standalone) location.replace('${app}');</script>
+<script>/* opened as the installed app: go straight to the player */ if (matchMedia('(display-mode: standalone)').matches || navigator.standalone) location.replace('${app}');${t.lang === 'en' ? `
+/* the root page: open in the visitor's language when there is a version of it (a language they picked here wins; ?lang=en stays) */
+(() => { try {
+  const have = ${JSON.stringify(LANGS.map(l => l.lang))};
+  let pick = localStorage.getItem('domentum:lang');
+  if (!have.includes(pick)) pick = (navigator.languages || [navigator.language]).map(l => String(l || '').slice(0, 2).toLowerCase()).find(l => have.includes(l));
+  if (pick && pick !== 'en' && !/[?&]lang=en/.test(location.search)) location.replace(pick + '/' + location.hash);
+} catch {} })();` : ''}</script>
 <script type="application/ld+json">
 ${jsonLd(t, url)}
 </script>
@@ -323,6 +330,20 @@ ${t.features.items.map(f => `          <li class="reveal draw"><h3>${esc(f.h)}</
         <ul class="uses">
 ${t.uses.items.map(u => `          <li class="reveal draw"><h3>${esc(u.h)}</h3><p>${esc(u.p)}</p></li>`).join('\n')}
         </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="alternatives">
+    <div class="wrap">
+      ${label('compare', t.compare.label)}
+      <div class="body">
+        <h2>${esc(t.compare.h2)}</h2>
+        <p class="intro">${rich(t.compare.intro)}</p>
+        <ul class="features">
+${t.compare.items.map(f => `          <li class="reveal draw"><h3>${esc(f.h)}</h3><p>${esc(f.p)}</p></li>`).join('\n')}
+        </ul>
+        <p class="note">${esc(t.compare.note)}</p>
       </div>
     </div>
   </section>
@@ -504,6 +525,10 @@ function llms() {
     `- ${t.noise.binaural.h3}: ${plain(t.noise.binaural.p)} ${t.noise.binaural.bands.map(b => `${b.name} ${b.hz} (${b.desc})`).join('; ')}.`, '',
     `## ${t.features.h2}`, '',
     ...t.features.items.map(f => `- ${f.h}: ${f.p}`), '',
+    `## ${t.compare.h2}`, '',
+    plain(t.compare.intro), '',
+    ...t.compare.items.map(f => `- ${f.h}: ${f.p}`),
+    `- ${t.compare.note}`, '',
     `## ${t.styles.h2}`, '',
     plain(t.styles.intro), '',
     ...THEMES.map(th => `- [${t.styles.items[th.id].name}](${BASE}app/?theme=${th.id}): ${t.styles.items[th.id].desc}`), '',

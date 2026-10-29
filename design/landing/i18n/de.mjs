@@ -95,6 +95,18 @@ export default {
       { h: 'Lärm ausblenden', p: 'Die Stimmenmaske und weißes Rauschen gegen laute Nachbarn, Großraumbüros oder Verkehrslärm.' },
     ],
   },
+  compare: {
+    label: 'Alternativen',
+    h2: 'Eine kostenlose Alternative zu Momentum, Noisli und anderen Sound-Apps',
+    intro: 'Du hast die Klangwelten von Momentum, einen Noisli-Mix, A Soft Murmur oder myNoise gesucht? Domentum kann dasselbe in einer einzigen Web-App, ==kostenlos, ohne Anmeldung und ohne Tageslimit==.',
+    items: [
+      { h: 'Kein Tageslimit', p: 'Manche Apps begrenzen, wie lange du kostenlos hören kannst: Die Klangwelten von Momentum etwa geben dir eine Gratisstunde pro Tag. In Domentum läuft jede Klangwelt so lange, wie du willst.' },
+      { h: 'Keine Bezahlversion', p: 'Viele Sound-Apps verstecken die besten Klänge hinter einem Abo. In Domentum gibt es nichts freizuschalten: Alle 14 Klangwelten, das Rauschen und die binauralen Beats sind kostenlos.' },
+      { h: 'Ebene für Ebene', p: 'Wie bei Noisli oder A Soft Murmur mischst du Klänge; Domentum teilt zusätzlich jede Klangwelt in Ebenen, die du einzeln einstellst, und lässt dich bis zu vier kombinieren.' },
+      { h: 'Eine eigene App, keine Erweiterung', p: 'Momentum lebt im neuen Tab deines Browsers. Domentum ist eine eigenständige App: Sie lässt sich auf Handy oder Computer installieren und funktioniert offline.' },
+    ],
+    note: 'Domentum ist ein unabhängiges Projekt und steht in keiner Verbindung zu Momentum, Noisli, A Soft Murmur, myNoise oder einer anderen genannten App. Die Namen gehören ihren jeweiligen Inhabern.',
+  },
   styles: {
     h2: 'Elf Stile, hell und dunkel',
     intro: 'Der Klang bleibt gleich, ==das Aussehen bestimmst du==. Jeder Stil hat eigene Bedienelemente, Animationen und Menüs.',
@@ -127,6 +139,8 @@ export default {
     h2: 'Häufige Fragen',
     items: [
       { q: 'Ist Domentum kostenlos?', a: 'Ja. Alles ist kostenlos: kein Konto, keine Werbung, kein Abo und kein Tageslimit.' },
+      { q: 'Ist Domentum dasselbe wie Momentum?', a: 'Nein. Die Namen ähneln sich, aber Domentum ist eine unabhängige App für Umgebungsgeräusche und hat nichts mit der Browser-Erweiterung Momentum zu tun. Die Klänge sind kostenlos und laufen ohne Zeitlimit.' },
+      { q: 'Ist Domentum eine kostenlose Alternative zu Noisli?', a: 'Ja. Wie Noisli lässt dich Domentum Umgebungsgeräusche mischen; es ist komplett kostenlos, teilt jede Klangwelt in Ebenen und funktioniert offline.' },
       { q: 'Gibt es ein Zeitlimit?', a: 'Nein. Die Sounds laufen, solange du willst. Wenn du magst, stellst du einen Timer, und sie werden von selbst sanft ausgeblendet.' },
       { q: 'Funktioniert Domentum offline?', a: 'Ja. Installiere die App und lade alle Sounds (59 MB) über das Menü herunter; danach funktioniert sie ohne Internetverbindung. Ebenen, die du schon gehört hast, werden automatisch gespeichert.' },
       { q: 'Brauche ich ein Konto?', a: 'Nein. Deine Mixe, Lautstärken und Einstellungen werden nur auf deinem Gerät gespeichert.' },

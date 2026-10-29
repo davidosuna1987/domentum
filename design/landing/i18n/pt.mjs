@@ -95,6 +95,18 @@ export default {
       { h: 'Abafar ruídos', p: 'O abafa-vozes e o ruído branco contra vizinhos barulhentos, escritórios abertos ou trânsito.' },
     ],
   },
+  compare: {
+    label: 'Alternativas',
+    h2: 'Uma alternativa grátis ao Momentum, ao Noisli e a outros apps de sons',
+    intro: 'Procurava as paisagens sonoras do Momentum, uma mistura do Noisli, o A Soft Murmur ou o myNoise? O Domentum faz o mesmo em um único app web, ==grátis, sem cadastro e sem limite diário==.',
+    items: [
+      { h: 'Sem limite diário', p: 'Alguns apps limitam quanto você pode ouvir de graça: as paisagens sonoras do Momentum, por exemplo, dão uma hora grátis por dia. No Domentum, cada paisagem toca pelo tempo que você quiser.' },
+      { h: 'Sem versão paga', p: 'Muitos apps de sons guardam os melhores atrás de uma assinatura. No Domentum não há nada para desbloquear: as 14 paisagens, o ruído e as batidas binaurais são grátis.' },
+      { h: 'Camada por camada', p: 'Como no Noisli ou no A Soft Murmur, você mistura sons; o Domentum ainda divide cada paisagem em camadas que você ajusta uma a uma, e deixa combinar até quatro.' },
+      { h: 'Um app próprio, não uma extensão', p: 'O Momentum vive na nova aba do navegador. O Domentum é um app independente: instala no celular ou no computador e funciona offline.' },
+    ],
+    note: 'O Domentum é um projeto independente e não tem relação com Momentum, Noisli, A Soft Murmur, myNoise nem com nenhum outro app citado. Os nomes pertencem aos seus donos.',
+  },
   styles: {
     h2: 'Onze estilos, nos modos claro e escuro',
     intro: 'O som é o mesmo; ==o visual fica por sua conta==. Cada estilo tem controles, animações e menus próprios.',
@@ -127,6 +139,8 @@ export default {
     h2: 'Perguntas frequentes',
     items: [
       { q: 'O Domentum é grátis?', a: 'Sim. Tudo é gratuito: sem cadastro, sem anúncios, sem assinatura e sem limite diário.' },
+      { q: 'O Domentum é a mesma coisa que o Momentum?', a: 'Não. Os nomes são parecidos, mas o Domentum é um app independente de sons ambientes, sem relação com a extensão de navegador Momentum. Seus sons são grátis e tocam sem limite de tempo.' },
+      { q: 'O Domentum é uma alternativa grátis ao Noisli?', a: 'Sim. Como o Noisli, ele permite misturar sons ambientes; o Domentum é totalmente grátis, divide cada paisagem em camadas e funciona offline.' },
       { q: 'Tem limite de tempo?', a: 'Não. Os sons tocam pelo tempo que você quiser. Se preferir, programe o temporizador e o som vai sumindo sozinho, aos poucos.' },
       { q: 'Funciona offline?', a: 'Sim. Instale o app e baixe todos os sons (59 MB) pelo menu; a partir daí, ele funciona sem internet. As camadas que você já ouviu ficam salvas automaticamente.' },
       { q: 'Preciso criar uma conta?', a: 'Não. Suas misturas, volumes e configurações ficam salvos apenas no seu dispositivo.' },

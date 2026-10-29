@@ -117,9 +117,9 @@ ul, ol { padding: 0; list-style: none; }
   transition-property: -webkit-mask-position, mask-position; transition-timing-function: cubic-bezier(0.4, 0.05, 0.35, 1);
 }
 .stroke.in { -webkit-mask-position: 0 0; mask-position: 0 0; }
-/* a short dab of ink above each feature, drawn in */
+/* a short vermilion dab above each feature, drawn in */
 .features h3::before, .uses h3::before {
-  content: ""; display: block; width: 34px; height: 7px; margin-bottom: 14px; background: var(--ink);
+  content: ""; display: block; width: 34px; height: 7px; margin-bottom: 14px; background: var(--red);
   -webkit-mask: url("brush/dash.svg") no-repeat center / 100% 100%; mask: url("brush/dash.svg") no-repeat center / 100% 100%;
 }
 .js .draw h3::before { clip-path: inset(0 100% 0 0); transition: clip-path 0.7s 0.15s cubic-bezier(0.6, 0.1, 0.2, 1); }
