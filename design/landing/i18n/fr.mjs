@@ -134,6 +134,11 @@ export default {
       { h: 'Ordinateur', steps: ['Ouvrez-la dans Chrome ou Edge.', 'Cliquez sur l’icône d’installation dans la barre d’adresse.', 'Elle s’ouvre dans sa propre fenêtre.'] },
     ],
     offline: 'Ouvrez ensuite le menu ⋯ de l’application et appuyez sur « Descargar todo » (tout télécharger) pour écouter hors ligne.',
+    extension: {
+      h: 'Extension Chrome',
+      steps: ['Téléchargez l’extension (.zip) et décompressez-la.', 'Ouvrez chrome://extensions et activez le mode développeur.', 'Cliquez sur « Charger l’extension non empaquetée » et choisissez le dossier. Chaque nouvel onglet devient Domentum, et son icône ouvre un mini lecteur.'],
+      download: 'Télécharger pour Chrome',
+    },
   },
   faq: {
     h2: 'Questions fréquentes',

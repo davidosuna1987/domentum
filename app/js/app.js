@@ -54,7 +54,9 @@ if (dev) {
   if (demo) state.playing = true;
 }
 
-const engine = new Engine();
+// In the Chrome extension the sound plays in an offscreen document (extension/js/ext.js stands in for Engine)
+const ext = location.protocol === 'chrome-extension:';
+const engine = ext ? new (await import('./ext.js')).RemoteEngine() : new Engine();
 engine.customLoader = async id => {
   const blob = await getAudio(id);
   if (!blob) throw new Error('Archivo no encontrado');
@@ -1087,6 +1089,17 @@ function toast(msg) {
 // ---------- boot ----------
 await applyTheme(state.theme);
 tickTimer();
+// In the extension another of its windows (the toolbar popup, another new tab) may change what plays: follow it.
+// How each window looks (theme, light/dark, tab) stays its own.
+engine.onRemote?.(r => {
+  if (r.state) {
+    const { theme, scheme, menus, tab, ...sound } = r.state;
+    Object.assign(state, sound);
+  }
+  if (r.playing != null) state.playing = r.playing;
+  render();
+  updateMedia();
+});
 if (dev) {
   window.__domentum = { engine, state, applyTheme, applyScheme };
   if (params.has('zen')) enterZen();
@@ -1094,7 +1107,7 @@ if (dev) {
   sheets[params.get('sheet')]?.();
 }
 // On localhost the service worker would serve stale code while developing; opt in with ?sw
-if ('serviceWorker' in navigator && location.protocol !== 'file:' && (!dev || location.search.includes('sw'))) {
+if ('serviceWorker' in navigator && !ext && location.protocol !== 'file:' && (!dev || location.search.includes('sw'))) {
   const sw = navigator.serviceWorker;
   const hadController = !!sw.controller;
   // sw.js skips waiting and claims the page, so a new version takes over while this one runs: reload to load

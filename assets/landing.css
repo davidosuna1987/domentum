@@ -236,6 +236,7 @@ ul, ol { padding: 0; list-style: none; }
 .platforms li { counter-increment: s; display: grid; grid-template-columns: 26px 1fr; color: var(--grey); }
 .platforms li::before { content: counter(s); color: var(--red); font-size: 14px; padding-top: 2px; }
 #install .ctas { margin-top: 34px; }
+.platforms .extension p { margin-top: 14px; padding-left: 26px; }
 
 /* FAQ */
 .faq { max-width: 52em; border-top: 1px solid var(--line); }

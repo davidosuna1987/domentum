@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Domentum — Ambient sounds",
+  "short_name": "Domentum",
+  "description": "Ambient sounds in every new tab and in your toolbar: rain, ocean, fire, noise, binaural beats. Free, with no time limit.",
+  "version": "1.0.0",
+  "homepage_url": "https://davidosuna1987.github.io/domentum/",
+  "icons": { "16": "icons/ext-16.png", "32": "icons/ext-32.png", "48": "icons/ext-48.png", "128": "icons/ext-128.png" },
+  "action": {
+    "default_title": "Domentum",
+    "default_popup": "popup.html",
+    "default_icon": { "16": "icons/ext-16.png", "32": "icons/ext-32.png" }
+  },
+  "chrome_url_overrides": { "newtab": "newtab.html" },
+  "background": { "service_worker": "background.js" },
+  "permissions": ["offscreen"],
+  "minimum_chrome_version": "116"
+}

@@ -134,6 +134,11 @@ export default {
       { h: 'Ordinador', steps: ['Obre-la a Chrome o Edge.', 'Fes clic a la icona d’instal·lació de la barra d’adreces.', 'S’obre en una finestra pròpia.'] },
     ],
     offline: 'Després, obre el menú ⋯ de l’app i toca «Descargar todo» (descarregar-ho tot) per escoltar sense connexió.',
+    extension: {
+      h: 'Extensió de Chrome',
+      steps: ['Baixa l’extensió (.zip) i descomprimeix-la.', 'Obre chrome://extensions i activa el mode de desenvolupador.', 'Fes clic a «Carrega l’extensió desempaquetada» i tria la carpeta. Cada pestanya nova serà Domentum, i la seva icona obre un mini reproductor.'],
+      download: 'Baixa-la per a Chrome',
+    },
   },
   faq: {
     h2: 'Preguntes freqüents',

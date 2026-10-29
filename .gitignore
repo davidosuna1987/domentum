@@ -8,3 +8,5 @@ design/restyle/sheets/
 design/*.png
 .vercel
 .env*
+# Built Chrome extension (node extension/build.mjs)
+dist/

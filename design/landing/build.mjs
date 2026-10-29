@@ -17,6 +17,8 @@ const { THEMES } = await imp('app/js/themes/index.js');
 const BASE = 'https://davidosuna1987.github.io/domentum/';
 const ORDER = ['en', 'es', 'ca', 'fr', 'it', 'pt', 'de'];
 const REPO = 'https://github.com/davidosuna1987/domentum';
+// the Chrome extension, as built by extension/build.mjs and attached to the latest GitHub release
+const EXTENSION = `${REPO}/releases/latest/download/domentum-chrome.zip`;
 const TODAY = new Date().toISOString().slice(0, 10);
 
 const LANGS = [];
@@ -375,6 +377,7 @@ ${THEMES.map(th => {
         <p class="intro">${rich(t.install.intro)}</p>
         <div class="platforms">
 ${t.install.items.map(p => `          <div class="reveal"><h3>${esc(p.h)}</h3><ol>${p.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol></div>`).join('\n')}
+          <div class="reveal extension"><h3>${esc(t.install.extension.h)}</h3><ol>${t.install.extension.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol><p><a class="link" href="${EXTENSION}" download>${esc(t.install.extension.download)}</a></p></div>
         </div>
         <p class="note">${esc(t.install.offline)}</p>
         <p class="ctas"><a class="btn" href="${app}">${esc(t.hero.cta)}</a></p>
@@ -512,7 +515,8 @@ function llms() {
     '- Field recordings from Freesound, public domain (CC0)', '',
     '## Pages', '',
     ...LANGS.map(l => `- [${l.name}](${urlOf(l.lang)}): ${l.title}`),
-    `- [Player](${BASE}app/): the app itself`, '',
+    `- [Player](${BASE}app/): the app itself`,
+    `- [Chrome extension](${EXTENSION}): Domentum in every new tab, and a mini player behind the toolbar icon. ${t.install.extension.steps.join(' ')}`, '',
     '## Soundscapes', '',
     'Each one opens directly with `?paisaje=<id>` on the player URL.', '',
     ...SCENES.map(s => {

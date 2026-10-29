@@ -29,6 +29,7 @@ The player's interface is in Spanish; this site is available in English, Españo
 - [Português](https://davidosuna1987.github.io/domentum/pt/): Domentum — Sons ambientes para se concentrar, relaxar e dormir
 - [Deutsch](https://davidosuna1987.github.io/domentum/de/): Domentum — Naturgeräusche zum Konzentrieren, Entspannen und Schlafen
 - [Player](https://davidosuna1987.github.io/domentum/app/): the app itself
+- [Chrome extension](https://github.com/davidosuna1987/domentum/releases/latest/download/domentum-chrome.zip): Domentum in every new tab, and a mini player behind the toolbar icon. Download the extension (.zip) and unzip it. Open chrome://extensions and turn on Developer mode. Click “Load unpacked” and choose the folder. Every new tab becomes Domentum, and its icon opens a mini player.
 
 ## Soundscapes
 

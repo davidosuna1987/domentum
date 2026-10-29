@@ -134,6 +134,11 @@ export default {
       { h: 'Computer', steps: ['Open it in Chrome or Edge.', 'Click the install icon in the address bar.', 'It opens in its own window.'] },
     ],
     offline: 'Then open the ⋯ menu in the app and tap “Descargar todo” (download everything) to listen offline.',
+    extension: {
+      h: 'Chrome extension',
+      steps: ['Download the extension (.zip) and unzip it.', 'Open chrome://extensions and turn on Developer mode.', 'Click “Load unpacked” and choose the folder. Every new tab becomes Domentum, and its icon opens a mini player.'],
+      download: 'Download for Chrome',
+    },
   },
   faq: {
     h2: 'Frequently asked questions',

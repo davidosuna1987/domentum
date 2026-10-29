@@ -4,3 +4,5 @@ design/
 README.md
 .env*
 .vercel
+extension/
+dist/

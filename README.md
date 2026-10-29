@@ -20,6 +20,7 @@ En línea: https://davidosuna1987.github.io/domentum/
 - `/` es la landing, en inglés; `/es/`, `/ca/`, `/fr/`, `/it/`, `/pt/` y `/de/` son las demás versiones. Se generan con `node design/landing/build.mjs` a partir de los textos de `design/landing/i18n/<idioma>.mjs` (en `==así==` van las frases con subrayado de pincel). `node design/landing/check.mjs <idioma>` comprueba que una traducción tiene todo; `node design/landing/og.mjs` rehace las imágenes para redes.
 - `/app/` es el reproductor (la app instalable). `app/?paisaje=rain` abre un paisaje concreto y `app/?theme=pop` un estilo.
 - `sitemap.xml`, `robots.txt` y `llms.txt` se generan con la landing.
+- `extension/` es la extensión de Chrome: cada pestaña nueva es el reproductor y el icono de la barra abre un mini reproductor; el sonido suena en un documento oculto, así que sigue al cerrar la ventanita o cambiar de pestaña. `node extension/build.mjs` la genera en `dist/extension/` (para «Cargar descomprimida») y `dist/domentum-chrome.zip` (para la Chrome Web Store o para adjuntarla a una versión de GitHub, que es lo que enlaza la landing).
 
 ## Desarrollo
 

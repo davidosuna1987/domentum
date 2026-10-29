@@ -134,6 +134,11 @@ export default {
       { h: 'Computer', steps: ['Öffne die Seite in Chrome oder Edge.', 'Klicke auf das Installationssymbol in der Adressleiste.', 'Die App öffnet sich in einem eigenen Fenster.'] },
     ],
     offline: 'Öffne danach in der App das Menü ⋯ und tippe auf „Descargar todo“ (Alles herunterladen), um offline zu hören.',
+    extension: {
+      h: 'Chrome-Erweiterung',
+      steps: ['Lade die Erweiterung (.zip) herunter und entpacke sie.', 'Öffne chrome://extensions und aktiviere den Entwicklermodus.', 'Klicke auf „Entpackte Erweiterung laden“ und wähle den Ordner. Jeder neue Tab ist dann Domentum, und das Symbol öffnet einen Mini-Player.'],
+      download: 'Für Chrome herunterladen',
+    },
   },
   faq: {
     h2: 'Häufige Fragen',
